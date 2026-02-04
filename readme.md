@@ -49,7 +49,45 @@ src/main/java/com/emergencia/prontosocorro
 │
 └── ProntosocorroApplication.java
 
+🛣️ Roadmap (Próximas Etapas)
+ Criar Controllers REST (@RestController)
 
+ Criar Repositories (Spring Data JPA)
+
+ Integrar banco de dados (H2 → PostgreSQL)
+
+ Criar endpoints:
+
+Entrada de paciente
+
+Alta hospitalar
+
+Registro de óbito
+
+ Evoluir regras clínicas (níveis de risco)
+
+🧠 Princípios Aplicados
+✔️ Single Responsibility Principle (SRP)
+
+✔️ Domain-Driven Design (DDD)
+
+✔️ State Pattern
+
+✔️ Separation of Concerns
+
+✔️ Código preparado para evolução
+
+🚀 Tecnologias Utilizadas
+Java 21
+
+Spring Boot
+
+Maven
+
+JUnit 5
+
+🏁 Conclusão
+Este projeto prioriza qualidade de modelagem, clareza de domínio e arquitetura limpa, servindo como base sólida para evolução com API REST, persistência e integrações futuras.
 
 
 
