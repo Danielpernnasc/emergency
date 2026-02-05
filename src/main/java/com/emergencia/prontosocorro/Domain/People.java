@@ -7,8 +7,9 @@ import com.emergencia.prontosocorro.Domain.State.StatePatient;
 import com.emergencia.prontosocorro.Domain.State.Status.Dead;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embeddable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,15 +34,19 @@ public class People {
 
     @Transient
     StatePatient statePatient;
-    @ManyToOne
-    @JoinColumn(name = "hospital_id")
-    Hospital hospital;
+
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "hospital_id", nullable = false)
+    private Hospital hospital;
     private String deathCause;
+    @Column(name = "death_date_time")
     private LocalDateTime deathTime;
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<ComorbidityType> comorbidities;
+
     protected People() {
         // obrigatório para JPA
     }

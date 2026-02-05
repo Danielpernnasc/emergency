@@ -8,12 +8,18 @@ import com.emergencia.prontosocorro.Domain.models.CareStatus;
 import com.emergencia.prontosocorro.Domain.models.CareofPacients;
 import com.emergencia.prontosocorro.Domain.models.SpecialistMedic;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+
 
 @Entity
 public class FirstCare {
@@ -28,12 +34,25 @@ public class FirstCare {
         @ManyToOne
         @JoinColumn(name = "people_id")
         private People patient;
+        @Enumerated(EnumType.STRING)
         private SpecialistMedic specialistMedic;
+        @Enumerated(EnumType.STRING)
         private CareStatus carestatus;
+        @Column(name = "care_date_time")
         private LocalDateTime careDateTime;
-        private List<CareofPacients> procedures =  new ArrayList<>();
+    
+        @ElementCollection(targetClass = CareofPacients.class)
+        @CollectionTable(
+            name = "first_care_procedures",
+            joinColumns = @JoinColumn(name = "first_care_id")
+        )
+        @Enumerated(EnumType.STRING)
+        @Column(name = "procedure")
+        private List<CareofPacients> procedures = new ArrayList<>();
 
-
+        public FirstCare() {
+            // obrigatório para JPA
+        }
         public FirstCare(Hospital hospital, People patient, SpecialistMedic specialistMedic) {
             this.hospital = hospital;
             this.patient = patient;

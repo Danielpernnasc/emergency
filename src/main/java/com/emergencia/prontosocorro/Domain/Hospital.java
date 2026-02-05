@@ -14,6 +14,9 @@ public class Hospital {
     String address;
     int numero;
 
+    public Hospital() {
+        // obrigatório para JPA
+    }
     public Hospital(Long id, String name, String address, int numero) {
         this.id = id;
         this.name = name;
