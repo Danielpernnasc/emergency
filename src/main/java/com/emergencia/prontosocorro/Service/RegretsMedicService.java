@@ -2,12 +2,9 @@ package com.emergencia.prontosocorro.Service;
 
 import org.springframework.stereotype.Service;
 
-import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Domain.models.SpecialistMedic;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 
 
 @Service
@@ -16,9 +13,6 @@ public class RegretsMedicService {
     public SpecialistMedic defineSepSpecialistMedic(People people) {
        String description = people.getDescription().toLowerCase();
        
-
-
-    
     if(description.isEmpty() || description == null){
          return SpecialistMedic.CLINICAL_MEDICINE;
     }

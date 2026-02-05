@@ -12,14 +12,21 @@ import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Domain.models.CareofPacients;
 import com.emergencia.prontosocorro.Domain.models.SpecialistMedic;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
+import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
+import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 
 @Service
 public class CareService {
     
     private final RegretsMedicService regretsMedicService;
+    private final RepositoryFirstCare repositoryCare;
+    private final RepositoryPeople repositoryPeople;
+   
 
-    public CareService(RegretsMedicService regretsMedicService) {
+    public CareService(RegretsMedicService regretsMedicService, RepositoryFirstCare repositoryCare, RepositoryPeople repositoryPeople) {
         this.regretsMedicService = regretsMedicService;
+        this.repositoryCare = repositoryCare;
+        this.repositoryPeople = repositoryPeople;
     }
 
     public FirstCare createFirstCare(People people, Hospital hospital) {
@@ -42,14 +49,16 @@ public class CareService {
             );
         }
 
-        // RegretsMedicService regretsMedic = new RegretsMedicService(people, hospital);
+       // 🔹 garante que o paciente existe no banco
+        
+       People savedPeople = repositoryPeople.save(people);
 
-        Object medicResult = regretsMedicService.defineSepSpecialistMedic(people);
+        Object medicResult = regretsMedicService.defineSepSpecialistMedic(savedPeople);
         if (!(medicResult instanceof SpecialistMedic)) {
             throw new IllegalStateException("Expected SpecialistMedic from defineSepSpecialistMedic");
         }
         SpecialistMedic specialistMedic = (SpecialistMedic) medicResult;
-        return new FirstCare(hospital, people, specialistMedic);
+        return new FirstCare(hospital, savedPeople, specialistMedic);
     }
 
     public void dischargePatient(FirstCare firstCare) {
