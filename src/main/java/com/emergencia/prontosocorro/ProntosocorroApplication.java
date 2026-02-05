@@ -30,19 +30,6 @@ public class ProntosocorroApplication {
 			System.out.println("=== TESTE DO MAIN ===");
 		    DecisionCaseCriticalService decisionService = new DecisionCaseCriticalService();
 	
-			
-			// People paciente = new People("João Silva", 30, "Dor no peito", new Sick());
-
-			// // Hospital hospital = new Hospital("Hospital Central", "Rua Principal, 123", 100);
-
-			// Hospital hospital = new Hospital(1L, "Hospital Central", "Rua Principal", 100);
-
-			//  System.out.println("Paciente: " + paciente.getName());
-            // System.out.println("Idade: " + paciente.getAge());
-            // System.out.println("Descrição: " + paciente.getDescription());
-            // System.out.println("Hospital: " + hospital.getNameHospital());
-			// System.out.println("Endereço do Hospital: " + hospital.getAddress());
-			// System.out.println("Número do Hospital: " + hospital.getNumero());
 			People[] pacientes = {
 					new People(
 						"João Silva", 30, 
@@ -151,14 +138,7 @@ public class ProntosocorroApplication {
 							+ assistance.getPeople().getDeathTime()
 						);
 					}
-					// else {
-					// 	   System.out.println(
-					// 		"✅ Paciente " + assistance.getPeople().getName()
-					// 		+ " resistiu e segue em atendimento."
-					// 	);
-					// } 
-
-
+					
 					if(assistance.getPeople().getName().equals("Bertano Sobrenome")){
 						assistance.getPeople().registerDeath("Hemorragia interna por trauma perfurante no pulmão");
 
