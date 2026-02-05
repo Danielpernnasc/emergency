@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.emergencia.prontosocorro.Domain.models.CareStatus;
 import com.emergencia.prontosocorro.Domain.models.CareofPacients;
+import com.emergencia.prontosocorro.Domain.models.SpecialistMedic;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

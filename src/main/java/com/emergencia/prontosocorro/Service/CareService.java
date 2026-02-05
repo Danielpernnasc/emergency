@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import com.emergencia.prontosocorro.Domain.FirstCare;
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
-import com.emergencia.prontosocorro.Domain.SpecialistMedic;
 import com.emergencia.prontosocorro.Domain.models.CareofPacients;
+import com.emergencia.prontosocorro.Domain.models.SpecialistMedic;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 
 @Service
@@ -44,7 +44,11 @@ public class CareService {
 
         // RegretsMedicService regretsMedic = new RegretsMedicService(people, hospital);
 
-        SpecialistMedic specialistMedic = regretsMedicService.defineSepSpecialistMedic(people);
+        Object medicResult = regretsMedicService.defineSepSpecialistMedic(people);
+        if (!(medicResult instanceof SpecialistMedic)) {
+            throw new IllegalStateException("Expected SpecialistMedic from defineSepSpecialistMedic");
+        }
+        SpecialistMedic specialistMedic = (SpecialistMedic) medicResult;
         return new FirstCare(hospital, people, specialistMedic);
     }
 
@@ -81,11 +85,7 @@ public class CareService {
             procedures.add(CareofPacients.CIRURGIA);
             procedures.add(CareofPacients.MEDICACAO);
             procedures.add(CareofPacients.OBSERVACAO);
-            }
-            
-            
-            
-            
+            } else
             if (desc.contains("dificuldade respiratória") || desc.contains("falta de ar")) {
             procedures.add(CareofPacients.OXIGENIOTERAPIA);
         } else if(desc.contains("dor no peito") || desc.contains("infarto") || desc.contains("Trauma perfurante") || desc.contains("acidente vascular cerebral") || desc.contains("derrame")){
@@ -97,8 +97,6 @@ public class CareService {
         } else {
             procedures.add(procedure);
         }
-
-
     }
 
     public boolean canBeDiscarged(People people, FirstCare firstCare) {

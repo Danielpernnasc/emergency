@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
-import com.emergencia.prontosocorro.Domain.SpecialistMedic;
+import com.emergencia.prontosocorro.Domain.models.SpecialistMedic;
 
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
