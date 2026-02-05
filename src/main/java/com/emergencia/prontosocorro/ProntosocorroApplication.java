@@ -12,6 +12,7 @@ import com.emergencia.prontosocorro.Domain.FirstCare;
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Domain.State.Status.Sick;
+import com.emergencia.prontosocorro.Domain.models.CareofPacients;
 import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
 import com.emergencia.prontosocorro.Service.CareService;
 import com.emergencia.prontosocorro.Service.DecisionCaseCriticalService;
@@ -110,13 +111,21 @@ public class ProntosocorroApplication {
 				
 				for (People p : pacientes) {
 					FirstCare assistance = careService.createFirstCare(p, p.getHospital());
-					
+					CareofPacients procedure = CareofPacients.values()[0];
 					System.out.println("---------------------------");
 					System.out.println("Paciente deu entrada no hospital...");
 					System.out.println("Paciente: " + assistance.getPeople().getName());
 					System.out.println("Idade: " + assistance.getPeople().getAge());
 					System.out.println("Descrição: " + assistance.getPeople().getDescription());
-					if(decisionService.isCriticalCase(assistance.getPeople())) {
+				
+					System.out.println("Estado: " + assistance.getPeople().getStatePatient().toString());
+					System.out.println("Hospital: " + assistance.getPeople().getHospital().getNameHospital());
+					System.out.println("Endereço do Hospital: " + assistance.getPeople().getHospital().getAddress());
+					System.out.println("Número do Hospital: " + assistance.getPeople().getHospital().getNumero());
+					careService.dischargePatient(assistance);
+
+					System.out.println("Paciente: " + assistance.getPeople().getName());
+					if (decisionService.isCriticalCase(assistance.getPeople())) {
 						System.out.println("Comorbidade: " +
 							(
 								assistance.getPeople().getComorbidities().contains(ComorbidityType.HIPERTENSAO) ||
@@ -128,13 +137,12 @@ public class ProntosocorroApplication {
 					} else {
 						System.out.println("Comorbidade: Não há");
 					}
-					System.out.println("Estado: " + assistance.getPeople().getStatePatient().toString());
-					System.out.println("Hospital: " + assistance.getPeople().getHospital().getNameHospital());
-					System.out.println("Endereço do Hospital: " + assistance.getPeople().getHospital().getAddress());
-					System.out.println("Número do Hospital: " + assistance.getPeople().getHospital().getNumero());
-					careService.dischargePatient(assistance);
-					System.out.println( "Paciente: " + assistance.getPeople().getName() 
-						+ (careService.canBeDiscarge(assistance.getPeople()) ? " foi liberado para alta." : " não pode ser liberado para alta.")
+					careService.applyProcedures(assistance, procedure);
+					System.out.println("Procedimentos realizados: " + assistance.getProcedures());
+
+					System.out.println(
+						"Paciente: " + assistance.getPeople().getName()
+						+ (careService.canBeDiscarged(assistance.getPeople(), assistance) ? " foi liberado para alta." : " não pode ser liberado para alta.")
 					);
 					if(assistance.getPeople().getDescription().toLowerCase().contains("infarto")){
 						assistance.getPeople().registerDeath("Infarto fulminante");
@@ -178,6 +186,3 @@ public class ProntosocorroApplication {
 	};
 
 }
-	
-
-

@@ -15,7 +15,6 @@ public class RegretsMedicService {
         this.people = people;
         this.hospital = hospital;
 
-   
     }
 
      public People getPeople() {

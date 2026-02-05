@@ -1,8 +1,11 @@
 package com.emergencia.prontosocorro.Domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.emergencia.prontosocorro.Domain.models.CareStatus;
+import com.emergencia.prontosocorro.Domain.models.CareofPacients;
 
 public class FirstCare {
 
@@ -11,6 +14,7 @@ public class FirstCare {
         private SpecialistMedic specialistMedic;
         private CareStatus carestatus;
         private LocalDateTime careDateTime;
+        private List<CareofPacients> procedures =  new ArrayList<>();
 
 
         public FirstCare(Hospital hospital, People patient, SpecialistMedic specialistMedic) {
@@ -19,6 +23,7 @@ public class FirstCare {
             this.specialistMedic = specialistMedic;
             this.carestatus = CareStatus.EM_ATENDIMENTO;
             this.careDateTime = LocalDateTime.now();
+            this.procedures = new ArrayList<>();
         }
 
 
@@ -56,12 +61,24 @@ public class FirstCare {
             this.carestatus = carestatus;
         }
 
+        public List<CareofPacients> getProcedures() {
+            return procedures;
+        }
+
+
+        public void addProcedures(CareofPacients careofPacients) {
+            this.procedures.add(careofPacients);
+        }
+       
+
         public void disCharge() {
             if(patient.getStatePatient().getStatusType().getState().equals("morto")) {
                   throw new IllegalStateException("Paciente morto não recebe alta");
             }
             this.carestatus = CareStatus.ALTA;
         }
+
+
 
 
 }

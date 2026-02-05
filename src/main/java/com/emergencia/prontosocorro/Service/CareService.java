@@ -1,9 +1,14 @@
 package com.emergencia.prontosocorro.Service;
 
+
+
+import java.util.List;
+
 import com.emergencia.prontosocorro.Domain.FirstCare;
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Domain.SpecialistMedic;
+import com.emergencia.prontosocorro.Domain.models.CareofPacients;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 
 public class CareService {
@@ -40,12 +45,58 @@ public class CareService {
         firstCare.disCharge();
     }
 
-    public boolean canBeDiscarge(People people) {
-        String desc = people.getDescription().toLowerCase();
-        if(desc.contains("febre") || desc.contains("corte")) {
-            return true;
+    public void applyProcedures(FirstCare firstCare, CareofPacients procedure) {
+        if (firstCare == null) {
+            throw new IllegalArgumentException("FirstCare must not be null");
         }
-        return false;
+        List<CareofPacients> procedures = firstCare.getProcedures();
+        String desc = firstCare.getPeople().getDescription().toLowerCase();
+
+
+      if (desc.contains("febre")) {
+            procedures.add(CareofPacients.MEDICACAO);
+
+        } else if (desc.contains("corte")) {
+            procedures.add(CareofPacients.CURATIVO);
+            procedures.add(CareofPacients.SUTURA);
+
+        } else if (desc.contains("fratura")) {
+            procedures.add(CareofPacients.IMOBILIZACAO);
+        } else   if (desc.contains("trauma perfurante")
+            || desc.contains("infarto")
+            || desc.contains("derrame")
+            || desc.contains("acidente vascular cerebral")) {
+            procedures.add(CareofPacients.CINTILOGRAFIA);
+            procedures.add(CareofPacients.EXAMES_IMAGEM);
+            procedures.add(CareofPacients.CIRURGIA);
+            procedures.add(CareofPacients.MEDICACAO);
+            procedures.add(CareofPacients.OBSERVACAO);
+            }
+            
+            
+            
+            
+            if (desc.contains("dificuldade respiratória") || desc.contains("falta de ar")) {
+            procedures.add(CareofPacients.OXIGENIOTERAPIA);
+        } else if(desc.contains("dor no peito") || desc.contains("infarto") || desc.contains("Trauma perfurante") || desc.contains("acidente vascular cerebral") || desc.contains("derrame")){
+            procedures.add(CareofPacients.CINTILOGRAFIA);
+            procedures.add(CareofPacients.EXAMES_IMAGEM);
+            procedures.add(CareofPacients.CIRURGIA);
+            procedures.add(CareofPacients.MEDICACAO);
+            procedures.add(CareofPacients.OBSERVACAO);
+        } else {
+            procedures.add(procedure);
+        }
+
+
+    }
+
+    public boolean canBeDiscarged(People people, FirstCare firstCare) {
+        String desc = people.getDescription().toLowerCase();
+        if (desc.contains("dor no peito") || desc.contains("infarto") || desc.contains("acidente vascular cerebral") || desc.contains("derrame") || desc.contains("trauma perfurante"))  {
+            return false;
+        }
+        return true;
     }
 
 }
