@@ -1,8 +1,12 @@
 package com.emergencia.prontosocorro.Service;
 
+import org.springframework.stereotype.Service;
+
 import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
 
+
+@Service
 public class DecisionCaseCriticalService {
 
     public boolean isCriticalCase(People people) {

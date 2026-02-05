@@ -1,40 +1,26 @@
 package com.emergencia.prontosocorro.Service;
 
+import org.springframework.stereotype.Service;
+
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Domain.SpecialistMedic;
 
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+
+@Service
 public class RegretsMedicService {
-
-    private People people;
-    private Hospital hospital;
-
-
-
-    public RegretsMedicService(People people, Hospital hospital) {
-        this.people = people;
-        this.hospital = hospital;
-
-    }
-
-     public People getPeople() {
-        return people;
-     }
-
-    public Hospital getHospital() {
-        return hospital;
-    }
 
     public SpecialistMedic defineSepSpecialistMedic(People people) {
        String description = people.getDescription().toLowerCase();
        
-       if(description == null || description.isEmpty()) {
-         return SpecialistMedic.CLINICAL_MEDICINE;
-       }  
 
-       
-    if(description.contains("fratura") || description.contains("ossos")){
-         return SpecialistMedic.ORTHOPEDIST;
+
+    
+    if(description.isEmpty() || description == null){
+         return SpecialistMedic.CLINICAL_MEDICINE;
     }
    
     if(description.contains("queimadura")){

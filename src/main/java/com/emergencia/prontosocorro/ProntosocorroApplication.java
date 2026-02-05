@@ -22,15 +22,12 @@ public class ProntosocorroApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProntosocorroApplication.class, args);
-
 	}
 
 	@Bean
-	public CommandLineRunner run() {
+	public CommandLineRunner run(CareService careService) {
 		return args -> {
 			System.out.println("=== TESTE DO MAIN ===");
-
-			CareService careService = new CareService();
 		    DecisionCaseCriticalService decisionService = new DecisionCaseCriticalService();
 	
 			

@@ -4,6 +4,8 @@ package com.emergencia.prontosocorro.Service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.emergencia.prontosocorro.Domain.FirstCare;
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
@@ -11,7 +13,14 @@ import com.emergencia.prontosocorro.Domain.SpecialistMedic;
 import com.emergencia.prontosocorro.Domain.models.CareofPacients;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 
+@Service
 public class CareService {
+    
+    private final RegretsMedicService regretsMedicService;
+
+    public CareService(RegretsMedicService regretsMedicService) {
+        this.regretsMedicService = regretsMedicService;
+    }
 
     public FirstCare createFirstCare(People people, Hospital hospital) {
         // Lógica para criar um atendimento inicial
@@ -33,8 +42,9 @@ public class CareService {
             );
         }
 
-        RegretsMedicService regretsMedic = new RegretsMedicService(people, hospital);
-        SpecialistMedic specialistMedic = regretsMedic.defineSepSpecialistMedic(people);
+        // RegretsMedicService regretsMedic = new RegretsMedicService(people, hospital);
+
+        SpecialistMedic specialistMedic = regretsMedicService.defineSepSpecialistMedic(people);
         return new FirstCare(hospital, people, specialistMedic);
     }
 

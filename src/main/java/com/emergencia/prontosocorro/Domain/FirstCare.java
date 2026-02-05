@@ -7,9 +7,25 @@ import java.util.List;
 import com.emergencia.prontosocorro.Domain.models.CareStatus;
 import com.emergencia.prontosocorro.Domain.models.CareofPacients;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+@Entity
 public class FirstCare {
 
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+
+        @ManyToOne
+        @JoinColumn(name = "hospital_id")
         private Hospital hospital;
+        @ManyToOne
+        @JoinColumn(name = "people_id")
         private People patient;
         private SpecialistMedic specialistMedic;
         private CareStatus carestatus;
