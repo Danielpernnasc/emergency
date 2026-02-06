@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.emergencia.prontosocorro.Domain.State.StatePatient;
 import com.emergencia.prontosocorro.Domain.models.CareStatus;
 import com.emergencia.prontosocorro.Domain.models.CareofPacients;
 import com.emergencia.prontosocorro.Domain.models.SpecialistMedic;
@@ -37,6 +38,7 @@ public class FirstCare {
         @Enumerated(EnumType.STRING)
         private SpecialistMedic specialistMedic;
         @Enumerated(EnumType.STRING)
+
         private CareStatus carestatus;
         @Column(name = "care_date_time")
         private LocalDateTime careDateTime;
@@ -53,7 +55,7 @@ public class FirstCare {
         public FirstCare() {
             // obrigatório para JPA
         }
-        public FirstCare(Hospital hospital, People patient, SpecialistMedic specialistMedic) {
+        public FirstCare(People patient, Hospital hospital, StatePatient statePatient, SpecialistMedic specialistMedic) {
             this.hospital = hospital;
             this.patient = patient;
             this.specialistMedic = specialistMedic;
@@ -85,6 +87,7 @@ public class FirstCare {
         public void setSpecialistMedic(SpecialistMedic specialistMedic) {
             this.specialistMedic = specialistMedic;
         }
+   
 
         public LocalDateTime getCareDateTime() {
             return careDateTime;
@@ -101,12 +104,10 @@ public class FirstCare {
             return procedures;
         }
 
-
         public void addProcedures(CareofPacients careofPacients) {
             this.procedures.add(careofPacients);
         }
        
-
         public void disCharge() {
             if(patient.getStatePatient().getStatusType().getState().equals("morto")) {
                   throw new IllegalStateException("Paciente morto não recebe alta");

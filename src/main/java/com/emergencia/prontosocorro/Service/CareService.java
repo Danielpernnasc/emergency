@@ -14,19 +14,27 @@ import com.emergencia.prontosocorro.Domain.models.SpecialistMedic;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
+import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 
 @Service
 public class CareService {
     
     private final RegretsMedicService regretsMedicService;
-    private final RepositoryFirstCare repositoryCare;
+    private final RepositoryFirstCare repositoryFirstCare;
     private final RepositoryPeople repositoryPeople;
+    private final RepositoryHospital repositoryHospital;
    
 
-    public CareService(RegretsMedicService regretsMedicService, RepositoryFirstCare repositoryCare, RepositoryPeople repositoryPeople) {
+    public CareService(
+        RegretsMedicService regretsMedicService, 
+        RepositoryFirstCare repositoryFirstCare, 
+        RepositoryPeople repositoryPeople, 
+        RepositoryHospital repositoryHospital) 
+        {
         this.regretsMedicService = regretsMedicService;
-        this.repositoryCare = repositoryCare;
+        this.repositoryHospital = repositoryHospital;
         this.repositoryPeople = repositoryPeople;
+        this.repositoryFirstCare = repositoryFirstCare;
     }
 
     public FirstCare createFirstCare(People people, Hospital hospital) {
@@ -58,7 +66,7 @@ public class CareService {
             throw new IllegalStateException("Expected SpecialistMedic from defineSepSpecialistMedic");
         }
         SpecialistMedic specialistMedic = (SpecialistMedic) medicResult;
-        return new FirstCare(hospital, savedPeople, specialistMedic);
+        return new FirstCare(savedPeople, hospital, savedPeople.getStatePatient(), specialistMedic);
     }
 
     public void dischargePatient(FirstCare firstCare) {

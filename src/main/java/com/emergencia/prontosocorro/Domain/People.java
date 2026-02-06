@@ -5,11 +5,15 @@ import java.util.List;
 
 import com.emergencia.prontosocorro.Domain.State.StatePatient;
 import com.emergencia.prontosocorro.Domain.State.Status.Dead;
+import com.emergencia.prontosocorro.Domain.State.Status.Interned;
+import com.emergencia.prontosocorro.Domain.State.Status.Live;
+import com.emergencia.prontosocorro.Domain.State.Status.Sick;
+import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,9 +22,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PostLoad;
 import jakarta.persistence.Transient;
-
-import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
 
 
 @Entity
@@ -32,9 +35,13 @@ public class People {
     int idade;
     String description;
 
-    @Transient
-    StatePatient statePatient;
+   @Enumerated(EnumType.STRING)
+    @Column(name = "status_patient", nullable = false)
+    private StatusType statusPatient;
 
+    @Transient
+    @JsonIgnore
+    private StatePatient statePatient;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "hospital_id", nullable = false)
@@ -51,15 +58,31 @@ public class People {
         // obrigatório para JPA
     }
 
-    public People(String name, int idade, String description, StatePatient statePatient, Hospital hospital, List<ComorbidityType> comorbidities) {
+    public People(
+        String name,
+        int idade,
+        String description,
+        Hospital hospital,
+        List<ComorbidityType> comorbidities
+    ) {
         this.name = name;
         this.idade = idade;
         this.description = description;
-        this.statePatient = statePatient;
         this.hospital = hospital;
-        this.deathCause = null;
-        this.deathTime = null;
-        this.comorbidities = (comorbidities != null) ? comorbidities : new ArrayList<>();
+        this.statusPatient = StatusType.ENFERMO; // 👈 estado inicial
+        this.comorbidities = comorbidities != null ? comorbidities : new ArrayList<>();
+        syncState();
+    }
+
+     @PostLoad
+    private void syncState() {
+        this.statePatient = switch (this.statusPatient) {
+            case ENFERMO -> new Sick();
+            case INTERNADO -> new Interned();
+            case VIVO -> new Live();
+            case MORTO -> new Dead();
+            default -> throw new IllegalArgumentException("Unknown status type: " + this.statusPatient);
+        };
     }
 
     public String getName() {
@@ -90,7 +113,15 @@ public class People {
     }
     
     public void changeStatus(StatusType statusType) {
-        this.statePatient.getStatusType();
+        // Convert StatusType to StatePatient based on the status value
+        switch(statusType) {
+            case MORTO:
+                this.statePatient = new Dead();
+                break;
+            // Add other cases for other StatusType values
+            default:
+                throw new IllegalArgumentException("Unknown status type: " + statusType);
+        }
     }
 
     public void setStatePatient(StatePatient statePatient) {
@@ -98,7 +129,7 @@ public class People {
     }
 
     public void registerDeath(String cause) {
-        if(this.statePatient.getStatusType() == StatusType.MORTO){
+        if(this.statePatient instanceof Dead){
             throw new IllegalStateException("Patient is already registered as dead");
         }
         this.statePatient = new Dead();
@@ -128,6 +159,7 @@ public class People {
 
     public void setComorbidities(List<ComorbidityType> comorbidities) {
         this.comorbidities = comorbidities;
+      
     }
 
 }

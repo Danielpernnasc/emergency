@@ -3,6 +3,7 @@ package com.emergencia.prontosocorro.Domain.models;
 public enum StatusType {
 
     ENFERMO("enfermo"),
+    INTERNADO("internado"),
     MORTO("morto"),
     VIVO("vivo");
 
