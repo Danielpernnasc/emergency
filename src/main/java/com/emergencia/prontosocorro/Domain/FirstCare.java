@@ -35,11 +35,12 @@ public class FirstCare {
         @ManyToOne
         @JoinColumn(name = "people_id")
         private People patient;
+        
         @Enumerated(EnumType.STRING)
         private SpecialistMedic specialistMedic;
         @Enumerated(EnumType.STRING)
 
-        private CareStatus carestatus;
+        private CareStatus careStatus;
         @Column(name = "care_date_time")
         private LocalDateTime careDateTime;
     
@@ -59,13 +60,21 @@ public class FirstCare {
             this.hospital = hospital;
             this.patient = patient;
             this.specialistMedic = specialistMedic;
-            this.carestatus = CareStatus.EM_ATENDIMENTO;
+            this.careStatus = CareStatus.EM_ATENDIMENTO;
             this.careDateTime = LocalDateTime.now();
             this.procedures = new ArrayList<>();
         }
 
 
         /** Getters and Setters */
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
 
         public Hospital getHospital() {
             return hospital;
@@ -93,11 +102,11 @@ public class FirstCare {
             return careDateTime;
         }
 
-        public CareStatus getCarestatus() {
-            return carestatus;
+        public CareStatus getCareStatus() {
+            return careStatus;
         }
-        public void setCarestatus(CareStatus carestatus) {
-            this.carestatus = carestatus;
+        public void setCareStatus(CareStatus careStatus) {
+            this.careStatus = careStatus;
         }
 
         public List<CareofPacients> getProcedures() {
@@ -112,7 +121,7 @@ public class FirstCare {
             if(patient.getStatePatient().getStatusType().getState().equals("morto")) {
                   throw new IllegalStateException("Paciente morto não recebe alta");
             }
-            this.carestatus = CareStatus.ALTA;
+            this.careStatus = CareStatus.ALTA;
         }
 
 

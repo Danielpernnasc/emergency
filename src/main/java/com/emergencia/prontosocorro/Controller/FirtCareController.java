@@ -1,10 +1,15 @@
 package com.emergencia.prontosocorro.Controller;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.emergencia.prontosocorro.Controller.DTO.FirstCareRequest;
+import com.emergencia.prontosocorro.Controller.DTO.Request.FirstCareRequest;
+import com.emergencia.prontosocorro.Controller.DTO.Response.FirstCareResponse;
 import com.emergencia.prontosocorro.Domain.FirstCare;
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
@@ -52,6 +57,29 @@ public class FirtCareController {
  
         
         return repositoryFirsCare.save(firstCare);
+    }
+
+    @GetMapping
+    public List<FirstCareResponse> findAll() {
+        return repositoryFirsCare.findAll()
+        .stream()
+        .map(fc -> new FirstCareResponse(
+            fc.getId(),
+            fc.getCareStatus(), // ✅ nome correto
+            fc.getSpecialistMedic(),
+            fc.getCareDateTime(),
+            fc.getPeople().getId(),
+            fc.getPeople().getName(),
+            fc.getHospital().getId(),
+            fc.getHospital().getNameHospital()
+        ))
+        .toList();
+    }
+
+    @GetMapping("{id}")
+    public FirstCare findById(@PathVariable Long id) {
+        return repositoryFirsCare.findById(id)
+            .orElseThrow(() -> new RuntimeException("FirstCare not found with id " + id));
     }
 
 }

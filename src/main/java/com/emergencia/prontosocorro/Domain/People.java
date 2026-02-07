@@ -22,6 +22,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PostLoad;
 import jakarta.persistence.Transient;
 
@@ -35,7 +36,7 @@ public class People {
     int idade;
     String description;
 
-   @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     @Column(name = "status_patient", nullable = false)
     private StatusType statusPatient;
 
@@ -53,6 +54,10 @@ public class People {
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<ComorbidityType> comorbidities;
+    
+    @OneToMany(mappedBy = "patient")
+    @JsonIgnore
+    private List<FirstCare> firstCares;
 
     protected People() {
         // obrigatório para JPA
@@ -72,6 +77,7 @@ public class People {
         this.statusPatient = StatusType.ENFERMO; // 👈 estado inicial
         this.comorbidities = comorbidities != null ? comorbidities : new ArrayList<>();
         syncState();
+        this.firstCares = new ArrayList<>();
     }
 
      @PostLoad
@@ -83,6 +89,14 @@ public class People {
             case MORTO -> new Dead();
             default -> throw new IllegalArgumentException("Unknown status type: " + this.statusPatient);
         };
+    }
+
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -159,7 +173,14 @@ public class People {
 
     public void setComorbidities(List<ComorbidityType> comorbidities) {
         this.comorbidities = comorbidities;
-      
+    }
+
+    public List<FirstCare> getFirstCares() {
+        return firstCares;
+    }
+
+    public void addFirstCare(FirstCare firstCare) {
+        this.firstCares.add(firstCare);
     }
 
 }

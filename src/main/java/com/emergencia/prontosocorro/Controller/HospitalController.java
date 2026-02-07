@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.emergencia.prontosocorro.Controller.DTO.HospitalRequest;
+import com.emergencia.prontosocorro.Controller.DTO.Request.HospitalRequest;
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 

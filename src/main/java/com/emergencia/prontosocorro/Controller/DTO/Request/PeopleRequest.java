@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Controller.DTO;
+package com.emergencia.prontosocorro.Controller.DTO.Request;
 
 import java.util.List;
 

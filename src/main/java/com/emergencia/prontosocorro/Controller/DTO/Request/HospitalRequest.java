@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Controller.DTO;
+package com.emergencia.prontosocorro.Controller.DTO.Request;
 
 public record HospitalRequest(
     String nameHospital, 

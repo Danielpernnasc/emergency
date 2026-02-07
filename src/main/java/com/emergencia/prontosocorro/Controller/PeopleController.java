@@ -8,12 +8,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
 
-import com.emergencia.prontosocorro.Controller.DTO.PeopleRequest;
+import com.emergencia.prontosocorro.Controller.DTO.Request.PeopleRequest;
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
+import com.emergencia.prontosocorro.Controller.DTO.Request.DeathRequest;
+import com.emergencia.prontosocorro.Service.PeopleService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -54,6 +57,15 @@ public class PeopleController {
     public People findById(@PathVariable Long id) {
         return repositoryPeople.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Pessoa não encontrada"));
+    }
+
+    @PathMapping("/{id}/death")
+    public ResponseEntity<Void> registerDeath(
+        @PathVariable Long id,
+        @RequestBody DeathRequest deathRequest
+    ){
+        peopleService.registerDeath(id, deathRequest.deathCause());
+        return ResponseEntity.ok().build;
     }
 
     
