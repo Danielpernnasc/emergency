@@ -16,7 +16,7 @@ import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 import com.emergencia.prontosocorro.Controller.DTO.Request.DeathRequest;
-import com.emergencia.prontosocorro.Service.PeopleService;
+
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -59,15 +59,7 @@ public class PeopleController {
             .orElseThrow(() -> new EntityNotFoundException("Pessoa não encontrada"));
     }
 
-    @PathMapping("/{id}/death")
-    public ResponseEntity<Void> registerDeath(
-        @PathVariable Long id,
-        @RequestBody DeathRequest deathRequest
-    ){
-        peopleService.registerDeath(id, deathRequest.deathCause());
-        return ResponseEntity.ok().build;
-    }
-
+  
     
 
 }
