@@ -89,11 +89,3 @@ JUnit 5
 🏁 Conclusão
 Este projeto prioriza qualidade de modelagem, clareza de domínio e arquitetura limpa, servindo como base sólida para evolução com API REST, persistência e integrações futuras.
 
-
-
-Rodar o Maven no meu Linux
-source ~/.sdkman/bin/sdkman-init.sh
-Depois:
-
-sdk version
-sdk current java
