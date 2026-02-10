@@ -1,4 +1,5 @@
 package com.emergencia.prontosocorro.Domain;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +7,9 @@ import java.util.List;
 import com.emergencia.prontosocorro.Domain.State.StatePatient;
 import com.emergencia.prontosocorro.Domain.State.Status.Dead;
 import com.emergencia.prontosocorro.Domain.State.Status.Interned;
-import com.emergencia.prontosocorro.Domain.State.Status.Live;
 import com.emergencia.prontosocorro.Domain.State.Status.Sick;
 import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
+import com.emergencia.prontosocorro.Domain.models.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,7 +26,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PostLoad;
 import jakarta.persistence.Transient;
-
 
 @Entity
 public class People {
@@ -51,25 +51,29 @@ public class People {
     @Column(name = "death_date_time")
     private LocalDateTime deathTime;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "severity", nullable = false)
+    private SeverityLevel severity = SeverityLevel.LEVE;
+
     @ElementCollection
     @Enumerated(EnumType.STRING)
+    @Column(name = "comorbidities", length = 50)
     private List<ComorbidityType> comorbidities;
-    
+
     @OneToMany(mappedBy = "patient")
     @JsonIgnore
     private List<FirstCare> firstCares;
 
-    protected People() {
+    public People() {
         // obrigatório para JPA
     }
 
     public People(
-        String name,
-        int idade,
-        String description,
-        Hospital hospital,
-        List<ComorbidityType> comorbidities
-    ) {
+            String name,
+            int idade,
+            String description,
+            Hospital hospital,
+            List<ComorbidityType> comorbidities) {
         this.name = name;
         this.idade = idade;
         this.description = description;
@@ -78,14 +82,14 @@ public class People {
         this.comorbidities = comorbidities != null ? comorbidities : new ArrayList<>();
         syncState();
         this.firstCares = new ArrayList<>();
+        this.severity = SeverityLevel.LEVE; // 👈 severidade inicial
     }
 
-     @PostLoad
+    @PostLoad
     private void syncState() {
         this.statePatient = switch (this.statusPatient) {
             case ENFERMO -> new Sick();
             case INTERNADO -> new Interned();
-            case VIVO -> new Live();
             case MORTO -> new Dead();
             default -> throw new IllegalArgumentException("Unknown status type: " + this.statusPatient);
         };
@@ -94,7 +98,7 @@ public class People {
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -102,6 +106,7 @@ public class People {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -125,40 +130,39 @@ public class People {
     public StatePatient getStatePatient() {
         return statePatient;
     }
-    
+
+    public StatusType getStatusPatient() {
+        return statusPatient;
+    }
+
     public void changeStatus(StatusType statusType) {
-        // Convert StatusType to StatePatient based on the status value
-        switch(statusType) {
-            case MORTO:
-                this.statePatient = new Dead();
-                break;
-            // Add other cases for other StatusType values
-            default:
-                throw new IllegalArgumentException("Unknown status type: " + statusType);
+        if (statusType == null) {
+            throw new IllegalArgumentException("StatusType is required");
         }
+        this.statusPatient = statusType;
+        this.statePatient = switch (statusType) {
+            case ENFERMO -> new Sick();
+            case INTERNADO -> new Interned();
+            case MORTO -> new Dead();
+        };
     }
 
     public void setStatePatient(StatePatient statePatient) {
         this.statePatient = statePatient;
+        this.statusPatient = statePatient == null ? null : statePatient.getStatusType();
     }
 
-    public void registerDeath(String cause) {
-        if(this.statePatient instanceof Dead){
+    public void registerDeath(String cause, LocalDateTime deathTime) {
+        if (this.statusPatient == StatusType.MORTO || this.statePatient instanceof Dead) {
             throw new IllegalStateException("Patient is already registered as dead");
         }
+        this.statusPatient = StatusType.MORTO;
         this.statePatient = new Dead();
         this.deathCause = cause;
-        this.deathTime = LocalDateTime.now();
+        this.deathTime = deathTime != null ? deathTime : LocalDateTime.now();
     }
 
-    public String getDeathCause() {
-        return deathCause;
-    }
-
-    public LocalDateTime getDeathTime() {
-        return deathTime;
-    }
-
+   
     public Hospital getHospital() {
         return hospital;
     }
@@ -181,6 +185,14 @@ public class People {
 
     public void addFirstCare(FirstCare firstCare) {
         this.firstCares.add(firstCare);
+    }
+
+    public SeverityLevel getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(SeverityLevel severity) {
+        this.severity = severity;
     }
 
 }

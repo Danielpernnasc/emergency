@@ -1,20 +1,16 @@
 package com.emergencia.prontosocorro.Controller.DTO.Request;
 
-import java.util.List;
-
-import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
-
 public record PeopleRequest(
     String name,
     int idade,
     String description,
     String statepatient,
-    Long hospitalId,
-    List<ComorbidityType> comorbidities
+    Long hospitalId
+
 ) {
 
     public PeopleRequest() {
-        this(null, 0, null, null, null, null);
+        this(null, 0, null, null, null);
     }
        
 
@@ -34,7 +30,4 @@ public record PeopleRequest(
         return hospitalId;
     }
 
-    public List<ComorbidityType> getComorbidities() {
-        return comorbidities;
-    }
 }

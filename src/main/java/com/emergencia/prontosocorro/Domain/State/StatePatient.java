@@ -7,5 +7,10 @@ public interface StatePatient {
 
     StatusType getStatusType();
 
+    static String valueOf(String upperCase) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'valueOf'");
+    }
+
  
 }

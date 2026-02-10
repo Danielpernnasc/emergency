@@ -7,5 +7,7 @@ public enum ComorbidityType {
     ASMA,
     DOENCA_RENAL_CRONICA,
     CARDIOPATIA,
-    OBESIDADE
+    OBESIDADE,
+    ALERGIA,
+    OUTRA
 }

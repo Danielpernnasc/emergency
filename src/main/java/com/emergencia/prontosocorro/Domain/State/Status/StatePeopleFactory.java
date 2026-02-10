@@ -13,7 +13,7 @@ public class StatePeopleFactory {
         return switch (lowerState) {
             case "enfermo" -> new Sick();
             case "morto" -> new Dead();
-            case "vivo" -> new Live();
+            case "internado" -> new Interned();
             default -> null;
         };
     }
