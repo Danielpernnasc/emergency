@@ -29,8 +29,10 @@ public class PeopleService {
                 .getStatePatient();
     }
 
-    public ResponseEntity<Long> updateStatePatient(Long id, StatusType newStatus, String justification, LocalDateTime date) {
-        return deathService.updateStatePatient(id, newStatus, justification, date);
+    public void registerDeath(Long id, String justification, LocalDateTime date) {
+        People people = repositoryPeople.findById(id)
+                .orElseThrow(() -> new RuntimeException("People not found with id " + id));
+        deathService.registerDeath(people, justification, date);
     }
 
     public boolean mistakeStatus(Long id, StatusType newStatus, String justification) {
@@ -41,9 +43,11 @@ public class PeopleService {
        if(currentStatus != StatusType.MORTO) {
             return false;
         }
-        
 
         people.changeStatus(newStatus);
+        if (newStatus == StatusType.ENFERMO || newStatus == StatusType.INTERNADO) {
+            people.clearDeathInfo();
+        }
         repositoryPeople.save(people);
         return true;
     }

@@ -162,7 +162,11 @@ public class People {
         this.deathTime = deathTime != null ? deathTime : LocalDateTime.now();
     }
 
-   
+    public void clearDeathInfo() {
+        this.deathCause = null;
+        this.deathTime = null;
+    }
+
     public Hospital getHospital() {
         return hospital;
     }

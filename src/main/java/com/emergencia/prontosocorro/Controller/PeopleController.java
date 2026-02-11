@@ -83,9 +83,8 @@ public class PeopleController {
 
     @PutMapping("/{id}/state")
     public ResponseEntity<Long> updateState(@PathVariable Long id, @RequestBody StatePatientRequest requestPeople){
-        peopleService.updateStatePatient(
+        peopleService.registerDeath(
             id, 
-            requestPeople.statusType(),
             requestPeople.justification(),
             requestPeople.date()
         );
@@ -98,6 +97,11 @@ public class PeopleController {
     public ResponseEntity<Long> mistakeStatus(@PathVariable Long id, @RequestBody StatePatientRequest requestPeople) {
         if (requestPeople.justification() == null || requestPeople.justification().trim().isEmpty()) {
             return ResponseEntity.badRequest().build();
+        }
+        if (requestPeople.statusType() == StatusType.ENFERMO || requestPeople.statusType() == StatusType.INTERNADO) {
+            if (requestPeople.date() == null) {
+                return ResponseEntity.badRequest().build();
+            }
         }
         boolean result = peopleService.mistakeStatus(id, requestPeople.statusType(), requestPeople.justification());
         if (result) {

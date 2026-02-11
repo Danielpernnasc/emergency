@@ -20,34 +20,24 @@ public class DeathService {
 
     }
 
-      public ResponseEntity<Long> updateStatePatient(Long id, StatusType newStatus, String justification, LocalDateTime date) {
-        People people = repositoryPeople.findById(id)
-                .orElseThrow(() -> new RuntimeException("People not found with id " + id));
-        StatusType currentStatus = people.getStatusPatient();
-
-        if (newStatus == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        
-        if (currentStatus == StatusType.MORTO && newStatus != StatusType.MORTO) {
-            return ResponseEntity.status(409).build();
-        }
-        if (currentStatus == StatusType.INTERNADO && newStatus == StatusType.ENFERMO) {
-            return ResponseEntity.ok(id);
-        }
-        if (newStatus == StatusType.MORTO) {
-            if (justification == null || justification.trim().isEmpty()) {
-                return ResponseEntity.badRequest().build();
-            }
-            LocalDateTime deathTime = date != null ? date : LocalDateTime.now();
-            people.registerDeath(justification, deathTime);
-            repositoryPeople.save(people);
-            return ResponseEntity.ok(id);
+    public void registerDeath(
+        People people,
+        String justification,
+        LocalDateTime date
+    ){
+        if(people.getStatusPatient() == StatusType.MORTO){
+            throw new IllegalStateException("Patient already dead");
         }
 
-        people.changeStatus(newStatus);
+        if(justification == null || justification.isBlank()){
+            throw new IllegalStateException("justification is mandatadory");
+        }
+
+        LocalDateTime deathTime =  date != null ? date : LocalDateTime.now();
+
+        people.registerDeath(justification, deathTime);
+
         repositoryPeople.save(people);
-        return ResponseEntity.ok(id);
     }
 
 
