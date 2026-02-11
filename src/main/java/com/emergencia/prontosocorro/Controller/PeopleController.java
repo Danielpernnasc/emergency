@@ -19,6 +19,7 @@ import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
+import com.emergencia.prontosocorro.Service.DeathService;
 import com.emergencia.prontosocorro.Service.PeopleService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -30,11 +31,13 @@ public class PeopleController {
     private final RepositoryPeople repositoryPeople;
     private final RepositoryHospital repositoryHospital;
     private final PeopleService peopleService;
+  
 
     public PeopleController(RepositoryPeople repositoryPeople, RepositoryHospital repositoryHospital, PeopleService peopleService) {
         this.repositoryPeople = repositoryPeople;
         this.repositoryHospital = repositoryHospital;
         this.peopleService = peopleService;
+    
     }
 
     @PostMapping
@@ -79,9 +82,17 @@ public class PeopleController {
     }
 
     @PutMapping("/{id}/state")
-    public ResponseEntity<Long> updateStatePatient(@PathVariable Long id, @RequestBody StatePatientRequest requestPeople) {
-        return peopleService.updateStatePatient(id, requestPeople.statusType(), requestPeople.justification(), requestPeople.date());
+    public ResponseEntity<Long> updateState(@PathVariable Long id, @RequestBody StatePatientRequest requestPeople){
+        peopleService.updateStatePatient(
+            id, 
+            requestPeople.statusType(),
+            requestPeople.justification(),
+            requestPeople.date()
+        );
+        return ResponseEntity.ok(id);
     }
+
+
 
     @PutMapping("/{id}/state/mistake")
     public ResponseEntity<Long> mistakeStatus(@PathVariable Long id, @RequestBody StatePatientRequest requestPeople) {

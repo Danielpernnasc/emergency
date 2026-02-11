@@ -126,18 +126,6 @@ public class FirtCareController {
         return responsePatiente(firstCare);
     }
 
-    @PutMapping("{id}/discharge")
-    public FirstCareResponse discharge(@PathVariable Long id) {
-        FirstCare firstCare = repositoryFirstCare.findById(id)
-                .orElseThrow(() -> new RuntimeException("FirstCare not found with id " + id));
-        careService.dischargePatient(firstCare);
-        repositoryFirstCare.save(firstCare);
-        if (!careService.canBeDiscarged(firstCare.getPeople(), firstCare)) {
-            throw new RuntimeException(
-                    "Patient cannot be discharged. Please ensure all necessary procedures are completed.");
-        }
-        return responsePatiente(firstCare);
-
-    }
+    
 
 }

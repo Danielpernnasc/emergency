@@ -136,34 +136,6 @@ public class CareService {
     }
 
     public boolean canBeDiscarged(People people, FirstCare firstCare) {
-        // String desc = people.getDescription().toLowerCase();
-        // boolean isGrave = desc.contains("dor no peito")
-        // || desc.contains("infarto")
-        // || desc.contains("acidente vascular cerebral")
-        // || desc.contains("derrame")
-        // || desc.contains("trauma perfurante");
-        // if (isGrave) {
-        // return false;
-        // }
-
-        // boolean isLeve = desc.contains("febre")
-        // || desc.contains("corte")
-        // || desc.contains("fratura")
-        // || desc.contains("dificuldade respiratória")
-        // || desc.contains("falta de ar");
-
-        // if (isLeve) {
-        // boolean hasMedicacao =
-        // firstCare.getProcedures().contains(CareofPacients.MEDICACAO)
-        // || firstCare.getProcedures().contains(CareofPacients.CURATIVO)
-        // || firstCare.getProcedures().contains(CareofPacients.SUTURA)
-        // || firstCare.getProcedures().contains(CareofPacients.IMOBILIZACAO)
-        // || firstCare.getProcedures().contains(CareofPacients.OXIGENIOTERAPIA);
-        // return hasMedicacao;
-        // }
-
-        // return CareStatus.ALTA.equals(firstCare.getCareStatus());
-
         boolean isGrave = people.getSeverity() == SeverityLevel.GRAVE;
         if (isGrave) {
             return false;
