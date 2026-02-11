@@ -140,6 +140,11 @@ public class People {
             throw new IllegalArgumentException("StatusType is required");
         }
         this.statusPatient = statusType;
+        
+        if (statusType != StatusType.MORTO) {
+            clearDeathInfo();   // 👈 REGRA DO DOMÍNIO
+        }
+
         this.statePatient = switch (statusType) {
             case ENFERMO -> new Sick();
             case INTERNADO -> new Interned();

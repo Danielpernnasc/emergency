@@ -46,7 +46,7 @@ public class PeopleService {
 
         people.changeStatus(newStatus);
         if (newStatus == StatusType.ENFERMO || newStatus == StatusType.INTERNADO) {
-            people.clearDeathInfo();
+            people.clearDeathInfo(); // 👈 REGRA DO DOMÍNIO
         }
         repositoryPeople.save(people);
         return true;
