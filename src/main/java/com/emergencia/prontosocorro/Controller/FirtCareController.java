@@ -70,7 +70,11 @@ public class FirtCareController {
                 hospital,
                 firstCareRequest.specialistMedic(),
                 comorbidities != null ? new HashSet<>(comorbidities) : new HashSet<>(),
-                CareStatus.EM_ATENDIMENTO);
+                CareStatus.EM_ATENDIMENTO,
+                firstCareRequest.getCidId() != null ? repositoryFirstCare.findAllById(firstCareRequest.getCidId())
+                        .orElseThrow(() -> new RuntimeException("CID not found with id " + firstCareRequest.getCidId())) : null
+                
+            );
 
         return repositoryFirstCare.save(firstCare);
     }

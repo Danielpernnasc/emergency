@@ -2,14 +2,12 @@ package com.emergencia.prontosocorro.Service;
 
 import java.time.LocalDateTime;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Domain.State.StatePatient;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
-import com.emergencia.prontosocorro.Service.DeathService;
+
 
 
 

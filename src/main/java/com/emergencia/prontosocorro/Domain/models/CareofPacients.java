@@ -1,5 +1,7 @@
 package com.emergencia.prontosocorro.Domain.models;
 
+
+
 public enum CareofPacients {
      MEDICACAO,
      CURATIVO,
@@ -9,6 +11,8 @@ public enum CareofPacients {
      OXIGENIOTERAPIA,
      CINTILOGRAFIA,
      EXAMES_IMAGEM,
-     CIRURGIA,
+     CIRURGIA,;
+
+   
 
 }

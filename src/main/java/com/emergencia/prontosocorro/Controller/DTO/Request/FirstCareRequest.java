@@ -12,10 +12,11 @@ public record FirstCareRequest(
     Long hospitalId,
     SpecialistMedic specialistMedic,
     List<ComorbidityType> comorbidities,
-    CareStatus careStatus
+    CareStatus careStatus,
+    Long cidId
 ) {
     public FirstCareRequest() {
-        this(null, null, null, null, null);
+        this(null, null, null, null, null, null);
     }
 
     public Long getPeopleId() {
@@ -41,6 +42,8 @@ public record FirstCareRequest(
         return comorbidities;
     }
 
-
+    public Long getCidId() {
+        return cidId;
+    }
    
 }

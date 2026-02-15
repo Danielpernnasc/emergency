@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-
+import com.emergencia.prontosocorro.Domain.Entity.CID;
 import com.emergencia.prontosocorro.Domain.models.CareStatus;
 import com.emergencia.prontosocorro.Domain.models.CareofPacients;
 import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
@@ -28,6 +28,10 @@ public class FirstCare {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "cid_code")
+    private CID cid;
 
     @ManyToOne
     @JoinColumn(name = "hospital_id")
@@ -63,7 +67,7 @@ public class FirstCare {
     // Required by JPA
     }
 
-    public FirstCare(People patient, Hospital hospital, SpecialistMedic specialistMedic,Set<ComorbidityType> comorbidities, CareStatus careStatus) {
+    public FirstCare(People patient, CID cid, Hospital hospital, SpecialistMedic specialistMedic,Set<ComorbidityType> comorbidities, CareStatus careStatus) {
         this.hospital = hospital;
         this.patient = patient;
         this.specialistMedic = specialistMedic;
@@ -71,6 +75,11 @@ public class FirstCare {
         this.careDateTime = LocalDateTime.now();
         this.comorbidities = comorbidities != null ? new HashSet<>(comorbidities) : new HashSet<>();
         this.procedures = new HashSet<>();
+    }
+
+    public FirstCare(People people, Hospital hospital2, SpecialistMedic specialistMedic2, Object object,
+            CareStatus emAtendimento, Object object2) {
+        //TODO Auto-generated constructor stub
     }
 
     /** Getters and Setters */
@@ -144,11 +153,31 @@ public class FirstCare {
         this.procedures.add(careofPacients);
     }
 
+
+    public void starterCare(){
+        this.careStatus = CareStatus.EM_ATENDIMENTO;
+    }
+
+    public void sendToSugery(){
+        if(careStatus != CareStatus.EM_ATENDIMENTO) {
+            throw new IllegalStateException("Paciente deve estar em atendimento para ser enviado para cirurgia");
+        }
+        this.careStatus = CareStatus.EM_CIRURGIA;
+    }
+
+    public void sendToObservation() {
+        this.careStatus = CareStatus.EM_OBSERVACAO;
+    }
+
     public void disCharge() {
         if (patient.getStatePatient().getStatusType().getState().equals("morto")) {
             throw new IllegalStateException("Paciente morto não recebe alta");
         }
         this.careStatus = CareStatus.ALTA;
+    }
+
+    public CID getCid() {
+        return cid;
     }
 
 }
