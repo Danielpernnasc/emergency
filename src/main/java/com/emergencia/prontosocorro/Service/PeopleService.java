@@ -50,14 +50,7 @@ public class PeopleService {
         return true;
     }
 
-   public void updateState(Long id, SeverityLevel severityLevel, String justification) {
-        People people = repositoryPeople.findById(id)
-            .orElseThrow(() -> new RuntimeException("People not found with id " + id));
-        people.changeStatus(severityLevel);
-        people.setSeverity(severityLevel);
-
-        repositoryPeople.save(people);
-    }
+   
 }
 
   

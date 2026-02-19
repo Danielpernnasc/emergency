@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.emergencia.prontosocorro.Controller.DTO.Request.DeathRequest;
 import com.emergencia.prontosocorro.Controller.DTO.Request.FirstCareRequest;
 import com.emergencia.prontosocorro.Controller.DTO.Request.StateEvolutionRequest;
+import com.emergencia.prontosocorro.Controller.DTO.Request.StatePatientRequest;
 import com.emergencia.prontosocorro.Controller.DTO.Response.FirstCareResponse;
 import com.emergencia.prontosocorro.Domain.FirstCare;
 import com.emergencia.prontosocorro.Domain.Hospital;
@@ -126,6 +128,16 @@ public class FirtCareController {
         return responsePatiente(firstCare);
 
     }
+
+    @PutMapping("/{id}/state")
+        public ResponseEntity<Long> updateState(
+            @PathVariable Long id,
+            @RequestBody StatePatientRequest request) {
+
+        careService.updateState(id, request.severityLevel(), null);
+        return ResponseEntity.ok(id);
+    }
+
 
     @PutMapping("{id}/evolution")
     public FirstCareResponse updateEvolution(

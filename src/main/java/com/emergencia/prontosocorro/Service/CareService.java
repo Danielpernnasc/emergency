@@ -147,6 +147,9 @@ public class CareService {
         if (newStatus != null) {
             firstCare.setCareStatus(newStatus);
         }
+
+        repositoryFirstCare.save(firstCare);
+        
     }
 
     private boolean isCriticalCare(FirstCare fc) {
@@ -159,6 +162,15 @@ public class CareService {
 
     private boolean hasProcedures(FirstCare fc) {
         return !fc.getProcedures().isEmpty();
+    }
+
+    public void updateState(Long id, SeverityLevel severityLevel, String justification) {
+        People people = repositoryPeople.findById(id)
+            .orElseThrow(() -> new RuntimeException("People not found with id " + id));
+        people.changeStatus(severityLevel);
+        people.setSeverity(severityLevel);
+
+        repositoryPeople.save(people);
     }
 
     public boolean canBeDiscarged(People people, FirstCare firstCare) {

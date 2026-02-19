@@ -89,25 +89,6 @@ public class PeopleController {
     }
 
 
-    @PutMapping("/{id}/state")
-        public ResponseEntity<Long> updateState(
-            @PathVariable Long id,
-            @RequestBody StatePatientRequest request) {
-
-        peopleService.updateState(id, request.severityLevel(), null);
-        return ResponseEntity.ok(id);
-    }
-
-    @PutMapping("/{id}/state/death")
-    public ResponseEntity<Long> patientWorsen(@PathVariable Long id, @RequestBody StatePatientRequest requestPeople){
-        peopleService.registerDeath(
-            id, 
-            requestPeople.justification(),
-            requestPeople.date()
-        );
-        return ResponseEntity.ok(id);
-    }
-
     @PutMapping("/{id}/state/mistake")
     public ResponseEntity<Long> mistakeStatus(@PathVariable Long id, @RequestBody StatePatientRequest requestPeople) {
         if (requestPeople.justification() == null || requestPeople.justification().trim().isEmpty()) {
