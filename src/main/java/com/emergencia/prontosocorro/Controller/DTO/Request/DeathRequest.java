@@ -1,5 +1,11 @@
 package com.emergencia.prontosocorro.Controller.DTO.Request;
 
-public record DeathRequest(String deathCause) {
+import java.time.LocalDateTime;
+
+public record DeathRequest(String deathCause, LocalDateTime deathTime) {
+
+    public LocalDateTime deathTime() {
+        return LocalDateTime.now();
+    }
 
 }

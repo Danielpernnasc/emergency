@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.emergencia.prontosocorro.Controller.DTO.Request.DeathRequest;
 import com.emergencia.prontosocorro.Controller.DTO.Request.FirstCareRequest;
 import com.emergencia.prontosocorro.Controller.DTO.Request.StateEvolutionRequest;
 import com.emergencia.prontosocorro.Controller.DTO.Response.FirstCareResponse;
@@ -138,11 +139,19 @@ public class FirtCareController {
             firstCare,
             requestEvolution.procedure(),
             requestEvolution.careStatus()   
-    );
+        );
 
         return responsePatiente(firstCare);
     }
 
-    
+    @PutMapping("{id}/register-death")
+    public FirstCareResponse registerDeath(@PathVariable Long id, @RequestBody DeathRequest deathRequest) {
+        FirstCare firstCare = repositoryFirstCare.findById(id)
+                .orElseThrow(() -> new RuntimeException("FirstCare not found with id " + id));
+
+        careService.registerDeath(firstCare, deathRequest.deathCause(), deathRequest.deathTime());
+
+        return responsePatiente(firstCare);
+    }
 
 }

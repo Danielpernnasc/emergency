@@ -182,7 +182,7 @@ public class People {
     }
 
     public void setStatusPatient(StatusType mapSeverityToStatus) {
-        this.statusPatient = mapSeverityToStatus;
+        
     }
 
 }

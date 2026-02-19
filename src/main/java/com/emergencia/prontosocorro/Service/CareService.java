@@ -1,5 +1,6 @@
 package com.emergencia.prontosocorro.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +31,9 @@ public class CareService {
     private final RepositoryPeople repositoryPeople;
     private final RepositoryFirstCare repositoryFirstCare;
     private final CIDClassifierService cidClassifierService;
-    private RepositoryCIDKeywordRule repositoryCIDKeywordRule;
+    private final RepositoryCIDKeywordRule repositoryCIDKeywordRule;
+
+
 
     public CareService(
             RepositoryFirstCare repositoryFirstCare,
@@ -42,27 +45,7 @@ public class CareService {
         this.repositoryFirstCare = repositoryFirstCare;
         this.repositoryCIDKeywordRule = repositoryCIDKeywordRule;
         this.cidClassifierService = cidClassifierService;
-    }
 
-
-    public void defineCID(FirstCare firstCare, CID cid){
-        if(firstCare == null || cid == null) {
-            throw new IllegalArgumentException("FirstCare must not be null");
-        }
-
-           firstCare.setCid(cid);
-            SeverityLevel severity = cid.getSeverityLevel();
-
-            
-            People people = firstCare.getPeople();
-
-            people.setSeverity(severity);
-            people.setStatusPatient(mapSeverityToStatus(severity));
-
-            applyProcedures(firstCare, null, null);
-
-            repositoryFirstCare.save(firstCare);
-            repositoryPeople.save(people);
     }
 
     public SpecialistMedic defineSpecialistMedic(String description) {
@@ -168,7 +151,6 @@ public class CareService {
 
     private boolean isCriticalCare(FirstCare fc) {
         return fc.getCareStatus() == CareStatus.EM_CIRURGIA;
-
     }
 
     private boolean isSevereCase(People p) {
@@ -191,10 +173,30 @@ public class CareService {
         careStatus == CareStatus.AGUARDANDO_ATENDIMENTO ||
         careStatus == CareStatus.EM_ATENDIMENTO ||
         careStatus == CareStatus.EM_OBSERVACAO) {
-          if (isCriticalCare(firstCare) || isSevereCase(people) || !hasProcedures(firstCare)) return false;
+          if (isCriticalCare(firstCare) || isSevereCase(people) || !hasProcedures(firstCare)) {
+              return false;
+          }
+        }else if(careStatus == CareStatus.ALTA || careStatus == CareStatus.OBITO) {
+            return true;
         }
 
         return !firstCare.getProcedures().isEmpty();
     }
+
+    public void registerDeath(FirstCare firstCare, String cause, LocalDateTime deathTime) {
+
+        People people = firstCare.getPeople();
+        if(people.getStatusPatient() == StatusType.MORTO) {
+            throw new IllegalStateException("Patient already dead");
+        }
+
+        people.registerDeath(cause, deathTime);
+
+        firstCare.setCareStatus(CareStatus.OBITO);
+           repositoryPeople.save(people);
+        repositoryFirstCare.save(firstCare);
+    }
+
+  
 
 }

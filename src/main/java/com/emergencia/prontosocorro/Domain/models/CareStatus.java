@@ -5,6 +5,7 @@ public enum CareStatus {
     EM_ATENDIMENTO,
     EM_CIRURGIA,
     EM_OBSERVACAO,
-    ALTA
+    ALTA,
+    OBITO
 
 }
