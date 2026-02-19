@@ -19,7 +19,6 @@ import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
-import com.emergencia.prontosocorro.Service.CareService;
 import com.emergencia.prontosocorro.Service.PeopleService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -31,15 +30,13 @@ public class PeopleController {
     private final RepositoryPeople repositoryPeople;
     private final RepositoryHospital repositoryHospital;
     private final PeopleService peopleService;
-    private final CareService careService;
+
   
 
-    public PeopleController(RepositoryPeople repositoryPeople, RepositoryHospital repositoryHospital, PeopleService peopleService, CareService careService) {
+    public PeopleController(RepositoryPeople repositoryPeople, RepositoryHospital repositoryHospital, PeopleService peopleService) {
         this.repositoryPeople = repositoryPeople;
         this.repositoryHospital = repositoryHospital;
         this.peopleService = peopleService;
-        this.careService = careService;
-    
     }
 
     @PostMapping
@@ -59,9 +56,7 @@ public class PeopleController {
 
         people.setSeverity(req.severityLevel());
 
-        people.changeStatus(
-                careService.mapSeverityToStatus(req.severityLevel())
-        );
+        people.changeStatus(req.severityLevel());
     }
 
     return repositoryPeople.save(people);
@@ -93,8 +88,18 @@ public class PeopleController {
             .orElseThrow(() -> new EntityNotFoundException("Pessoa não encontrada"));
     }
 
+
     @PutMapping("/{id}/state")
-    public ResponseEntity<Long> updateState(@PathVariable Long id, @RequestBody StatePatientRequest requestPeople){
+        public ResponseEntity<Long> updateState(
+            @PathVariable Long id,
+            @RequestBody StatePatientRequest request) {
+
+        peopleService.updateState(id, request.severityLevel(), null);
+        return ResponseEntity.ok(id);
+    }
+
+    @PutMapping("/{id}/state/death")
+    public ResponseEntity<Long> patientWorsen(@PathVariable Long id, @RequestBody StatePatientRequest requestPeople){
         peopleService.registerDeath(
             id, 
             requestPeople.justification(),
@@ -102,8 +107,6 @@ public class PeopleController {
         );
         return ResponseEntity.ok(id);
     }
-
-
 
     @PutMapping("/{id}/state/mistake")
     public ResponseEntity<Long> mistakeStatus(@PathVariable Long id, @RequestBody StatePatientRequest requestPeople) {

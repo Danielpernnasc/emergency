@@ -116,14 +116,22 @@ public class People {
     }
 
 
-    public void changeStatus(StatusType statusType) {
+    public void changeStatus(SeverityLevel newStatus) {
+        if (newStatus == null) {
+            throw new IllegalArgumentException("SeverityLevel is required");
+        }
 
-    if (statusType == null) {
-        throw new IllegalArgumentException("StatusType is required");
+        this.severity = newStatus;
+        this.statusPatient = switch (newStatus) {
+            case GRAVE -> StatusType.CRITICO;
+            case MODERADO -> StatusType.URGENTE;
+            case LEVE -> StatusType.ENFERMO;
+            case UTI -> StatusType.INTERNADO;
+        };
+    
     }
 
-        this.statusPatient = statusType;
-    }
+  
 
   public void registerDeath(String cause, LocalDateTime deathTime) {
 
@@ -180,6 +188,10 @@ public class People {
     public void setSeverity(SeverityLevel severity) {
         this.severity = severity;
 
+    }
+
+    public void setStatusPatient(StatusType mapSeverityToStatus) {
+        this.statusPatient = mapSeverityToStatus;
     }
 
 }

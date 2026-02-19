@@ -60,7 +60,7 @@ public class CareService {
             People people = firstCare.getPeople();
 
             people.setSeverity(severity);
-            people.changeStatus(mapSeverityToStatus(severity));
+            people.setStatusPatient(mapSeverityToStatus(severity));
 
             applyProcedures(firstCare, null);
 
@@ -130,7 +130,7 @@ public class CareService {
         if (cid != null) {
             SeverityLevel severity = cid.getSeverityLevel();
             savedPeople.setSeverity(severity);
-            savedPeople.changeStatus(mapSeverityToStatus(severity));
+            savedPeople.setStatusPatient(mapSeverityToStatus(severity));
         }
 
         System.out.println("CID detectado: " + (cid != null ? cid.getCode() : "NULL"));

@@ -69,9 +69,7 @@ public class FirtCareController {
 
         // ✅ Severidade automática via CID
         people.setSeverity(cid.getSeverityLevel());
-        people.changeStatus(
-                careService.mapSeverityToStatus(cid.getSeverityLevel())
-        );
+        people.changeStatus(cid.getSeverityLevel());
 
         repositoryPeople.save(people);
     }
