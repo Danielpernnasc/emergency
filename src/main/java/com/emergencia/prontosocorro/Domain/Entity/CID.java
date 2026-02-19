@@ -1,8 +1,11 @@
 package com.emergencia.prontosocorro.Domain.Entity;
 
+import java.util.Set;
+
 import com.emergencia.prontosocorro.Domain.models.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.models.SpecialistMedic;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,6 +16,7 @@ public class CID {
     @Id
     private String code;
 
+    @Column(nullable = false)
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -20,6 +24,8 @@ public class CID {
 
     @Enumerated(EnumType.STRING)
     private SpecialistMedic specialistMedic;
+
+
 
 
     protected CID() {
@@ -46,10 +52,17 @@ public class CID {
         this.description = trim;
      }
 
-     public CID getGroup() {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'getGroup'");
-     }
 
+     public SeverityLevel getSeverityLevel() {
+         return severityLevel;
+      }
+
+      public String getDescription() {
+         return description;
+      }
+
+      public Set<SpecialistMedic> getSpecialistMedic() {
+            return Set.of(specialistMedic);
+      }
 
 }

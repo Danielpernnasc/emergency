@@ -19,12 +19,14 @@ import com.emergencia.prontosocorro.Controller.DTO.Response.FirstCareResponse;
 import com.emergencia.prontosocorro.Domain.FirstCare;
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
+import com.emergencia.prontosocorro.Domain.Entity.CID;
 import com.emergencia.prontosocorro.Domain.models.CareStatus;
 import com.emergencia.prontosocorro.Domain.models.CareofPacients;
 import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
+import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
 import com.emergencia.prontosocorro.Service.CareService;
 
 @RestController
@@ -35,46 +37,52 @@ public class FirtCareController {
     private final RepositoryPeople repositoryPeople;
     private final RepositoryHospital repositoryHospital;
     private final RepositoryFirstCare repositoryFirstCare;
-
+    private final RepositoryCID repositoryCID;
+    
     public FirtCareController(
             CareService careService,
             RepositoryPeople repositoryPeople,
             RepositoryHospital repositoryHospital,
+            RepositoryCID repositoryCID,
             RepositoryFirstCare repositoryFirstCare) {
         this.careService = careService;
         this.repositoryPeople = repositoryPeople;
         this.repositoryHospital = repositoryHospital;
+        this.repositoryCID = repositoryCID;
         this.repositoryFirstCare = repositoryFirstCare;
     }
 
     @PostMapping
-    public FirstCare create(@RequestBody FirstCareRequest firstCareRequest) {
-        People people = repositoryPeople.findById(firstCareRequest.peopleId())
-                .orElseThrow(() -> new RuntimeException("People not found with id " + firstCareRequest.peopleId()));
+      public FirstCare create(@RequestBody FirstCareRequest req) {
 
-        Hospital hospital = repositoryHospital.findById(firstCareRequest.hospitalId())
-                .orElseThrow(() -> new RuntimeException("Hospital not found with id " + firstCareRequest.hospitalId()));
+        People people = repositoryPeople.findById(req.peopleId())
+                .orElseThrow(() -> new RuntimeException("People not found"));
 
-        List<ComorbidityType> comorbidities = firstCareRequest.comorbidities();
-        if ((comorbidities == null || comorbidities.isEmpty()) && firstCareRequest.getComorbidities() != null) {
-            comorbidities = new ArrayList<>();
-            comorbidities.addAll(firstCareRequest.getComorbidities());
-        }
-        if (comorbidities != null && !comorbidities.isEmpty()) {
-            people.setComorbidities(comorbidities);
-            repositoryPeople.save(people);
-        }
+        Hospital hospital = repositoryHospital.findById(req.hospitalId())
+                .orElseThrow(() -> new RuntimeException("Hospital not found"));
 
-        FirstCare firstCare = new FirstCare(
-                people,
-                hospital,
-                firstCareRequest.specialistMedic(),
-                comorbidities != null ? new HashSet<>(comorbidities) : new HashSet<>(),
-                CareStatus.EM_ATENDIMENTO,
-                firstCareRequest.getCidId() != null ? repositoryFirstCare.findAllById(firstCareRequest.getCidId())
-                        .orElseThrow(() -> new RuntimeException("CID not found with id " + firstCareRequest.getCidId())) : null
-                
-            );
+    CID cid = null;
+
+    if (req.cidCode() != null) {
+        cid = repositoryCID.findById(req.cidCode())  // 😈🔥
+                .orElseThrow(() -> new RuntimeException("CID not found"));
+
+        // ✅ Severidade automática via CID
+        people.setSeverity(cid.getSeverityLevel());
+        people.changeStatus(
+                careService.mapSeverityToStatus(cid.getSeverityLevel())
+        );
+
+        repositoryPeople.save(people);
+    }
+
+        FirstCare firstCare = new FirstCare();
+        firstCare.setPeople(people);
+        firstCare.setHospital(hospital);
+        firstCare.setCid(cid);
+        firstCare.setSpecialistMedic(req.specialistMedic());
+        firstCare.setCareStatus(req.careStatus());
+       
 
         return repositoryFirstCare.save(firstCare);
     }
@@ -92,7 +100,8 @@ public class FirtCareController {
                         fc.getPeople().getId(),
                         fc.getPeople().getName(),
                         fc.getHospital().getId(),
-                        fc.getHospital().getNameHospital()))
+                        fc.getHospital().getNameHospital(), 
+                        fc.getCid() != null ? fc.getCid().getCode() : null))
                 .toList();
     }
 
@@ -106,7 +115,9 @@ public class FirtCareController {
                 firstCare.getPeople().getId(),
                 firstCare.getPeople().getName(),
                 firstCare.getHospital().getId(),
-                firstCare.getHospital().getNameHospital());
+                firstCare.getHospital().getNameHospital(),
+                firstCare.getCid() != null ? firstCare.getCid().getCode() : null);
+          
     }
 
     @GetMapping("{id}")

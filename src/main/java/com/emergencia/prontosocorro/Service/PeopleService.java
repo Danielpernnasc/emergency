@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 import com.emergencia.prontosocorro.Domain.People;
-import com.emergencia.prontosocorro.Domain.State.StatePatient;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 
@@ -21,10 +20,10 @@ public class PeopleService {
         this.deathService = deathService;
     }
 
-    public StatePatient getStatePatientById(Long id) {
+    public StatusType getStatePatientById(Long id) {
         return repositoryPeople.findById(id)
                 .orElseThrow(() -> new RuntimeException("People not found with id " + id))
-                .getStatePatient();
+                .getStatusPatient();
     }
 
     public void registerDeath(Long id, String justification, LocalDateTime date) {

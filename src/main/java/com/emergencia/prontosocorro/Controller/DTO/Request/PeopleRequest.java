@@ -1,16 +1,18 @@
 package com.emergencia.prontosocorro.Controller.DTO.Request;
+import com.emergencia.prontosocorro.Domain.models.SeverityLevel;
 
 public record PeopleRequest(
     String name,
     int idade,
     String description,
-    String statepatient,
-    Long hospitalId
+    Long hospitalId,
+    SeverityLevel severityLevel
+
 
 ) {
 
     public PeopleRequest() {
-        this(null, 0, null, null, null);
+        this(null, 0, null, null,  null);
     }
        
 
@@ -29,5 +31,11 @@ public record PeopleRequest(
     public Long getHospitalId(){
         return hospitalId;
     }
+
+    public SeverityLevel getSeverityLevel() {
+        return severityLevel;
+    }
+
+
 
 }

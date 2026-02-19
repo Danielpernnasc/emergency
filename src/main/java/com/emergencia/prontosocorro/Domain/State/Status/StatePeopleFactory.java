@@ -12,6 +12,8 @@ public class StatePeopleFactory {
 
         return switch (lowerState) {
             case "enfermo" -> new Sick();
+            case "urgente" -> new Urgent();
+            case "critico" -> new Critical();
             case "morto" -> new Dead();
             case "internado" -> new Interned();
             default -> null;

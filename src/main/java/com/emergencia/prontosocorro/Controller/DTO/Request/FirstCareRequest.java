@@ -13,7 +13,7 @@ public record FirstCareRequest(
     SpecialistMedic specialistMedic,
     List<ComorbidityType> comorbidities,
     CareStatus careStatus,
-    Long cidId
+    String cidCode
 ) {
     public FirstCareRequest() {
         this(null, null, null, null, null, null);
@@ -32,18 +32,15 @@ public record FirstCareRequest(
     }
 
     public CareStatus getCareStatus() {
-        if(this.specialistMedic == null) {
-            return CareStatus.AGUARDANDO_ATENDIMENTO;
-        }
-        return CareStatus.EM_ATENDIMENTO; // Valor fixo para o status inicial
+        return CareStatus.EM_ATENDIMENTO; 
     }
 
     public List<ComorbidityType> getComorbidities() {
         return comorbidities;
     }
 
-    public Long getCidId() {
-        return cidId;
+    public String getCidCode() {
+        return cidCode;
     }
    
 }

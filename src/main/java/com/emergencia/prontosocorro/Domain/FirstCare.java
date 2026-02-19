@@ -9,6 +9,7 @@ import com.emergencia.prontosocorro.Domain.models.CareStatus;
 import com.emergencia.prontosocorro.Domain.models.CareofPacients;
 import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
 import com.emergencia.prontosocorro.Domain.models.SpecialistMedic;
+import com.emergencia.prontosocorro.Domain.models.StatusType;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -21,6 +22,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 
 @Entity
 public class FirstCare {
@@ -42,23 +44,40 @@ public class FirstCare {
 
     @Enumerated(EnumType.STRING)
     private SpecialistMedic specialistMedic;
-    @Enumerated(EnumType.STRING)
 
+    @Enumerated(EnumType.STRING)
     private CareStatus careStatus;
-    @Column(name = "care_date_time")
+
+    @Column(name = "care_date_time", nullable = false)
     private LocalDateTime careDateTime;
 
     @Enumerated(EnumType.STRING)
     private ComorbidityType comorbidityType;
 
     @ElementCollection
+    @CollectionTable(name = "first_care_cares_status", joinColumns = @JoinColumn(name = "first_care_id"))
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "care_status")
+    private Set<CareStatus> care_status = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(name = "first_care_specialist_medics", joinColumns = @JoinColumn(name = "first_care_id"))
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "specialist_medic")
+    private Set<SpecialistMedic> specialist_medics = new HashSet<>();
+
+    @ElementCollection
     @CollectionTable(name = "first_care_comorbidities", joinColumns = @JoinColumn(name = "first_care_id"))
+
     @Enumerated(EnumType.STRING)
     @Column(name = "comorbidity")
     private Set<ComorbidityType> comorbidities = new HashSet<>();
 
     @ElementCollection(targetClass = CareofPacients.class)
     @CollectionTable(name = "first_care_procedures", joinColumns = @JoinColumn(name = "first_care_id"))
+
     @Enumerated(EnumType.STRING)
     @Column(name = "care_procedure")
     private Set<CareofPacients> procedures = new HashSet<>();
@@ -67,20 +86,18 @@ public class FirstCare {
     // Required by JPA
     }
 
-    public FirstCare(People patient, CID cid, Hospital hospital, SpecialistMedic specialistMedic,Set<ComorbidityType> comorbidities, CareStatus careStatus) {
+    public FirstCare(People patient, CID cid, Hospital hospital, Set<SpecialistMedic> specialist_medics, Set<ComorbidityType> comorbidities, Set<CareStatus> care_status) {
         this.hospital = hospital;
         this.patient = patient;
-        this.specialistMedic = specialistMedic;
-        this.careStatus = careStatus;
+        this.specialist_medics = specialist_medics != null ? new HashSet<>(specialist_medics) : new HashSet<>();
+        this.care_status = care_status != null ? new HashSet<>(care_status) : new HashSet<>();
         this.careDateTime = LocalDateTime.now();
         this.comorbidities = comorbidities != null ? new HashSet<>(comorbidities) : new HashSet<>();
         this.procedures = new HashSet<>();
     }
+  
 
-    public FirstCare(People people, Hospital hospital2, SpecialistMedic specialistMedic2, Object object,
-            CareStatus emAtendimento, Object object2) {
-        //TODO Auto-generated constructor stub
-    }
+	
 
     /** Getters and Setters */
 
@@ -117,8 +134,19 @@ public class FirstCare {
         this.specialistMedic = specialistMedic;
     }
 
+    public void setSpecialist_Medic(Set<SpecialistMedic> specialist_medics) {
+        this.specialist_medics = specialist_medics != null ? new HashSet<>(specialist_medics) : new HashSet<>();
+    }
+
     public LocalDateTime getCareDateTime() {
         return careDateTime;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (careDateTime == null) {
+            careDateTime = LocalDateTime.now();
+        }
     }
 
     public CareStatus getCareStatus() {
@@ -127,6 +155,10 @@ public class FirstCare {
 
     public void setCareStatus(CareStatus careStatus) {
         this.careStatus = careStatus;
+    }
+
+    public void setCare_Status(Set<CareStatus> care_status) {
+        this.care_status = care_status != null ? new HashSet<>(care_status) : new HashSet<>();
     }
 
     public Set<CareofPacients> getProcedures() {
@@ -153,7 +185,6 @@ public class FirstCare {
         this.procedures.add(careofPacients);
     }
 
-
     public void starterCare(){
         this.careStatus = CareStatus.EM_ATENDIMENTO;
     }
@@ -170,7 +201,7 @@ public class FirstCare {
     }
 
     public void disCharge() {
-        if (patient.getStatePatient().getStatusType().getState().equals("morto")) {
+        if (patient.getStatusPatient().equals(StatusType.MORTO)) {
             throw new IllegalStateException("Paciente morto não recebe alta");
         }
         this.careStatus = CareStatus.ALTA;
@@ -178,6 +209,10 @@ public class FirstCare {
 
     public CID getCid() {
         return cid;
+    }
+
+    public void setCid(CID cid) {
+        this.cid = cid;
     }
 
 }

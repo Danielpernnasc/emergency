@@ -19,7 +19,7 @@ import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
-import com.emergencia.prontosocorro.Service.DeathService;
+import com.emergencia.prontosocorro.Service.CareService;
 import com.emergencia.prontosocorro.Service.PeopleService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -31,30 +31,42 @@ public class PeopleController {
     private final RepositoryPeople repositoryPeople;
     private final RepositoryHospital repositoryHospital;
     private final PeopleService peopleService;
+    private final CareService careService;
   
 
-    public PeopleController(RepositoryPeople repositoryPeople, RepositoryHospital repositoryHospital, PeopleService peopleService) {
+    public PeopleController(RepositoryPeople repositoryPeople, RepositoryHospital repositoryHospital, PeopleService peopleService, CareService careService) {
         this.repositoryPeople = repositoryPeople;
         this.repositoryHospital = repositoryHospital;
         this.peopleService = peopleService;
+        this.careService = careService;
     
     }
 
     @PostMapping
-    People create(@RequestBody PeopleRequest peopleRequest) {
-     
-        Hospital hospital = repositoryHospital.findById(peopleRequest.hospitalId())
-                .orElseThrow(() -> new RuntimeException("Hospital not found with id " + peopleRequest.hospitalId()));
-        
-  
-        People people = new People();
-        people.setName(peopleRequest.name());
-        people.setAge(peopleRequest.idade());
-        people.setDescription(peopleRequest.description());
-        people.setHospital(hospital);
-        people.changeStatus(StatusType.ENFERMO);
-        return repositoryPeople.save(people);
+    public People create(@RequestBody PeopleRequest req) {
+
+    Hospital hospital = repositoryHospital.findById(req.hospitalId())
+            .orElseThrow(() -> new RuntimeException(
+                    "Hospital not found with id " + req.hospitalId()));
+
+    People people = new People();
+    people.setName(req.name());
+    people.setAge(req.idade());
+    people.setDescription(req.description());
+    people.setHospital(hospital);
+
+    if (req.severityLevel() != null) {
+
+        people.setSeverity(req.severityLevel());
+
+        people.changeStatus(
+                careService.mapSeverityToStatus(req.severityLevel())
+        );
     }
+
+    return repositoryPeople.save(people);
+}
+
 
     @GetMapping
     public List<PeopleResponse> findAll() {
