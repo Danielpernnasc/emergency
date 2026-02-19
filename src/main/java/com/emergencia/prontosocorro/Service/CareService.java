@@ -27,20 +27,17 @@ import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 @Service
 public class CareService {
 
-    private final RegretsMedicService regretsMedicService;
     private final RepositoryPeople repositoryPeople;
     private final RepositoryFirstCare repositoryFirstCare;
     private final CIDClassifierService cidClassifierService;
     private RepositoryCIDKeywordRule repositoryCIDKeywordRule;
 
     public CareService(
-            RegretsMedicService regretsMedicService,
             RepositoryFirstCare repositoryFirstCare,
             RepositoryPeople repositoryPeople,
             RepositoryCIDKeywordRule repositoryCIDKeywordRule,
             CIDClassifierService cidClassifierService
         ) {
-        this.regretsMedicService = regretsMedicService;
         this.repositoryPeople = repositoryPeople;
         this.repositoryFirstCare = repositoryFirstCare;
         this.repositoryCIDKeywordRule = repositoryCIDKeywordRule;
@@ -62,7 +59,7 @@ public class CareService {
             people.setSeverity(severity);
             people.setStatusPatient(mapSeverityToStatus(severity));
 
-            applyProcedures(firstCare, null);
+            applyProcedures(firstCare, null, null);
 
             repositoryFirstCare.save(firstCare);
             repositoryPeople.save(people);
@@ -135,12 +132,8 @@ public class CareService {
 
         System.out.println("CID detectado: " + (cid != null ? cid.getCode() : "NULL"));
 
-        Object medicResult = regretsMedicService.defineSepSpecialistMedic(savedPeople);
-        if (!(medicResult instanceof SpecialistMedic)) {
-            throw new IllegalStateException("Expected SpecialistMedic from defineSepSpecialistMedic");
-        }
-        SpecialistMedic specialistMedic = (SpecialistMedic) medicResult;
-
+        SpecialistMedic specialistMedic = defineSpecialistMedic(savedPeople.getDescription());
+    
         FirstCare firstCare = new FirstCare();
         firstCare.setPeople(savedPeople);
         firstCare.setHospital(hospital);
@@ -158,28 +151,24 @@ public class CareService {
         firstCare.disCharge();
     }
 
-    public void applyProcedures(FirstCare firstCare, Set<CareofPacients> proceduresToAdd) {
+    public void applyProcedures(FirstCare firstCare, Set<CareofPacients> proceduresToAdd, CareStatus newStatus) {
+        
         if (firstCare == null) {
             throw new IllegalArgumentException("FirstCare must not be null");
         }
 
-        CID cid = firstCare.getCid();
-        if (cid == null) {
-            throw new IllegalArgumentException("CID must not be null");
+         if (proceduresToAdd != null) {
+            firstCare.getProcedures().addAll(proceduresToAdd);
         }
 
-
-        String groupCode = firstCare.getCid().getCode();
-        if (groupCode.length() > 3) {
-            groupCode = groupCode.substring(0, 3);
+        if (newStatus != null) {
+            firstCare.setCareStatus(newStatus);
         }
-
-
     }
 
     private boolean isCriticalCare(FirstCare fc) {
-        return fc.getCareStatus() == CareStatus.EM_CIRURGIA
-            || fc.getCareStatus() == CareStatus.AGUARDANDO_ATENDIMENTO;
+        return fc.getCareStatus() == CareStatus.EM_CIRURGIA;
+
     }
 
     private boolean isSevereCase(People p) {

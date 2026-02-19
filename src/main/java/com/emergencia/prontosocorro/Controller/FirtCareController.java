@@ -133,9 +133,13 @@ public class FirtCareController {
         FirstCare firstCare = repositoryFirstCare.findById(id)
                 .orElseThrow(() -> new RuntimeException("FirstCare not found with id " + id));
 
-        Set<CareofPacients> procedures = requestEvolution.procedure();
-        careService.applyProcedures(firstCare, procedures);
-        repositoryFirstCare.save(firstCare);
+    
+        careService.applyProcedures(
+            firstCare,
+            requestEvolution.procedure(),
+            requestEvolution.careStatus()   
+    );
+
         return responsePatiente(firstCare);
     }
 

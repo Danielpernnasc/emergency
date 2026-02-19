@@ -42,7 +42,6 @@ public class People {
     @JoinColumn(name = "hospital_id", nullable = false)
     private Hospital hospital;
 
-    private String deathCause;
     @Column(name = "death_date_time")
     private LocalDateTime deathTime;
 
@@ -131,8 +130,6 @@ public class People {
     
     }
 
-  
-
   public void registerDeath(String cause, LocalDateTime deathTime) {
 
     if (this.statusPatient == StatusType.MORTO) {
@@ -140,7 +137,6 @@ public class People {
     }
 
     this.statusPatient = StatusType.MORTO;
-    this.deathCause = cause;
     this.deathTime = deathTime != null ? deathTime : LocalDateTime.now();
 }
 
@@ -148,10 +144,7 @@ public class People {
         return statusPatient;
     }
 
-   
-
     public void clearDeathInfo() {
-        this.deathCause = null;
         this.deathTime = null;
     }
 
@@ -182,8 +175,6 @@ public class People {
     public SeverityLevel getSeverity() {
         return severity;
     }
-
-
 
     public void setSeverity(SeverityLevel severity) {
         this.severity = severity;
