@@ -8,6 +8,8 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import com.emergencia.prontosocorro.Controller.DTO.Request.FirstCareRequest;
+import com.emergencia.prontosocorro.Controller.DTO.Request.PeopleRequest;
 import com.emergencia.prontosocorro.Domain.FirstCare;
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
@@ -22,29 +24,27 @@ import com.emergencia.prontosocorro.Domain.models.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryCIDKeywordRule;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
-
-
+import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
 
 @Service
 public class CareService {
 
     private final RepositoryPeople repositoryPeople;
     private final RepositoryFirstCare repositoryFirstCare;
-    private final CIDClassifierService cidClassifierService;
+    private final RepositoryCID repositoryCID;
     private final RepositoryCIDKeywordRule repositoryCIDKeywordRule;
-
-
 
     public CareService(
             RepositoryFirstCare repositoryFirstCare,
             RepositoryPeople repositoryPeople,
             RepositoryCIDKeywordRule repositoryCIDKeywordRule,
-            CIDClassifierService cidClassifierService
+            RepositoryCID repositoryCID
         ) {
         this.repositoryPeople = repositoryPeople;
         this.repositoryFirstCare = repositoryFirstCare;
         this.repositoryCIDKeywordRule = repositoryCIDKeywordRule;
-        this.cidClassifierService = cidClassifierService;
+        this.repositoryCID = repositoryCID;
+
 
     }
 
@@ -66,6 +66,16 @@ public class CareService {
         return SpecialistMedic.CLINICAL_MEDICINE;
     }
 
+    public CareStatus mapStatusTypeToCareStatus(StatusType statusType) {
+        return switch (statusType) {
+            case ENFERMO -> CareStatus.AGUARDANDO_ATENDIMENTO;
+            case URGENTE -> CareStatus.EM_ATENDIMENTO;
+            case CRITICO -> CareStatus.EM_CIRURGIA;
+            case INTERNADO -> CareStatus.EM_OBSERVACAO;
+            case MORTO -> CareStatus.OBITO;
+            default -> throw new IllegalArgumentException("Unexpected value: " + statusType);
+        };
+    }
     public StatusType mapSeverityToStatus(SeverityLevel severity) {
       
         return switch (severity) {
@@ -76,7 +86,7 @@ public class CareService {
         };
     }
 
-    public FirstCare createFirstCare(People people, Hospital hospital) {
+    public FirstCare createFirstCare(People people, Hospital hospital, FirstCareRequest req) {
         // Lógica para criar um atendimento inicial
         if (people == null || hospital == null) {
             throw new IllegalArgumentException("People and Hospital must not be null");
@@ -86,15 +96,8 @@ public class CareService {
             throw new IllegalArgumentException("StatePatient must not be null");
         }
 
-        StatusType patientStatus = people.getStatusPatient();
-        if (patientStatus == StatusType.MORTO) {
-            throw new IllegalStateException("Patient is not in a state to receive care");
-        }
 
-        if (patientStatus == StatusType.MORTO) {
-            throw new IllegalStateException(
-                    "Dead people do not receive hospital care");
-        }
+       
 
         List<ComorbidityType> comorbidities = people.getComorbidities();
         if (comorbidities == null || comorbidities.isEmpty()) {
@@ -103,29 +106,30 @@ public class CareService {
             people.setComorbidities(comorbidities);
         }
 
-        People savedPeople = repositoryPeople.save(people);
+        people.ensureAlive();
 
-        CID cid = cidClassifierService.classify(savedPeople.getDescription());
+        CID cid = null;
 
-        if (cid != null) {
-            SeverityLevel severity = cid.getSeverityLevel();
-            savedPeople.setSeverity(severity);
-            savedPeople.setStatusPatient(mapSeverityToStatus(severity));
+        if (req.cidCode() != null) {
+
+            cid = repositoryCID.findById(req.cidCode())
+                    .orElseThrow(() -> new RuntimeException("CID not found"));
+
+            people.setSeverity(cid.getSeverityLevel());
+            people.changeStatus(cid.getSeverityLevel());
         }
 
-        System.out.println("CID detectado: " + (cid != null ? cid.getCode() : "NULL"));
+        repositoryPeople.save(people);
 
-        SpecialistMedic specialistMedic = defineSpecialistMedic(savedPeople.getDescription());
-    
         FirstCare firstCare = new FirstCare();
-        firstCare.setPeople(savedPeople);
+        firstCare.setPeople(people);
         firstCare.setHospital(hospital);
         firstCare.setCid(cid);
-        firstCare.setSpecialistMedic(specialistMedic);
-        firstCare.setComorbidities(savedPeople.getComorbidities() != null ? new HashSet<>(savedPeople.getComorbidities()) : new HashSet<>());
-        firstCare.setCareStatus(CareStatus.EM_ATENDIMENTO);
+        firstCare.setSpecialistMedic(req.specialistMedic());
+        firstCare.setCareStatus(req.careStatus());
+
         return repositoryFirstCare.save(firstCare);
-    }
+        }
 
     public void dischargePatient(FirstCare firstCare) {
         if (firstCare == null) {
@@ -134,7 +138,8 @@ public class CareService {
         firstCare.disCharge();
     }
 
-    public void applyProcedures(FirstCare firstCare, Set<CareofPacients> proceduresToAdd, CareStatus newStatus) {
+
+    public void applyProcedures(Long id, FirstCare firstCare, Set<CareofPacients> proceduresToAdd, CareStatus newStatus) {
         
         if (firstCare == null) {
             throw new IllegalArgumentException("FirstCare must not be null");
@@ -148,8 +153,20 @@ public class CareService {
             firstCare.setCareStatus(newStatus);
         }
 
-        repositoryFirstCare.save(firstCare);
+         firstCare.getPeople().ensureAlive();
         
+        repositoryFirstCare.save(firstCare);
+    }
+
+    private StatusType mapCareStatusToStatusType(CareStatus careStatus) {
+        return switch (careStatus) {
+            case AGUARDANDO_ATENDIMENTO -> StatusType.ENFERMO;
+            case EM_ATENDIMENTO -> StatusType.URGENTE;
+            case EM_CIRURGIA -> StatusType.CRITICO;
+            case EM_OBSERVACAO -> StatusType.URGENTE;
+            case ALTA -> StatusType.ENFERMO;
+            case OBITO -> StatusType.MORTO;
+        };
     }
 
     private boolean isCriticalCare(FirstCare fc) {
@@ -164,15 +181,7 @@ public class CareService {
         return !fc.getProcedures().isEmpty();
     }
 
-    public void updateState(Long id, SeverityLevel severityLevel, String justification) {
-        People people = repositoryPeople.findById(id)
-            .orElseThrow(() -> new RuntimeException("People not found with id " + id));
-        people.changeStatus(severityLevel);
-        people.setSeverity(severityLevel);
-
-        repositoryPeople.save(people);
-    }
-
+  
     public boolean canBeDiscarged(People people, FirstCare firstCare) {
         boolean isGrave = people.getSeverity() == SeverityLevel.GRAVE;
         if (isGrave) {
@@ -196,7 +205,7 @@ public class CareService {
     }
 
     public void registerDeath(FirstCare firstCare, String cause, LocalDateTime deathTime) {
-
+        firstCare.getPeople().ensureAlive();
         People people = firstCare.getPeople();
         if(people.getStatusPatient() == StatusType.MORTO) {
             throw new IllegalStateException("Patient already dead");
@@ -208,7 +217,4 @@ public class CareService {
            repositoryPeople.save(people);
         repositoryFirstCare.save(firstCare);
     }
-
-  
-
 }

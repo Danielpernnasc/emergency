@@ -6,6 +6,7 @@ public enum StatusType {
     INTERNADO("internado"),
     URGENTE("urgente"),
     CRITICO("critico"),
+    FORA_PERIGO("fora de perigo"),
     MORTO("morto");
 
     private final String state;

@@ -1,18 +1,23 @@
 package com.emergencia.prontosocorro.Controller.DTO.Request;
+import java.util.List;
+
+import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
 import com.emergencia.prontosocorro.Domain.models.SeverityLevel;
+
 
 public record PeopleRequest(
     String name,
     int idade,
     String description,
     Long hospitalId,
-    SeverityLevel severityLevel
+    SeverityLevel severityLevel,
+    List<ComorbidityType> comorbidities
 
 
 ) {
 
     public PeopleRequest() {
-        this(null, 0, null, null,  null);
+        this(null, 0, null, null, null, null);
     }
        
 
@@ -35,6 +40,14 @@ public record PeopleRequest(
     public SeverityLevel getSeverityLevel() {
         return severityLevel;
     }
+
+    public List<ComorbidityType> comorbidities() {
+        return comorbidities;
+    }
+
+  
+
+
 
 
 

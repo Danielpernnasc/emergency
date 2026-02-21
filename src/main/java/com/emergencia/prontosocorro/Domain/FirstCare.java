@@ -96,11 +96,6 @@ public class FirstCare {
         this.procedures = new HashSet<>();
     }
   
-
-	
-
-    /** Getters and Setters */
-
     public Long getId() {
         return id;
     }
@@ -183,21 +178,6 @@ public class FirstCare {
 
     public void addProcedures(CareofPacients careofPacients) {
         this.procedures.add(careofPacients);
-    }
-
-    public void starterCare(){
-        this.careStatus = CareStatus.EM_ATENDIMENTO;
-    }
-
-    public void sendToSugery(){
-        if(careStatus != CareStatus.EM_ATENDIMENTO) {
-            throw new IllegalStateException("Paciente deve estar em atendimento para ser enviado para cirurgia");
-        }
-        this.careStatus = CareStatus.EM_CIRURGIA;
-    }
-
-    public void sendToObservation() {
-        this.careStatus = CareStatus.EM_OBSERVACAO;
     }
 
     public void disCharge() {

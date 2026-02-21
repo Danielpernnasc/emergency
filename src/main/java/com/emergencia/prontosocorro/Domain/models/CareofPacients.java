@@ -12,7 +12,7 @@ public enum CareofPacients {
      OXIGENIOTERAPIA,
      CINTILOGRAFIA,
      EXAMES_IMAGEM,
-     CIRURGIA,;
+     CIRURGIA;
 
      private Set<CareofPacients> procedures;
 

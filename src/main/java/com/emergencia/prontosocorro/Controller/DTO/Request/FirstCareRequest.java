@@ -31,9 +31,10 @@ public record FirstCareRequest(
         return specialistMedic;
     }
 
-    public CareStatus getCareStatus() {
-        return CareStatus.EM_ATENDIMENTO; 
-    }
+ 
+public CareStatus getCareStatus() {
+    return careStatus;
+}
 
     public List<ComorbidityType> getComorbidities() {
         return comorbidities;
@@ -41,6 +42,17 @@ public record FirstCareRequest(
 
     public String getCidCode() {
         return cidCode;
+    }
+
+    public FirstCareRequest toPeopleRequest() {
+        return new FirstCareRequest(
+            this.peopleId,
+            this.hospitalId,
+            this.specialistMedic,
+            this.comorbidities,
+            this.careStatus,
+            this.cidCode
+        );
     }
    
 }

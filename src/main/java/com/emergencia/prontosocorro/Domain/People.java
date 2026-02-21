@@ -4,10 +4,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
 import com.emergencia.prontosocorro.Domain.models.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
-import com.emergencia.prontosocorro.Service.CareService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -73,7 +75,6 @@ public class People {
 
     }
 
-
     public Long getId() {
         return id;
     }
@@ -114,7 +115,6 @@ public class People {
             severity = SeverityLevel.LEVE;
     }
 
-
     public void changeStatus(SeverityLevel newStatus) {
         if (newStatus == null) {
             throw new IllegalArgumentException("SeverityLevel is required");
@@ -127,10 +127,9 @@ public class People {
             case LEVE -> StatusType.ENFERMO;
             case UTI -> StatusType.INTERNADO;
         };
-    
     }
 
-  public void registerDeath(String cause, LocalDateTime deathTime) {
+    public void registerDeath(String cause, LocalDateTime deathTime) {
 
     if (this.statusPatient == StatusType.MORTO) {
         throw new IllegalStateException("Patient already dead");
@@ -138,7 +137,7 @@ public class People {
 
     this.statusPatient = StatusType.MORTO;
     this.deathTime = deathTime != null ? deathTime : LocalDateTime.now();
-}
+    }
 
     public StatusType getStatusPatient() {
         return statusPatient;
@@ -178,11 +177,18 @@ public class People {
 
     public void setSeverity(SeverityLevel severity) {
         this.severity = severity;
-
     }
 
-    public void setStatusPatient(StatusType mapSeverityToStatus) {
-        
+    public void setStatusPatient(StatusType statusPatient) {
+        this.statusPatient = statusPatient;
     }
 
+    public void ensureAlive(){
+         if (this.getStatusPatient() == StatusType.MORTO) {
+            throw new ResponseStatusException(
+            HttpStatus.CONFLICT,
+            "Cannot register death for deceased patient");
+        }
+
+    }
 }

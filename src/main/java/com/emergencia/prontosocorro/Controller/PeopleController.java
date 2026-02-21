@@ -40,7 +40,7 @@ public class PeopleController {
     }
 
     @PostMapping
-    public People create(@RequestBody PeopleRequest req) {
+    public ResponseEntity<People> create(@RequestBody PeopleRequest req) {
 
     Hospital hospital = repositoryHospital.findById(req.hospitalId())
             .orElseThrow(() -> new RuntimeException(
@@ -59,7 +59,11 @@ public class PeopleController {
         people.changeStatus(req.severityLevel());
     }
 
-    return repositoryPeople.save(people);
+    if(people.getStatusPatient() == StatusType.MORTO) {
+        return ResponseEntity.status(409).build();
+    }
+
+    return ResponseEntity.ok(repositoryPeople.save(people));
 }
 
 
@@ -103,7 +107,7 @@ public class PeopleController {
         if (result) {
             return ResponseEntity.ok(id);
         } else {
-            return ResponseEntity.status(409).build(); // Conflito, não permitido   
+            return ResponseEntity.status(409).build(); 
         }
     }
     
