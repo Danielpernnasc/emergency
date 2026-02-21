@@ -88,8 +88,8 @@ public class PeopleController {
 
     @GetMapping("{id}")
     public People findById(@PathVariable Long id) {
-        return repositoryPeople.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Pessoa não encontrada"));
+        return peopleService.getStatePatientById(id);
+    
     }
 
 

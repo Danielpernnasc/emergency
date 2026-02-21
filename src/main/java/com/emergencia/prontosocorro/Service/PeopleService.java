@@ -21,10 +21,9 @@ public class PeopleService {
         this.deathService = deathService;
     }
 
-    public StatusType getStatePatientById(Long id) {
+    public People getStatePatientById(Long id) {
         return repositoryPeople.findById(id)
-                .orElseThrow(() -> new RuntimeException("People not found with id " + id))
-                .getStatusPatient();
+                .orElseThrow(() -> new RuntimeException("People not found with id " + id));
     }
 
     public void registerDeath(Long id, String justification, LocalDateTime date) {

@@ -41,7 +41,6 @@ public class CIDKeywordRule {
         this.specialistMedic = specialistMedic;
     }
 
-
     public Long getId() {
         return id;
     }
