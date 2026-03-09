@@ -3,8 +3,12 @@ package com.emergencia.prontosocorro.Service;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
+
+import com.emergencia.prontosocorro.Controller.DTO.Request.PeopleRequest;
+import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
+import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 
 
@@ -14,10 +18,21 @@ import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 public class PeopleService {
       private final RepositoryPeople repositoryPeople;
       private final DeathService deathService;
+      private final RepositoryHospital repositoryHospital;
 
-    public PeopleService(RepositoryPeople repositoryPeople, DeathService deathService) {
+    public PeopleService(RepositoryPeople repositoryPeople, DeathService deathService, RepositoryHospital repositoryHospital) {
         this.repositoryPeople = repositoryPeople;
         this.deathService = deathService;
+        this.repositoryHospital = repositoryHospital;
+    }
+
+    public People createPatient(People people, PeopleRequest reqPeople) {
+        Hospital hospital = repositoryHospital.findById(reqPeople.hospitalId())
+                .orElseThrow(() -> new RuntimeException(
+                        "Hospital not found with id " + reqPeople.hospitalId()));
+        people.setHospital(hospital);
+        people.setStatusPatient(StatusType.ENFERMO);
+        return repositoryPeople.save(people);
     }
 
     public People getStatePatientById(Long id) {

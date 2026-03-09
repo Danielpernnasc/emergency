@@ -13,6 +13,7 @@ import com.emergencia.prontosocorro.Domain.models.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -50,7 +51,11 @@ public class People {
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
-    @Column(name = "comorbidities", length = 50)
+    @CollectionTable(
+        name = "people_comorbidities",
+        joinColumns = @JoinColumn(name = "people_id")
+    )
+    @Column(name = "comorbidities")
     private List<ComorbidityType> comorbidities;
 
     @Enumerated(EnumType.STRING)
@@ -66,12 +71,12 @@ public class People {
         // obrigatório para JPA
     }
 
-      public People(String name, int idade, String description, Hospital hospital, ComorbidityType comorbities, StatusType statusPatient, SeverityLevel severity) {
+      public People(String name, int idade, String description, Hospital hospital, StatusType statusPatient, SeverityLevel severity) {
         this.name = name;
         this.idade = idade;
         this.description = description;
         this.hospital = hospital;
-        this.comorbidities.add(comorbities);
+
         this.statusPatient = statusPatient;
         this.severity = severity;
 
@@ -108,18 +113,6 @@ public class People {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public ComorbidityType getComorbidity() {
-        return comorbidities != null && !comorbidities.isEmpty() ? comorbidities.get(0) : null;
-    }
-
-    public void setComorbidity(ComorbidityType comorbidity) {
-        if (this.comorbidities == null) {
-            this.comorbidities = new ArrayList<>();
-        }
-        this.comorbidities.add(comorbidity);
-    }
-
 
     public void changeStatus(SeverityLevel newStatus) {
         if (newStatus == null) {

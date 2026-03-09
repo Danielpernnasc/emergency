@@ -66,29 +66,24 @@ public class FirtCareController {
 
     @GetMapping
     public List<FirstCareResponse> findAll() {
+          System.out.println("ENTROU NO FIND ALL 🚑");
         return repositoryFirstCare.findAll()
+        
                 .stream()
-                .map(fc -> new FirstCareResponse(
-                        fc.getId(),
-                        fc.getCareStatus(),
-                        fc.getSpecialistMedic(),
-                        fc.getCareDateTime(),
-                        fc.getComorbidities() != null ? new ArrayList<>(fc.getComorbidities()) : new ArrayList<>(),
-                        fc.getPeople().getId(),
-                        fc.getPeople().getName(),
-                        fc.getHospital().getId(),
-                        fc.getHospital().getNameHospital(), 
-                        fc.getCid() != null ? fc.getCid().getCode() : null))
+                .map(this::responsePatiente)
                 .toList();
     }
 
     private FirstCareResponse responsePatiente(FirstCare firstCare) {
+
         return new FirstCareResponse(
                 firstCare.getId(),
                 firstCare.getCareStatus(),
                 firstCare.getSpecialistMedic(),
                 firstCare.getCareDateTime(),
-                firstCare.getComorbidities() != null ? new ArrayList<>(firstCare.getComorbidities()) : new ArrayList<>(),
+               firstCare.getPeople().getComorbidities() != null 
+                ? new ArrayList<>(firstCare.getPeople().getComorbidities()) 
+                : new ArrayList<>(),
                 firstCare.getPeople().getId(),
                 firstCare.getPeople().getName(),
                 firstCare.getHospital().getId(),

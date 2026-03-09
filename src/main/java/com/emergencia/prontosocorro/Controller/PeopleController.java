@@ -38,32 +38,17 @@ public class PeopleController {
     }
 
     @PostMapping
-    public ResponseEntity<People> create(@RequestBody PeopleRequest req) {
+    public ResponseEntity<People> createPatient(@RequestBody PeopleRequest req) {
 
-            Hospital hospital = repositoryHospital.findById(req.hospitalId())
-            .orElseThrow(() -> new RuntimeException(
-                    "Hospital not found with id " + req.hospitalId()));
+        People people = new People();
+        people.setName(req.name());
+        people.setAge(req.idade());
+        people.setDescription(req.description());
+        people.setSeverity(req.severityLevel());
+        people.setComorbidities(req.comorbidities());
 
-                People people = new People();
-                people.setName(req.name());
-                people.setAge(req.idade());
-                people.setDescription(req.description());
-                people.setHospital(hospital);
-                people.setStatusPatient(StatusType.ENFERMO);
-                people.setComorbidities(null);
-
-                if (req.severityLevel() != null) {
-
-                    people.setSeverity(req.severityLevel());
-
-                    people.changeStatus(req.severityLevel());
-                }
-
-        if(people.getStatusPatient() == StatusType.MORTO) {
-            return ResponseEntity.status(409).build();
-        }
-
-        return ResponseEntity.ok(repositoryPeople.save(people));
+        People createdPeople = peopleService.createPatient(people, req);
+        return ResponseEntity.ok(createdPeople);
 }
 
 

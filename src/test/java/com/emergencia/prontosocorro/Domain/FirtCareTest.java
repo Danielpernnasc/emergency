@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergencia.prontosocorro.Domain.FirstCare;
-import com.emergencia.prontosocorro.Domain.People;
 import com.emergencia.prontosocorro.Domain.models.CareStatus;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 
@@ -20,7 +18,7 @@ public class FirtCareTest {
        firstCare.setPeople(patient);
        firstCare.disCharge();
 
-       assertEquals(CareStatus.ALTA, firstCare.getCareStatus());
+       assertEquals(CareStatus.DE_ALTA, firstCare.getCareStatus());
     }
 
 

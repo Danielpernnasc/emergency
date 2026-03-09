@@ -125,7 +125,6 @@ public class CareService {
         firstCare.setPeople(people);
         firstCare.setHospital(hospital);
         firstCare.setCid(cid);
-        firstCare.setComorbidities(req.comorbidities());
         firstCare.setSpecialistMedic(req.specialistMedic());
         firstCare.setCareStatus(req.careStatus());
 
@@ -171,21 +170,7 @@ private boolean hasProcedures(FirstCare fc) {
     return !fc.getProcedures().isEmpty();
 }
 
-private CID getCidForComorbidities(List<ComorbidityType> comorbidities) {
-    if (comorbidities == null || comorbidities.isEmpty()) {
-        return null;
-    }
-    // Return the first CID found for the comorbidities, or null if none exist
-    for (ComorbidityType comorbidity : comorbidities) {
-        List<CID> cids = repositoryCID.findAll();
-        for (CID cid : cids) {
-            if (cid.getSeverityLevel() == comorbidity.getSeverityLevel()) {
-                return cid;
-            }
-        }
-    }
-    return null;
-}
+
 
 public boolean canBeDiscarged(People people, FirstCare firstCare) {
         boolean isGrave = people.getSeverity() == SeverityLevel.GRAVE;

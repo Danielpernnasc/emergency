@@ -47,7 +47,7 @@ public class PeopleServiceTest {
                 .thenReturn(Optional.of(people));
 
         DeathService deathService = mock(DeathService.class);
-        peopleService = new PeopleService(repositoryPeople, deathService);
+        peopleService = new PeopleService(repositoryPeople, deathService, null);
         peopleService.registerDeath(1L, "test", null);
 
         assertEquals(StatusType.MORTO, people.getStatusPatient());

@@ -69,13 +69,6 @@ public class FirstCare {
     @Column(name = "specialist_medic")
     private Set<SpecialistMedic> specialist_medics = new HashSet<>();
 
-    @ElementCollection
-    @CollectionTable(name = "first_care_comorbidities", joinColumns = @JoinColumn(name = "first_care_id"))
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "comorbidity")
-    private Set<ComorbidityType> comorbidities = new HashSet<>();
-
     @ElementCollection(targetClass = CareofPacients.class)
     @CollectionTable(name = "first_care_procedures", joinColumns = @JoinColumn(name = "first_care_id"))
 
@@ -93,7 +86,6 @@ public class FirstCare {
         this.specialist_medics = specialist_medics != null ? new HashSet<>(specialist_medics) : new HashSet<>();
         this.care_status = care_status != null ? new HashSet<>(care_status) : new HashSet<>();
         this.careDateTime = LocalDateTime.now();
-        this.comorbidities = comorbidities != null ? new HashSet<>(comorbidities) : new HashSet<>();
         this.procedures = new HashSet<>();
     }
   
@@ -167,14 +159,6 @@ public class FirstCare {
 
     public void setComorbidityType(ComorbidityType comorbidityType) {
         this.comorbidityType = comorbidityType;
-    }
-
-    public Set<ComorbidityType> getComorbidities() {
-        return comorbidities;
-    }
-
-    public void setComorbidities(List<ComorbidityType> comorbidities) {
-        this.comorbidities = comorbidities != null ? new HashSet<>(comorbidities) : new HashSet<>();
     }
 
     public void addProcedures(CareofPacients careofPacients) {
