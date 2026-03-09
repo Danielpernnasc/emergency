@@ -21,9 +21,7 @@ import com.emergencia.prontosocorro.Controller.DTO.Response.FirstCareResponse;
 import com.emergencia.prontosocorro.Domain.FirstCare;
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
-import com.emergencia.prontosocorro.Domain.Entity.CID;
-
-import com.emergencia.prontosocorro.Domain.models.StatusType;
+import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
@@ -38,7 +36,7 @@ public class FirtCareController {
     private final RepositoryPeople repositoryPeople;
     private final RepositoryHospital repositoryHospital;
     private final RepositoryFirstCare repositoryFirstCare;
-    private final RepositoryCID repositoryCID;
+
     
     public FirtCareController(
             CareService careService,
@@ -49,7 +47,6 @@ public class FirtCareController {
         this.careService = careService;
         this.repositoryPeople = repositoryPeople;
         this.repositoryHospital = repositoryHospital;
-        this.repositoryCID = repositoryCID;
         this.repositoryFirstCare = repositoryFirstCare;
     }
 
@@ -107,6 +104,22 @@ public class FirtCareController {
         return responsePatiente(firstCare);
 
     }
+
+  
+
+     @PutMapping("{id}/add-comorbidity")
+     public FirstCareResponse addComorbidity(
+        @PathVariable Long id, 
+        @RequestBody ComorbidityType comorbidity) {
+        FirstCare firstCare = repositoryFirstCare.findById(id)
+                .orElseThrow(() -> new RuntimeException("FirstCare not found with id " + id));
+                careService.addComorbidity(firstCare, comorbidity);
+                repositoryFirstCare.save(firstCare);
+                return responsePatiente(firstCare);
+     }
+      
+     
+     
     
     @PutMapping("{id}/evolution")
     public FirstCareResponse updateEvolution(

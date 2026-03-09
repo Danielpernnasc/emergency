@@ -21,8 +21,6 @@ import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 import com.emergencia.prontosocorro.Service.PeopleService;
 
-import jakarta.persistence.EntityNotFoundException;
-
 @RestController
 @RequestMapping("/people")
 public class PeopleController {
@@ -42,28 +40,30 @@ public class PeopleController {
     @PostMapping
     public ResponseEntity<People> create(@RequestBody PeopleRequest req) {
 
-    Hospital hospital = repositoryHospital.findById(req.hospitalId())
+            Hospital hospital = repositoryHospital.findById(req.hospitalId())
             .orElseThrow(() -> new RuntimeException(
                     "Hospital not found with id " + req.hospitalId()));
 
-    People people = new People();
-    people.setName(req.name());
-    people.setAge(req.idade());
-    people.setDescription(req.description());
-    people.setHospital(hospital);
+                People people = new People();
+                people.setName(req.name());
+                people.setAge(req.idade());
+                people.setDescription(req.description());
+                people.setHospital(hospital);
+                people.setStatusPatient(StatusType.ENFERMO);
+                people.setComorbidities(null);
 
-    if (req.severityLevel() != null) {
+                if (req.severityLevel() != null) {
 
-        people.setSeverity(req.severityLevel());
+                    people.setSeverity(req.severityLevel());
 
-        people.changeStatus(req.severityLevel());
-    }
+                    people.changeStatus(req.severityLevel());
+                }
 
-    if(people.getStatusPatient() == StatusType.MORTO) {
-        return ResponseEntity.status(409).build();
-    }
+        if(people.getStatusPatient() == StatusType.MORTO) {
+            return ResponseEntity.status(409).build();
+        }
 
-    return ResponseEntity.ok(repositoryPeople.save(people));
+        return ResponseEntity.ok(repositoryPeople.save(people));
 }
 
 

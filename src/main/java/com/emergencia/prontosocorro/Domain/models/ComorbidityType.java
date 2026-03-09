@@ -1,5 +1,7 @@
 package com.emergencia.prontosocorro.Domain.models;
 
+
+
 public enum ComorbidityType {
     HIPERTENSAO,
     DIABETES,
@@ -9,5 +11,16 @@ public enum ComorbidityType {
     CARDIOPATIA,
     OBESIDADE,
     ALERGIA,
-    OUTRA
+    OUTRA;
+
+
+
+    public Object getSeverityLevel() {
+        return switch (this) {
+            case HIPERTENSAO, DIABETES, CARDIOPATIA -> SeverityLevel.GRAVE;
+            case DOENCA_DE_CHAGAS, ASMA, DOENCA_RENAL_CRONICA -> SeverityLevel.MODERADO;
+            case OBESIDADE, ALERGIA -> SeverityLevel.LEVE;
+            case OUTRA -> SeverityLevel.LEVE;
+        };
+    }
 }

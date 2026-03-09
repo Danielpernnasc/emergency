@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 import com.emergencia.prontosocorro.Domain.People;
-import com.emergencia.prontosocorro.Domain.models.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.models.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 

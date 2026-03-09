@@ -2,14 +2,13 @@ package com.emergencia.prontosocorro.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
+
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
 import com.emergencia.prontosocorro.Controller.DTO.Request.FirstCareRequest;
-import com.emergencia.prontosocorro.Controller.DTO.Request.PeopleRequest;
 import com.emergencia.prontosocorro.Domain.FirstCare;
 import com.emergencia.prontosocorro.Domain.Hospital;
 import com.emergencia.prontosocorro.Domain.People;
@@ -73,16 +72,19 @@ public class CareService {
             case CRITICO -> CareStatus.EM_CIRURGIA;
             case INTERNADO -> CareStatus.EM_OBSERVACAO;
             case MORTO -> CareStatus.OBITO;
-            default -> throw new IllegalArgumentException("Unexpected value: " + statusType);
+            case FORA_PERIGO -> CareStatus.DE_ALTA;
         };
     }
+    
     public StatusType mapSeverityToStatus(SeverityLevel severity) {
       
+
         return switch (severity) {
             case GRAVE -> StatusType.CRITICO;
+            case UTI -> StatusType.INTERNADO;
             case MODERADO -> StatusType.URGENTE;
             case LEVE -> StatusType.ENFERMO;
-            case UTI -> StatusType.INTERNADO;
+            case OBSERVACAO -> StatusType.FORA_PERIGO;
         };
     }
 
@@ -96,20 +98,18 @@ public class CareService {
             throw new IllegalArgumentException("StatePatient must not be null");
         }
 
-
-       
-
-        List<ComorbidityType> comorbidities = people.getComorbidities();
-        if (comorbidities == null || comorbidities.isEmpty()) {
-            people.setComorbidities(new ArrayList<>());
-        } else {
-            people.setComorbidities(comorbidities);
-        }
-
         people.ensureAlive();
 
-        CID cid = null;
+        List<ComorbidityType> reqComorbidities = people.getComorbidities();
 
+        if(reqComorbidities != null && !reqComorbidities.isEmpty()) {
+            people.setComorbidities(reqComorbidities);
+        }
+
+      
+    
+        CID cid = null;
+        
         if (req.cidCode() != null) {
 
             cid = repositoryCID.findById(req.cidCode())
@@ -125,6 +125,7 @@ public class CareService {
         firstCare.setPeople(people);
         firstCare.setHospital(hospital);
         firstCare.setCid(cid);
+        firstCare.setComorbidities(req.comorbidities());
         firstCare.setSpecialistMedic(req.specialistMedic());
         firstCare.setCareStatus(req.careStatus());
 
@@ -158,17 +159,6 @@ public class CareService {
         repositoryFirstCare.save(firstCare);
     }
 
-    private StatusType mapCareStatusToStatusType(CareStatus careStatus) {
-        return switch (careStatus) {
-            case AGUARDANDO_ATENDIMENTO -> StatusType.ENFERMO;
-            case EM_ATENDIMENTO -> StatusType.URGENTE;
-            case EM_CIRURGIA -> StatusType.CRITICO;
-            case EM_OBSERVACAO -> StatusType.URGENTE;
-            case ALTA -> StatusType.ENFERMO;
-            case OBITO -> StatusType.MORTO;
-        };
-    }
-
     private boolean isCriticalCare(FirstCare fc) {
         return fc.getCareStatus() == CareStatus.EM_CIRURGIA;
     }
@@ -177,12 +167,27 @@ public class CareService {
         return p.getSeverity() == SeverityLevel.GRAVE;
     }
 
-    private boolean hasProcedures(FirstCare fc) {
-        return !fc.getProcedures().isEmpty();
-    }
+private boolean hasProcedures(FirstCare fc) {
+    return !fc.getProcedures().isEmpty();
+}
 
-  
-    public boolean canBeDiscarged(People people, FirstCare firstCare) {
+private CID getCidForComorbidities(List<ComorbidityType> comorbidities) {
+    if (comorbidities == null || comorbidities.isEmpty()) {
+        return null;
+    }
+    // Return the first CID found for the comorbidities, or null if none exist
+    for (ComorbidityType comorbidity : comorbidities) {
+        List<CID> cids = repositoryCID.findAll();
+        for (CID cid : cids) {
+            if (cid.getSeverityLevel() == comorbidity.getSeverityLevel()) {
+                return cid;
+            }
+        }
+    }
+    return null;
+}
+
+public boolean canBeDiscarged(People people, FirstCare firstCare) {
         boolean isGrave = people.getSeverity() == SeverityLevel.GRAVE;
         if (isGrave) {
             return false;
@@ -197,7 +202,7 @@ public class CareService {
           if (isCriticalCare(firstCare) || isSevereCase(people) || !hasProcedures(firstCare)) {
               return false;
           }
-        }else if(careStatus == CareStatus.ALTA || careStatus == CareStatus.OBITO) {
+        }else if(careStatus == CareStatus.DE_ALTA || careStatus == CareStatus.OBITO) {
             return true;
         }
 
@@ -216,5 +221,35 @@ public class CareService {
         firstCare.setCareStatus(CareStatus.OBITO);
            repositoryPeople.save(people);
         repositoryFirstCare.save(firstCare);
+    }
+
+
+    public void addComorbidity(FirstCare firstCare, ComorbidityType comorbidity) {
+        if (firstCare == null) {
+            throw new IllegalArgumentException("FirstCare must not be null");
+        }
+
+        ComorbidityType comorbidityType;
+        try {
+            comorbidityType = ComorbidityType.valueOf(comorbidity.name());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid comorbidity type: " + comorbidity);
+        }
+
+        People people = firstCare.getPeople();
+
+        List<ComorbidityType> comorbidities = people.getComorbidities();
+        if (comorbidities == null) {
+            comorbidities = new ArrayList<>();
+            people.setComorbidities(comorbidities);
+        }
+        if (!comorbidities.contains(comorbidityType)) {
+            comorbidities.add(comorbidityType);
+            repositoryPeople.save(people);
+        }
+
+        firstCare.setComorbidityType(comorbidityType);
+       
+
     }
 }

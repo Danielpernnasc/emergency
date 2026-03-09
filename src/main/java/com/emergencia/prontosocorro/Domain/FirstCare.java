@@ -2,6 +2,7 @@ package com.emergencia.prontosocorro.Domain;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.emergencia.prontosocorro.Domain.Entity.CID;
@@ -172,7 +173,7 @@ public class FirstCare {
         return comorbidities;
     }
 
-    public void setComorbidities(Set<ComorbidityType> comorbidities) {
+    public void setComorbidities(List<ComorbidityType> comorbidities) {
         this.comorbidities = comorbidities != null ? new HashSet<>(comorbidities) : new HashSet<>();
     }
 
@@ -184,7 +185,7 @@ public class FirstCare {
         if (patient.getStatusPatient().equals(StatusType.MORTO)) {
             throw new IllegalStateException("Paciente morto não recebe alta");
         }
-        this.careStatus = CareStatus.ALTA;
+        this.careStatus = CareStatus.DE_ALTA;
     }
 
     public CID getCid() {

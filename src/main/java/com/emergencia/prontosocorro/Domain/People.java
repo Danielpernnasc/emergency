@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -65,11 +66,12 @@ public class People {
         // obrigatório para JPA
     }
 
-      public People(String name, int idade, String description, Hospital hospital, StatusType statusPatient, SeverityLevel severity) {
+      public People(String name, int idade, String description, Hospital hospital, ComorbidityType comorbities, StatusType statusPatient, SeverityLevel severity) {
         this.name = name;
         this.idade = idade;
         this.description = description;
         this.hospital = hospital;
+        this.comorbidities.add(comorbities);
         this.statusPatient = statusPatient;
         this.severity = severity;
 
@@ -107,13 +109,17 @@ public class People {
         this.description = description;
     }
 
-    @PrePersist
-    public void prePersist() {
-        if (statusPatient == null)
-            statusPatient = StatusType.ENFERMO;
-        if (severity == null)
-            severity = SeverityLevel.LEVE;
+    public ComorbidityType getComorbidity() {
+        return comorbidities != null && !comorbidities.isEmpty() ? comorbidities.get(0) : null;
     }
+
+    public void setComorbidity(ComorbidityType comorbidity) {
+        if (this.comorbidities == null) {
+            this.comorbidities = new ArrayList<>();
+        }
+        this.comorbidities.add(comorbidity);
+    }
+
 
     public void changeStatus(SeverityLevel newStatus) {
         if (newStatus == null) {
@@ -126,17 +132,18 @@ public class People {
             case MODERADO -> StatusType.URGENTE;
             case LEVE -> StatusType.ENFERMO;
             case UTI -> StatusType.INTERNADO;
+            case OBSERVACAO -> StatusType.FORA_PERIGO;
         };
     }
 
     public void registerDeath(String cause, LocalDateTime deathTime) {
 
-    if (this.statusPatient == StatusType.MORTO) {
-        throw new IllegalStateException("Patient already dead");
-    }
+        if (this.statusPatient == StatusType.MORTO) {
+            throw new IllegalStateException("Patient already dead");
+        }
 
-    this.statusPatient = StatusType.MORTO;
-    this.deathTime = deathTime != null ? deathTime : LocalDateTime.now();
+        this.statusPatient = StatusType.MORTO;
+        this.deathTime = deathTime != null ? deathTime : LocalDateTime.now();
     }
 
     public StatusType getStatusPatient() {
@@ -167,10 +174,6 @@ public class People {
         return firstCares;
     }
 
-    public void addFirstCare(FirstCare firstCare) {
-        this.firstCares.add(firstCare);
-    }
-
     public SeverityLevel getSeverity() {
         return severity;
     }
@@ -190,5 +193,9 @@ public class People {
             "Cannot register death for deceased patient");
         }
 
+    }
+
+    public @Nullable Object getDeathTime() {
+        return deathTime;
     }
 }

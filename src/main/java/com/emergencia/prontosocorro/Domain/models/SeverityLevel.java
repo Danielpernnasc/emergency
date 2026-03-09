@@ -4,5 +4,6 @@ public enum SeverityLevel {
     LEVE,
     MODERADO,
     GRAVE,
-    UTI
+    UTI,
+    OBSERVACAO
 }
