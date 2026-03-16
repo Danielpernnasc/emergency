@@ -100,7 +100,11 @@ Estados possíveis:
 - Interned
 - Dead
 
-Cada estado define comportamentos específicos do paciente.
+Cada estado define comportamentos específicos do paciente
+
+Paciente → Atendimento → Hospital
+            ↓
+         Estado
 
 ---
 
