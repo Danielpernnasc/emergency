@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.emergencia.prontosocorro.Controller.DTO.Request.HospitalRequest;
-import com.emergencia.prontosocorro.Domain.Hospital;
+import com.emergencia.prontosocorro.DTO.Request.HospitalRequest;
+import com.emergencia.prontosocorro.Domain.Entity.Hospital;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -68,12 +68,6 @@ public class HospitalController {
         return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Hospital hospital = repositoryHospital.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Hospital not found with id " + id));
-        repositoryHospital.delete(hospital);
-        return ResponseEntity.noContent().build();
-    }
+ 
 
 }

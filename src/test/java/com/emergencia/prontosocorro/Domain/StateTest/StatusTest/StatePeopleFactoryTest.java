@@ -11,7 +11,7 @@ import com.emergencia.prontosocorro.Domain.State.Status.Interned;
 import com.emergencia.prontosocorro.Domain.State.Status.Sick;
 import com.emergencia.prontosocorro.Domain.State.Status.StatePeopleFactory;
 import com.emergencia.prontosocorro.Domain.State.Status.Urgent;
-import com.emergencia.prontosocorro.Domain.models.StatusType;
+import com.emergencia.prontosocorro.Domain.enums.StatusType;
 
 public class StatePeopleFactoryTest {
 

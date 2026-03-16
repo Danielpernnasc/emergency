@@ -2,8 +2,8 @@ package com.emergencia.prontosocorro.Domain.Entity;
 
 import java.util.Set;
 
-import com.emergencia.prontosocorro.Domain.models.SeverityLevel;
-import com.emergencia.prontosocorro.Domain.models.SpecialistMedic;
+import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
+import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +29,7 @@ public class CID {
     // obrigatório para JPA
     }
 
-     public CID(String code, String description, SeverityLevel severityLevel, SpecialistMedic specialistMedic) {
+    public CID(String code, String description, SeverityLevel severityLevel, SpecialistMedic specialistMedic) {
         this.code = code;
         this.description = description;
         this.severityLevel = severityLevel;
@@ -41,13 +41,13 @@ public class CID {
         return code;
      }
 
-     public void setCode(String trim) {
-        this.code = trim;
-     }
+  public void setCode(String code) {
+    this.code = code;
+}
 
-     public void setDescription(String trim) {
-        this.description = trim;
-     }
+   public void setDescription(String description) {
+      this.description = description;
+   }
 
 
      public SeverityLevel getSeverityLevel() {
@@ -58,8 +58,8 @@ public class CID {
          return description;
       }
 
-      public Set<SpecialistMedic> getSpecialistMedic() {
-            return Set.of(specialistMedic);
-      }
+  public SpecialistMedic getSpecialistMedic() {
+    return specialistMedic;
+   }
 
 }

@@ -24,7 +24,7 @@ A ideia central é modelar corretamente o **negócio hospitalar**, garantindo qu
 src/main/java/com/emergencia/prontosocorro
 │
 ├── Domain
-│   ├── models
+│   ├── enums
 │   │   ├── CareStatus.java
 │   │   ├── ComorbidityType.java
 │   │   └── StatusType.java

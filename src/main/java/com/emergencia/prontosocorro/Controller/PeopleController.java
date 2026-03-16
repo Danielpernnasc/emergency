@@ -11,13 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.emergencia.prontosocorro.Controller.DTO.Request.PeopleRequest;
-import com.emergencia.prontosocorro.Controller.DTO.Request.StatePatientRequest;
-import com.emergencia.prontosocorro.Controller.DTO.Response.PeopleResponse;
-import com.emergencia.prontosocorro.Domain.Hospital;
-import com.emergencia.prontosocorro.Domain.People;
-import com.emergencia.prontosocorro.Domain.models.StatusType;
-import com.emergencia.prontosocorro.Repository.RepositoryHospital;
+import com.emergencia.prontosocorro.DTO.Request.PeopleRequest;
+import com.emergencia.prontosocorro.DTO.Request.StatePatientRequest;
+import com.emergencia.prontosocorro.DTO.Response.PeopleResponse;
+import com.emergencia.prontosocorro.Domain.Entity.People;
+import com.emergencia.prontosocorro.Domain.enums.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 import com.emergencia.prontosocorro.Service.PeopleService;
 
@@ -26,14 +24,12 @@ import com.emergencia.prontosocorro.Service.PeopleService;
 public class PeopleController {
 
     private final RepositoryPeople repositoryPeople;
-    private final RepositoryHospital repositoryHospital;
     private final PeopleService peopleService;
 
   
 
-    public PeopleController(RepositoryPeople repositoryPeople, RepositoryHospital repositoryHospital, PeopleService peopleService) {
+    public PeopleController(RepositoryPeople repositoryPeople, PeopleService peopleService) {
         this.repositoryPeople = repositoryPeople;
-        this.repositoryHospital = repositoryHospital;
         this.peopleService = peopleService;
     }
 
@@ -79,20 +75,16 @@ public class PeopleController {
 
 
     @PutMapping("/{id}/state/mistake")
-    public ResponseEntity<Long> mistakeStatus(@PathVariable Long id, @RequestBody StatePatientRequest requestPeople) {
-        if (requestPeople.justification() == null || requestPeople.justification().trim().isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-        if (requestPeople.statusType() == StatusType.ENFERMO || requestPeople.statusType() == StatusType.INTERNADO) {
-            if (requestPeople.date() == null) {
-                return ResponseEntity.badRequest().build();
-            }
-        }
+    public ResponseEntity<Long> mistakeStatus(
+        @PathVariable Long id, 
+        @RequestBody 
+        StatePatientRequest requestPeople) {
+    
         boolean result = peopleService.mistakeStatus(id, requestPeople.statusType(), requestPeople.justification());
         if (result) {
             return ResponseEntity.ok(id);
         } else {
-            return ResponseEntity.status(409).build(); 
+            return ResponseEntity.status(409).build();
         }
     }
     

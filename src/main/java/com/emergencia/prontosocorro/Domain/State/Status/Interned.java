@@ -1,7 +1,7 @@
 package com.emergencia.prontosocorro.Domain.State.Status;
 
 import com.emergencia.prontosocorro.Domain.State.StatePatient;
-import com.emergencia.prontosocorro.Domain.models.StatusType;
+import com.emergencia.prontosocorro.Domain.enums.StatusType;
 
 public class Interned implements StatePatient {
     @Override

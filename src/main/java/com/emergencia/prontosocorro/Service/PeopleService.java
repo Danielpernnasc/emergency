@@ -2,12 +2,13 @@ package com.emergencia.prontosocorro.Service;
 
 import java.time.LocalDateTime;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.emergencia.prontosocorro.Controller.DTO.Request.PeopleRequest;
-import com.emergencia.prontosocorro.Domain.Hospital;
-import com.emergencia.prontosocorro.Domain.People;
-import com.emergencia.prontosocorro.Domain.models.StatusType;
+import com.emergencia.prontosocorro.DTO.Request.PeopleRequest;
+import com.emergencia.prontosocorro.Domain.Entity.Hospital;
+import com.emergencia.prontosocorro.Domain.Entity.People;
+import com.emergencia.prontosocorro.Domain.enums.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 
@@ -49,18 +50,20 @@ public class PeopleService {
     public boolean mistakeStatus(Long id, StatusType newStatus, String justification) {
         People people = repositoryPeople.findById(id)
                 .orElseThrow(() -> new RuntimeException("People not found with id " + id));
-        StatusType currentStatus = people.getStatusPatient();
 
-       if(currentStatus != StatusType.MORTO) {
-            return false;
-        }
+            if (people.getStatusPatient() != StatusType.MORTO) {
+                throw new IllegalStateException("Only dead patients can have status corrected");
+            }
+              people.setStatusPatient(newStatus);
 
-        people.setStatusPatient(newStatus);
-        if (newStatus == StatusType.ENFERMO || newStatus == StatusType.INTERNADO) {
-            people.clearDeathInfo();
-        }
-        repositoryPeople.save(people);
-        return true;
+       
+            if (newStatus == StatusType.ENFERMO || newStatus == StatusType.INTERNADO) {
+                people.clearDeathInfo();
+            }
+            
+            repositoryPeople.save(people);
+            return true;
+       
     }
 
    

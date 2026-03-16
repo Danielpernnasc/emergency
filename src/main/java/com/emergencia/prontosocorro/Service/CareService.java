@@ -6,20 +6,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.emergencia.prontosocorro.Controller.DTO.Request.FirstCareRequest;
-import com.emergencia.prontosocorro.Domain.FirstCare;
-import com.emergencia.prontosocorro.Domain.Hospital;
-import com.emergencia.prontosocorro.Domain.People;
+import com.emergencia.prontosocorro.DTO.Request.FirstCareRequest;
 import com.emergencia.prontosocorro.Domain.Entity.CID;
 import com.emergencia.prontosocorro.Domain.Entity.CIDKeywordRule;
-import com.emergencia.prontosocorro.Domain.models.CareStatus;
-import com.emergencia.prontosocorro.Domain.models.CareofPacients;
-import com.emergencia.prontosocorro.Domain.models.ComorbidityType;
-import com.emergencia.prontosocorro.Domain.models.SeverityLevel;
-import com.emergencia.prontosocorro.Domain.models.SpecialistMedic;
-import com.emergencia.prontosocorro.Domain.models.StatusType;
+import com.emergencia.prontosocorro.Domain.Entity.FirstCare;
+import com.emergencia.prontosocorro.Domain.Entity.Hospital;
+import com.emergencia.prontosocorro.Domain.Entity.People;
+import com.emergencia.prontosocorro.Domain.enums.CareStatus;
+import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
+import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
+import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
+import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
+import com.emergencia.prontosocorro.Domain.enums.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryCIDKeywordRule;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
@@ -54,11 +56,9 @@ public class CareService {
         
         for (CIDKeywordRule rule : rules) {
 
-            if (desc.contains(rule.getKeyword().toLowerCase())) {
-
-               if(rule.getSpecialistMedic() != null) {
+            if (desc.toLowerCase().contains(rule.getKeyword().toLowerCase()) 
+                && rule.getSpecialistMedic() != null){
                 return rule.getSpecialistMedic();
-               }
             }
         }
 
@@ -83,7 +83,7 @@ public class CareService {
             case GRAVE -> StatusType.CRITICO;
             case UTI -> StatusType.INTERNADO;
             case MODERADO -> StatusType.URGENTE;
-            case LEVE -> StatusType.ENFERMO;
+            case LEVE, OUTROS -> StatusType.ENFERMO;
             case OBSERVACAO -> StatusType.FORA_PERIGO;
         };
     }
@@ -139,12 +139,14 @@ public class CareService {
     }
 
 
-    public void applyProcedures(Long id, FirstCare firstCare, Set<CareofPacients> proceduresToAdd, CareStatus newStatus) {
+    public void applyProcedures(Long id,  FirstCare firstCare, Set<CareofPacients> proceduresToAdd, CareStatus newStatus) {
+
+        // FirstCare firstCare = repositoryFirstCare.findById(id)
+        //         .orElseThrow(() -> new RuntimeException("FirstCare not found with id: " + id));
         
         if (firstCare == null) {
             throw new IllegalArgumentException("FirstCare must not be null");
         }
-
          if (proceduresToAdd != null) {
             firstCare.getProcedures().addAll(proceduresToAdd);
         }
@@ -183,7 +185,8 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
         if(careStatus == CareStatus.EM_CIRURGIA ||
         careStatus == CareStatus.AGUARDANDO_ATENDIMENTO ||
         careStatus == CareStatus.EM_ATENDIMENTO ||
-        careStatus == CareStatus.EM_OBSERVACAO) {
+        careStatus == CareStatus.EM_OBSERVACAO ||
+        careStatus == CareStatus.DE_ALTA) {
           if (isCriticalCare(firstCare) || isSevereCase(people) || !hasProcedures(firstCare)) {
               return false;
           }
@@ -198,7 +201,7 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
         firstCare.getPeople().ensureAlive();
         People people = firstCare.getPeople();
         if(people.getStatusPatient() == StatusType.MORTO) {
-            throw new IllegalStateException("Patient already dead");
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Patient is already registered as deceased");
         }
 
         people.registerDeath(cause, deathTime);
@@ -207,34 +210,27 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
            repositoryPeople.save(people);
         repositoryFirstCare.save(firstCare);
     }
+    
+    public void addComorbidity(FirstCare firstCare,  List<ComorbidityType> comorbidites) {
 
-
-    public void addComorbidity(FirstCare firstCare, ComorbidityType comorbidity) {
         if (firstCare == null) {
             throw new IllegalArgumentException("FirstCare must not be null");
         }
 
-        ComorbidityType comorbidityType;
-        try {
-            comorbidityType = ComorbidityType.valueOf(comorbidity.name());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid comorbidity type: " + comorbidity);
-        }
-
         People people = firstCare.getPeople();
 
-        List<ComorbidityType> comorbidities = people.getComorbidities();
-        if (comorbidities == null) {
-            comorbidities = new ArrayList<>();
-            people.setComorbidities(comorbidities);
-        }
-        if (!comorbidities.contains(comorbidityType)) {
-            comorbidities.add(comorbidityType);
-            repositoryPeople.save(people);
+        if (people.getComorbidities() == null) {
+            people.setComorbidities(new ArrayList<>());
         }
 
-        firstCare.setComorbidityType(comorbidityType);
-       
+       for (ComorbidityType comorbidity : comorbidites) {
+        if (!people.getComorbidities().contains(comorbidity)) {
+            people.getComorbidities().add(comorbidity);
+        }
+        }
 
+        repositoryPeople.save(people);
     }
+  
+
 }
