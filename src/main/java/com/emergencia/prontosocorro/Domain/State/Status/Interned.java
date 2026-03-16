@@ -1,24 +1,22 @@
 package com.emergencia.prontosocorro.Domain.State.Status;
 
 import com.emergencia.prontosocorro.Domain.State.StatePatient;
-import com.emergencia.prontosocorro.Domain.models.StatusType;
+import com.emergencia.prontosocorro.Domain.enums.StatusType;
 
-public class Live implements  StatePatient {
-
+public class Interned implements StatePatient {
     @Override
     public boolean canReceiveCare() {
-        return false;
+        return true;
     }
 
-     @Override
+    @Override
     public String toString() {
-        return "Vivo";
+        return "Internado";
     }
 
-  
     @Override
     public StatusType getStatusType() {
-        return StatusType.VIVO;
+        return StatusType.INTERNADO;
     }
 
 }

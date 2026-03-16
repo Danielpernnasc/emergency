@@ -1,5 +1,5 @@
 package com.emergencia.prontosocorro.Domain.State;
-import com.emergencia.prontosocorro.Domain.models.StatusType;
+import com.emergencia.prontosocorro.Domain.enums.StatusType;
 
 public interface StatePatient {
 
@@ -7,4 +7,6 @@ public interface StatePatient {
 
     StatusType getStatusType();
 
+
+ 
 }

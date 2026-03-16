@@ -1,7 +1,7 @@
 package com.emergencia.prontosocorro.Domain.State.Status;
 
 import com.emergencia.prontosocorro.Domain.State.StatePatient;
-import com.emergencia.prontosocorro.Domain.models.StatusType;
+import com.emergencia.prontosocorro.Domain.enums.StatusType;
 
 public class StatePeopleFactory {
     public static StatePatient from(StatusType statusType){
@@ -12,8 +12,10 @@ public class StatePeopleFactory {
 
         return switch (lowerState) {
             case "enfermo" -> new Sick();
+            case "urgente" -> new Urgent();
+            case "critico" -> new Critical();
             case "morto" -> new Dead();
-            case "vivo" -> new Live();
+            case "internado" -> new Interned();
             default -> null;
         };
     }

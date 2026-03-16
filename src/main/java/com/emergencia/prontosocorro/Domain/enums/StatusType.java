@@ -1,10 +1,13 @@
-package com.emergencia.prontosocorro.Domain.models;
+package com.emergencia.prontosocorro.Domain.enums;
 
 public enum StatusType {
 
     ENFERMO("enfermo"),
-    MORTO("morto"),
-    VIVO("vivo");
+    INTERNADO("internado"),
+    URGENTE("urgente"),
+    CRITICO("critico"),
+    FORA_PERIGO("fora de perigo"),
+    MORTO("morto");
 
     private final String state;
 

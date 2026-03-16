@@ -6,7 +6,8 @@
 ![Maven](https://img.shields.io/badge/Maven-3.9-blue)
 ![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow)
 
-Sistema de simulação de **atendimento em pronto-socorro hospitalar**, modelado com foco em **Domain-Driven Design (DDD)**, **boas práticas de OO**, **State Pattern** e **separação clara de responsabilidades**, antes da introdução de Controller, Repository e Banco de Dados.
+🏥 ProntoSocorro – Sistema de Atendimento Hospitalar
+## modelado com foco em: **Domain-Driven Design (DDD)**, **boas práticas de OO**, **State Pattern** e **separação clara de responsabilidades**, antes da introdução de Controller, Repository e Banco de Dados.
 
 ---
 
@@ -23,48 +24,117 @@ A ideia central é modelar corretamente o **negócio hospitalar**, garantindo qu
 ## 🧠 Arquitetura (Visão Conceitual)
 src/main/java/com/emergencia/prontosocorro
 │
+├── Controller
+│   ├── FirstCareController.java
+│   ├── HospitalController.java
+│   └── PeopleController.java
+│
 ├── Domain
-│   ├── models
+│   ├── Entity
+│   │   ├── Cid.java
+│   │   ├── CIDKeywordRule.java
+│   │   ├── FirstCare.java
+│   │   ├── Hospital.java
+│   │   └── People.java
+│   │
+│   ├── enums
+│   │   ├── CareofPacients.java
 │   │   ├── CareStatus.java
 │   │   ├── ComorbidityType.java
+│   │   ├── SeverityLevel.java
+│   │   ├── SpecialistMedic.java
 │   │   └── StatusType.java
 │   │
-│   ├── State
-│   │   ├── Status
-│   │   │   ├── Sick.java
-│   │   │   ├── Live.java
-│   │   │   └── Dead.java
-│   │   ├── StatePatient.java
-│   │   └── StatePeopleFactory.java
+│   └── State
+│       ├── Status
+│       │   ├── Critical.java
+│       │   ├── Dead.java
+│       │   ├── Interned.java
+│       │   ├── Sick.java
+│       │   └── Urgent.java
+│       │
+│       ├── StatePatient.java
+│       └── StatePeopleFactory.java
+│
+├── DTO
+│   ├── Request
+│   │   ├── DeathRequest.java
+│   │   ├── FirstCareRequest.java
+│   │   ├── HospitalRequest.java
+│   │   ├── PeopleRequest.java
+│   │   ├── StateEvolutionRequest.java
+│   │   └── StatePatientRequest.java
 │   │
-│   ├── FirstCare.java
-│   ├── People.java
-│   ├── Hospital.java
-│   └── SpecialistMedic.java
+│   └── Response
+│       ├── FirstCareResponse.java
+│       └── PeopleResponse.java
+│
+├── Repository
+│   ├── LoaderRepository
+│   │   ├── RepositoryCID.java
+│   │   └── RepositoryCIDKeywordRule.java
+│   │
+│   ├── RepositoryFirstCare.java
+│   ├── RepositoryHospital.java
+│   └── RepositoryPeople.java
 │
 ├── Service
 │   ├── CareService.java
-│   ├── DecisionCaseCriticalService.java
-│   └── RegretsMedicService.java
+│   ├── DeathService.java
+│   └── PeopleService.java
 │
 └── ProntosocorroApplication.java
 
-🛣️ Roadmap (Próximas Etapas)
- Criar Controllers REST (@RestController)
+# 📐 Padrões de Projeto Utilizados
 
- Criar Repositories (Spring Data JPA)
+O projeto utiliza alguns padrões clássicos de engenharia de software:
 
- Integrar banco de dados (H2 → PostgreSQL)
+### State Pattern
+Utilizado para modelar o estado do paciente.
 
- Criar endpoints:
+Estados possíveis:
 
-Entrada de paciente
+- Sick
+- Urgent
+- Critical
+- Interned
+- Dead
 
-Alta hospitalar
+Cada estado define comportamentos específicos do paciente.
 
-Registro de óbito
+---
 
- Evoluir regras clínicas (níveis de risco)
+### Factory Pattern
+
+A criação dos estados do paciente é centralizada na classe:
+
+# 📊 Cobertura de Testes
+
+A cobertura de testes é analisada utilizando **JaCoCo**.
+
+Principais áreas cobertas:
+
+- Regras de negócio do domínio
+- Fluxos de atendimento
+- Registro de óbito
+- Estados do paciente
+
+A cobertura atual está acima de **80%**, garantindo maior confiabilidade do sistema.
+
+# 📬 Exemplo de Requisição
+
+Criar paciente:
+
+POST /people
+
+```json
+{
+  "name": "Arthur de Camelot",
+  "idade": 45,
+  "description": "Paciente com dor no peito",
+  "comorbidities": ["OUTRA"]
+}
+
 
 🧠 Princípios Aplicados
 ✔️ Single Responsibility Principle (SRP)
@@ -78,22 +148,43 @@ Registro de óbito
 ✔️ Código preparado para evolução
 
 🚀 Tecnologias Utilizadas
-Java 21
 
-Spring Boot
+- Java 21
+- Spring Boot
+- Spring Data JPA
+- Maven
+- JUnit 5
+- Mockito
+- JaCoCo
 
-Maven
 
-JUnit 5
+## 🌐 Endpoints Principais
+
+### Pacientes
+POST /people  
+GET /people  
+GET /people/{id}
+
+### Hospitais
+POST /hospital  
+GET /hospital
+
+### Atendimento
+POST /first-care  
+PUT /first-care/{id}/add-comorbidity  
+PUT /first-care/{id}/register-death
 
 🏁 Conclusão
 Este projeto prioriza qualidade de modelagem, clareza de domínio e arquitetura limpa, servindo como base sólida para evolução com API REST, persistência e integrações futuras.
 
+▶️ Como Executar o Projeto
+Clone o repositório:
 
+git clone https://github.com/seu-usuario/prontosocorro.git
+Entre na pasta do projeto:
 
-Rodar o Maven no meu Linux
-source ~/.sdkman/bin/sdkman-init.sh
-Depois:
+cd prontosocorro
+Execute o projeto:
 
-sdk version
-sdk current java
+mvn spring-boot:run
+

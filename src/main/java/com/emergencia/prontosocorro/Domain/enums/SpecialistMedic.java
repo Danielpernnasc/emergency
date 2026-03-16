@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Domain;
+package com.emergencia.prontosocorro.Domain.enums;
 
 public enum SpecialistMedic {
     CARDIOLOGIST,
@@ -11,6 +11,10 @@ public enum SpecialistMedic {
     PSYCHIATRIST,
     UROLOGIST,
     CLINICAL_MEDICINE, 
-    NOASSISTANCE_REQUIRED
+    NOASSISTANCE_REQUIRED,
+    PEDIATRIC_MEDICINE,
+    TRAUMATOLOGY,
+    INFECTOLOGIST,
+    OTHER
 
 }

@@ -1,51 +1,358 @@
 package com.emergencia.prontosocorro.Service;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.emergencia.prontosocorro.Domain.FirstCare;
-import com.emergencia.prontosocorro.Domain.Hospital;
-import com.emergencia.prontosocorro.Domain.People;
-import com.emergencia.prontosocorro.Domain.SpecialistMedic;
-import com.emergencia.prontosocorro.Domain.State.Status.Sick;
+import com.emergencia.prontosocorro.DTO.Request.FirstCareRequest;
+import com.emergencia.prontosocorro.Domain.Entity.CID;
+import com.emergencia.prontosocorro.Domain.Entity.CIDKeywordRule;
+import com.emergencia.prontosocorro.Domain.Entity.FirstCare;
+import com.emergencia.prontosocorro.Domain.Entity.Hospital;
+import com.emergencia.prontosocorro.Domain.Entity.People;
+import com.emergencia.prontosocorro.Domain.enums.CareStatus;
+import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
+import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
+import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
+import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
+import com.emergencia.prontosocorro.Domain.enums.StatusType;
+import com.emergencia.prontosocorro.Repository.RepositoryCIDKeywordRule;
+import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
+import com.emergencia.prontosocorro.Repository.RepositoryPeople;
+import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
 
+
+
+@ExtendWith(MockitoExtension.class)
 public class CareServiceTest {
 
+    @Mock
+    RepositoryFirstCare repositoryFirstCare;
+    @Mock
+    RepositoryCIDKeywordRule repositoryCIDKeywordRule;
+    @Mock
+    RepositoryPeople repositoryPeople;
+    @Mock
+    RepositoryCID repositoryCID;
+
+    @InjectMocks
+    CareService careService;
+
     @Test
-    FirstCare testCreateFirstCare(People people, Hospital hospital, SpecialistMedic specialistMedic) {
-        if(people == null || hospital == null || specialistMedic == null) {
-            throw new IllegalArgumentException("People, Hospital, and SpecialistMedic must not be null");
-        }
+    void shouldDefineSpecialistMedic(){
 
-        if(people.getStatePatient() == null){
-            throw new IllegalArgumentException("StatePatient must not be null");
-        }
+        CIDKeywordRule rule = new CIDKeywordRule();
+        rule.setCidCode("A01");
 
-        if(!people.getStatePatient().canReceiveCare()) {
-            throw new IllegalStateException("Patient is not in a state to receive care");
-        }
+        rule.setKeyword("Febre recorrente");
+        rule.setSpecialistMedic(SpecialistMedic.CLINICAL_MEDICINE);
 
-         return new FirstCare(hospital, people, specialistMedic);
+        if(rule.getSpecialistMedic() != null){
+            when(repositoryCIDKeywordRule.findAll())
+                .thenReturn(List.of(rule));
+
+            SpecialistMedic specialist = careService.defineSpecialistMedic("Paciente com febre recorrente");
+
+            assertEquals(SpecialistMedic.CLINICAL_MEDICINE, specialist);
+        }
+    
+      when(repositoryCIDKeywordRule.findAll())
+                .thenReturn(List.of(rule));
+
+        
+
+        SpecialistMedic specialist = careService.defineSpecialistMedic("Paciente com dor no peito");
+
+        assertEquals(SpecialistMedic.CLINICAL_MEDICINE, specialist);
+      
     }
 
     @Test
-    void shouldCreateFirstCareWhenPatientCanReceiveFirstCare() {
-       People patient = new People(
-        "Maria Souza", 
-        45, 
-        "Fratura na perna", 
-        new Sick(),
-        new Hospital(2L, "Hospital São Lucas", "Avenida Secundária", 200),
-        new ArrayList<>()
-    
-    );
-        CareService service = new CareService();
+    void shouldmapStatusTypeToCareStatus(){
+        assertEquals(CareStatus.AGUARDANDO_ATENDIMENTO, careService.mapStatusTypeToCareStatus(StatusType.ENFERMO));
+        assertEquals(CareStatus.EM_ATENDIMENTO, careService.mapStatusTypeToCareStatus(StatusType.URGENTE));
+        assertEquals(CareStatus.EM_CIRURGIA, careService.mapStatusTypeToCareStatus(StatusType.CRITICO));
+        assertEquals(CareStatus.EM_OBSERVACAO, careService.mapStatusTypeToCareStatus(StatusType.INTERNADO));
+        assertEquals(CareStatus.OBITO, careService.mapStatusTypeToCareStatus(StatusType.MORTO));
+        assertEquals(CareStatus.DE_ALTA, careService.mapStatusTypeToCareStatus(StatusType.FORA_PERIGO));
+    }
 
-        FirstCare firstCare = service.createFirstCare(patient, patient.getHospital());
-            assertNotNull(firstCare);
-            assertNotNull(firstCare.getSpecialistMedic());
-    }    
+    @Test
+    void shouldmapSeverityToStatus(){
+        assertEquals(StatusType.ENFERMO, careService.mapSeverityToStatus(SeverityLevel.LEVE));
+        assertEquals(StatusType.URGENTE, careService.mapSeverityToStatus(SeverityLevel.MODERADO));
+        assertEquals(StatusType.CRITICO, careService.mapSeverityToStatus(SeverityLevel.GRAVE));
+        assertEquals(StatusType.INTERNADO, careService.mapSeverityToStatus(SeverityLevel.UTI));
+        assertEquals(StatusType.FORA_PERIGO, careService.mapSeverityToStatus(SeverityLevel.OBSERVACAO));
+        assertEquals(StatusType.ENFERMO, careService.mapSeverityToStatus(SeverityLevel.OUTROS));
+    }
+
+    @Test
+    void shouldcreateFirstCare(){
+  
+        //Arrange
+       People people = new People();
+       people.setStatusPatient(StatusType.ENFERMO);
+       Hospital hospital = new Hospital();
+
+
+    
+        FirstCareRequest req = new FirstCareRequest();
+        
+         assertThrows(IllegalArgumentException.class, () -> {
+                careService.createFirstCare(null, hospital, req);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+                careService.createFirstCare(people, null, req);
+        });
+    
+
+        when(repositoryPeople.save(any(People.class)))
+            .thenReturn(people);
+
+        when(repositoryFirstCare.save(any(FirstCare.class)))
+                .thenAnswer(i -> i.getArgument(0));
+
+        List<ComorbidityType> comorbidities = List.of(ComorbidityType.DIABETES);
+        people.setComorbidities(comorbidities);
+
+    CID cid = new CID(
+        "A00",
+        "Descrição",
+        SeverityLevel.MODERADO,
+        SpecialistMedic.CLINICAL_MEDICINE
+        );
+
+    FirstCareRequest requerimento = new FirstCareRequest(
+        1L,
+        1L,
+        SpecialistMedic.CLINICAL_MEDICINE,
+        CareStatus.EM_ATENDIMENTO,
+        cid.getCode()
+    );
+
+    when(repositoryCID.findById("A00")).thenReturn(Optional.of(cid));
+
+    careService.createFirstCare(people, hospital, requerimento);
+
+    //verify(repositoryCID).findById(null);
+    verify(repositoryCID).findById("A00");
+
+
+        // Act
+        FirstCare result = careService.createFirstCare(people, hospital, req);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(people, result.getPeople());
+        assertEquals(hospital, result.getHospital());
+        assertNull(result.getCid());
+        assertNull(result.getSpecialistMedic());
+        assertNull(result.getCareStatus());
+    
+    }
+
+    @Test
+    void shoulddisCharge(){
+
+        //Arrange
+        FirstCare firstCare = new FirstCare();
+        People patient = new People();
+        patient.setStatusPatient(StatusType.ENFERMO);
+        firstCare.setPeople(patient);
+        firstCare.setCareStatus(CareStatus.EM_ATENDIMENTO);
+
+        //Act
+        firstCare.disCharge();
+
+        //Assert
+
+        assertEquals(CareStatus.DE_ALTA, firstCare.getCareStatus());
+    }
+
+
+
+
+    @Test 
+    void shouldcanBeDiscarged(){
+
+        People patient = new People();
+        patient.setSeverity(SeverityLevel.GRAVE);
+        patient.setSeverity(SeverityLevel.LEVE);
+        patient.setSeverity(SeverityLevel.UTI);
+        patient.setSeverity(SeverityLevel.OBSERVACAO);
+        patient.setSeverity(SeverityLevel.OUTROS);
+
+        FirstCare firstCare = new FirstCare();
+        boolean result = careService.canBeDiscarged(patient, firstCare);
+            assertFalse(result);
+    
+            patient.setSeverity(SeverityLevel.GRAVE);
+            patient.setSeverity(SeverityLevel.UTI);
+            firstCare.setCareStatus(CareStatus.EM_ATENDIMENTO);
+            firstCare.setCareStatus(CareStatus.EM_CIRURGIA);
+            firstCare.setCareStatus(CareStatus.AGUARDANDO_ATENDIMENTO);
+            firstCare.setCareStatus(CareStatus.EM_OBSERVACAO);
+            firstCare.setCareStatus(CareStatus.DE_ALTA);
+            result = careService.canBeDiscarged(patient, firstCare);
+            assertFalse(result);
+    
+            patient.setSeverity(SeverityLevel.GRAVE);
+            patient.setSeverity(SeverityLevel.UTI);
+        firstCare.setCareStatus(CareStatus.EM_ATENDIMENTO);
+        boolean canBeDischarged = careService.canBeDiscarged(patient, firstCare);
+         assertFalse(result);
+        assertFalse(canBeDischarged);
+    }
+
+    @Test
+    void shouldReturnTrueWhenStatusIsAlta() {
+
+        People people = new People();
+        people.setSeverity(SeverityLevel.LEVE);
+
+        FirstCare firstCare = new FirstCare();
+        firstCare.setCareStatus(CareStatus.DE_ALTA);
+
+        boolean result = careService.canBeDiscarged(people, firstCare);
+
+        assertFalse(result);
+    }
+
+    
+@Test
+void shouldReturnFalseWhenNoProcedures() {
+
+    People people = new People();
+    people.setSeverity(SeverityLevel.LEVE);
+
+    FirstCare firstCare = new FirstCare();
+    firstCare.setCareStatus(CareStatus.EM_ATENDIMENTO);
+    firstCare.setProcedures(Set.of(CareofPacients.MEDICACAO));
+
+    boolean result = careService.canBeDiscarged(people, firstCare);
+
+    assertTrue(result);
+}
+
+    @Test
+    void shoulregisterDeath(){
+         People patient = new People();
+        patient.setStatusPatient(StatusType.ENFERMO);
+
+        FirstCare firstCare = new FirstCare();
+        firstCare.setPeople(patient);
+
+        careService.registerDeath(firstCare, "Causa", LocalDateTime.now());
+
+        assertEquals(StatusType.MORTO, patient.getStatusPatient());
+        assertEquals(CareStatus.OBITO, firstCare.getCareStatus());
+
+        assertThrows(ResponseStatusException.class, () -> {
+                careService.registerDeath(firstCare, "Causa da morte", LocalDateTime.now());
+        });
+
+        verify(repositoryPeople).save(patient);
+        verify(repositoryFirstCare).save(firstCare);
+    }
+
+  @Test
+    void shouldAddComorbidityWhenNotExists() {
+
+        FirstCare firstCare = new FirstCare();
+        People patient = new People();
+
+        List<ComorbidityType> comorbidities = new ArrayList<>();
+        comorbidities.add(ComorbidityType.ALERGIA);
+
+        patient.setComorbidities(comorbidities);
+        firstCare.setPeople(patient);
+
+        careService.addComorbidity(firstCare, comorbidities);
+
+        assertFalse(patient.getComorbidities().contains(ComorbidityType.DIABETES));
+    }
+
+
+    @Test
+    void shouldNotAddDuplicateComorbidity() {
+
+        FirstCare firstCare = new FirstCare();
+        People patient = new People();
+
+        List<ComorbidityType> comorbidities = new ArrayList<>();
+        comorbidities.add(ComorbidityType.DIABETES);
+
+        patient.setComorbidities(comorbidities);
+        firstCare.setPeople(patient);
+
+        careService.addComorbidity(firstCare, comorbidities);
+
+        assertEquals(1, patient.getComorbidities().size());
+    }
+
+
+
+    @Test
+    void  shoulddischargePatient(){
+        FirstCare firstCare = new FirstCare();
+        assertThrows(IllegalArgumentException.class, () -> {
+                careService.dischargePatient(null);
+        });
+        People patient = new People();
+        patient.setStatusPatient(StatusType.ENFERMO);
+        firstCare.setPeople(patient);
+        careService.dischargePatient(firstCare);
+        assertEquals(CareStatus.DE_ALTA, firstCare.getCareStatus());
+        assertEquals(StatusType.ENFERMO, patient.getStatusPatient());
+    }
+
+ 
+    @Test 
+    void shouldapplyProcedures(){
+        //Arrange
+        FirstCare firstCare = new FirstCare();
+        People patient = new People();
+        patient.setStatusPatient(StatusType.ENFERMO); // importante se o método usa estado
+        firstCare.setPeople(patient);
+        firstCare.setProcedures(new HashSet<>());
+        assertThrows(IllegalArgumentException.class, () -> {
+                careService.applyProcedures(1L, null, null, CareStatus.EM_ATENDIMENTO);
+        });
+        careService.applyProcedures(1L, firstCare, null, CareStatus.EM_ATENDIMENTO);
+        patient.setStatusPatient(StatusType.ENFERMO);
+        firstCare.setPeople(patient);
+        firstCare.setCareStatus(CareStatus.EM_ATENDIMENTO);
+
+        //Act
+        firstCare.getPeople().ensureAlive();
+
+        //Assert
+        assertDoesNotThrow(() -> firstCare.getPeople().ensureAlive());
+        assertTrue(firstCare.getProcedures().isEmpty());
+
+    }
+        
+    
+
 
 }
+
+   
+
+
