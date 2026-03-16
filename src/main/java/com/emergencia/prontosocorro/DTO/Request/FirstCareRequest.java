@@ -1,7 +1,5 @@
 package com.emergencia.prontosocorro.DTO.Request;
 
-
-
 import com.emergencia.prontosocorro.Domain.enums.CareStatus;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 

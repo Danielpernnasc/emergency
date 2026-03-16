@@ -1,7 +1,5 @@
 package com.emergencia.prontosocorro.Domain.enums;
 
-
-
 public enum ComorbidityType {
     HIPERTENSAO,
     DIABETES,

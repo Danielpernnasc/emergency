@@ -4,7 +4,6 @@ import java.util.List;
 import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
 import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 
-
 public record PeopleRequest(
     String name,
     int idade,
@@ -20,7 +19,6 @@ public record PeopleRequest(
         this(null, 0, null, null, null, null);
     }
        
-
     public String getName(){
         return name;
     }

@@ -1,7 +1,5 @@
 package com.emergencia.prontosocorro.Domain.Entity;
 
-import java.util.Set;
-
 import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 
