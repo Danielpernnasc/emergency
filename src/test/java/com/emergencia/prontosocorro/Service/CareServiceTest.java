@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +25,7 @@ import com.emergencia.prontosocorro.Domain.Entity.FirstCare;
 import com.emergencia.prontosocorro.Domain.Entity.Hospital;
 import com.emergencia.prontosocorro.Domain.Entity.People;
 import com.emergencia.prontosocorro.Domain.enums.CareStatus;
+import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
 import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
 import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
@@ -218,6 +219,36 @@ public class CareServiceTest {
          assertFalse(result);
         assertFalse(canBeDischarged);
     }
+
+    @Test
+    void shouldReturnTrueWhenStatusIsAlta() {
+
+        People people = new People();
+        people.setSeverity(SeverityLevel.LEVE);
+
+        FirstCare firstCare = new FirstCare();
+        firstCare.setCareStatus(CareStatus.DE_ALTA);
+
+        boolean result = careService.canBeDiscarged(people, firstCare);
+
+        assertFalse(result);
+    }
+
+    
+@Test
+void shouldReturnFalseWhenNoProcedures() {
+
+    People people = new People();
+    people.setSeverity(SeverityLevel.LEVE);
+
+    FirstCare firstCare = new FirstCare();
+    firstCare.setCareStatus(CareStatus.EM_ATENDIMENTO);
+    firstCare.setProcedures(Set.of(CareofPacients.MEDICACAO));
+
+    boolean result = careService.canBeDiscarged(people, firstCare);
+
+    assertTrue(result);
+}
 
     @Test
     void shoulregisterDeath(){
