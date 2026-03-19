@@ -1,5 +1,6 @@
 package com.emergencia.prontosocorro.Controller;
 
+import com.emergencia.prontosocorro.Service.CareService;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.emergencia.prontosocorro.DTO.Request.PeopleRequest;
@@ -22,6 +24,7 @@ import com.emergencia.prontosocorro.Service.PeopleService;
 @RequestMapping("/people")
 public class PeopleController {
 
+ 
     private final RepositoryPeople repositoryPeople;
     private final PeopleService peopleService;
 
@@ -30,6 +33,7 @@ public class PeopleController {
     public PeopleController(RepositoryPeople repositoryPeople, PeopleService peopleService) {
         this.repositoryPeople = repositoryPeople;
         this.peopleService = peopleService;
+
     }
 
     @PostMapping
@@ -47,6 +51,9 @@ public class PeopleController {
 }
 
 
+   
+   
+    
     @GetMapping
     public List<PeopleResponse> findAll() {
         return repositoryPeople.findAll()

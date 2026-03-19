@@ -22,6 +22,8 @@ import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
 import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 import com.emergencia.prontosocorro.Domain.enums.StatusType;
+import com.emergencia.prontosocorro.Message.event.PatientTransferredEvent;
+import com.emergencia.prontosocorro.Message.producer.HospitalEventProducer;
 import com.emergencia.prontosocorro.Repository.RepositoryCIDKeywordRule;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
@@ -34,17 +36,20 @@ public class CareService {
     private final RepositoryFirstCare repositoryFirstCare;
     private final RepositoryCID repositoryCID;
     private final RepositoryCIDKeywordRule repositoryCIDKeywordRule;
+     private final HospitalEventProducer hospitalEventProducer;
 
     public CareService(
             RepositoryFirstCare repositoryFirstCare,
             RepositoryPeople repositoryPeople,
             RepositoryCIDKeywordRule repositoryCIDKeywordRule,
-            RepositoryCID repositoryCID
+            RepositoryCID repositoryCID,
+            HospitalEventProducer hospitalEventProducer
         ) {
         this.repositoryPeople = repositoryPeople;
         this.repositoryFirstCare = repositoryFirstCare;
         this.repositoryCIDKeywordRule = repositoryCIDKeywordRule;
         this.repositoryCID = repositoryCID;
+        this.hospitalEventProducer = hospitalEventProducer;
 
 
     }
@@ -141,9 +146,7 @@ public class CareService {
 
     public void applyProcedures(Long id,  FirstCare firstCare, Set<CareofPacients> proceduresToAdd, CareStatus newStatus) {
 
-        // FirstCare firstCare = repositoryFirstCare.findById(id)
-        //         .orElseThrow(() -> new RuntimeException("FirstCare not found with id: " + id));
-        
+     
         if (firstCare == null) {
             throw new IllegalArgumentException("FirstCare must not be null");
         }
@@ -231,6 +234,10 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
 
         repositoryPeople.save(people);
     }
-  
+
+       public void transferPatient(long patientId, Long fromHospital, Long toHospital){
+         PatientTransferredEvent event = new PatientTransferredEvent(patientId, fromHospital, toHospital);
+         hospitalEventProducer.sendPatientTransfer(event);
+    }
 
 }

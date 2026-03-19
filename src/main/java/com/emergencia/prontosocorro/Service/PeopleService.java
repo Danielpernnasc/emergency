@@ -1,5 +1,6 @@
 package com.emergencia.prontosocorro.Service;
 
+
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 
 @Service
 public class PeopleService {
+
       private final RepositoryPeople repositoryPeople;
       private final DeathService deathService;
       private final RepositoryHospital repositoryHospital;
@@ -21,6 +23,7 @@ public class PeopleService {
         this.repositoryPeople = repositoryPeople;
         this.deathService = deathService;
         this.repositoryHospital = repositoryHospital;
+
     }
 
     public People createPatient(People people, PeopleRequest reqPeople) {
@@ -61,6 +64,8 @@ public class PeopleService {
             return true;
        
     }
+
+ 
 
    
 }
