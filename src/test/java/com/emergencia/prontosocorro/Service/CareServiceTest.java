@@ -24,6 +24,7 @@ import com.emergencia.prontosocorro.Domain.Entity.CIDKeywordRule;
 import com.emergencia.prontosocorro.Domain.Entity.FirstCare;
 import com.emergencia.prontosocorro.Domain.Entity.Hospital;
 import com.emergencia.prontosocorro.Domain.Entity.People;
+import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Domain.enums.CareStatus;
 import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
 import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
@@ -143,7 +144,8 @@ public class CareServiceTest {
         1L,
         SpecialistMedic.CLINICAL_MEDICINE,
         CareStatus.EM_ATENDIMENTO,
-        cid.getCode()
+        cid.getCode(),
+        CareSector.SETOR_UTI
     );
 
     when(repositoryCID.findById("A00")).thenReturn(Optional.of(cid));

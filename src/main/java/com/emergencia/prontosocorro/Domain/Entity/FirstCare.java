@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Domain.enums.CareStatus;
 import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
 import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
@@ -59,19 +60,23 @@ public class FirstCare {
     @Enumerated(EnumType.STRING)
     @Column(name = "care_procedure")
     private Set<CareofPacients> procedures = new HashSet<>();
+    
+    @Enumerated(EnumType.STRING)
+    private CareSector sector;
 
   public FirstCare() {
     // Required by JPA
     }
 
-    public FirstCare(People patient, CID cid, Hospital hospital, Set<SpecialistMedic> specialist_medics, Set<CareStatus> care_status) {
+    public FirstCare(People patient, CID cid, Hospital hospital, SpecialistMedic specialist_medics, CareStatus care_status, CareSector sector) {
         this.patient = patient;
         this.cid = cid;
         this.hospital = hospital;
-        this.specialistMedic = specialist_medics != null && !specialist_medics.isEmpty() ? specialist_medics.iterator().next() : null   ;
-        this.careStatus = care_status != null ? care_status.iterator().next() : null;
+        this.specialistMedic =  specialist_medics;
+        this.careStatus = care_status;
         this.careDateTime = LocalDateTime.now();
         this.procedures = new HashSet<>();
+        this.sector = sector;
     }
   
     public Long getId() {
@@ -156,6 +161,14 @@ public class FirstCare {
 
     public void setCid(CID cid) {
         this.cid = cid;
+    }
+
+    public CareSector getSector(){
+        return sector;
+    }
+
+    public void setSector(CareSector sector){
+        this.sector = sector;
     }
 
 }

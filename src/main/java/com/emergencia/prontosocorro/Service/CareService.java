@@ -16,6 +16,7 @@ import com.emergencia.prontosocorro.Domain.Entity.CIDKeywordRule;
 import com.emergencia.prontosocorro.Domain.Entity.FirstCare;
 import com.emergencia.prontosocorro.Domain.Entity.Hospital;
 import com.emergencia.prontosocorro.Domain.Entity.People;
+import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Domain.enums.CareStatus;
 import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
 import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
@@ -23,9 +24,11 @@ import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 import com.emergencia.prontosocorro.Domain.enums.StatusType;
 import com.emergencia.prontosocorro.Message.event.PatientTransferredEvent;
+import com.emergencia.prontosocorro.Message.event.SectorChangedEvent;
 import com.emergencia.prontosocorro.Message.producer.HospitalEventProducer;
 import com.emergencia.prontosocorro.Repository.RepositoryCIDKeywordRule;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
+import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
 
@@ -37,19 +40,22 @@ public class CareService {
     private final RepositoryCID repositoryCID;
     private final RepositoryCIDKeywordRule repositoryCIDKeywordRule;
      private final HospitalEventProducer hospitalEventProducer;
+     private final RepositoryHospital repositoryHospital;
 
     public CareService(
             RepositoryFirstCare repositoryFirstCare,
             RepositoryPeople repositoryPeople,
             RepositoryCIDKeywordRule repositoryCIDKeywordRule,
             RepositoryCID repositoryCID,
-            HospitalEventProducer hospitalEventProducer
+            HospitalEventProducer hospitalEventProducer,
+            RepositoryHospital repositoryHospital
         ) {
         this.repositoryPeople = repositoryPeople;
         this.repositoryFirstCare = repositoryFirstCare;
         this.repositoryCIDKeywordRule = repositoryCIDKeywordRule;
         this.repositoryCID = repositoryCID;
         this.hospitalEventProducer = hospitalEventProducer;
+        this.repositoryHospital = repositoryHospital;
 
 
     }
@@ -132,6 +138,7 @@ public class CareService {
         firstCare.setCid(cid);
         firstCare.setSpecialistMedic(req.specialistMedic());
         firstCare.setCareStatus(req.careStatus());
+        firstCare.setSector(req.sector());
 
         return repositoryFirstCare.save(firstCare);
         }
@@ -235,9 +242,55 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
         repositoryPeople.save(people);
     }
 
-       public void transferPatient(long patientId, Long fromHospital, Long toHospital){
+    public void transferPatient(long patientId, Long fromHospital, Long toHospital){
+
+        FirstCare firstCare = repositoryFirstCare.findById(patientId)
+                        .orElseThrow(() -> new RuntimeException("FirstCare not found"));
+            if(!firstCare.getHospital().getId().equals(fromHospital)){
+                throw new RuntimeException("Paciente não está nesse hospital");
+            }
+
+            Hospital newHospital = repositoryHospital.findById(toHospital)
+            .orElseThrow(() -> new RuntimeException("Hospital destino não encontrado"));
+
+
+          firstCare.setHospital(newHospital);
+
+
+            repositoryFirstCare.save(firstCare);
+
          PatientTransferredEvent event = new PatientTransferredEvent(patientId, fromHospital, toHospital);
          hospitalEventProducer.sendPatientTransfer(event);
     }
+
+    public void changeSector(Long patientId, CareSector newSector){
+
+        FirstCare firstCare = repositoryFirstCare.findById(patientId)
+                        .orElseThrow(() -> new RuntimeException("Atendimento não encontrado"));
+
+        CareSector current = firstCare.getSector();
+
+        if(current == CareSector.SETOR_UTI && newSector == CareSector.TRIAGEM){
+            throw new RuntimeException("Paciente não pode voltar para triagem");
+        }
+
+        if (current == CareSector.CENTRO_CIRURGICO && newSector == CareSector.TRIAGEM){
+            throw new RuntimeException("Fluxo inválido");
+        }
+
+       
+        firstCare.setSector(newSector);
+
+        repositoryFirstCare.save(firstCare);
+           SectorChangedEvent event = new SectorChangedEvent(
+            patientId,
+            current,
+            newSector
+    );
+
+    hospitalEventProducer.sendPatienttoSector(event);
+    }
+
+ 
 
 }

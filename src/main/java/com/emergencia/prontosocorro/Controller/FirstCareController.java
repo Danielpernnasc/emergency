@@ -2,9 +2,11 @@ package com.emergencia.prontosocorro.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.emergencia.prontosocorro.DTO.Request.ChangeSectorRequest;
 import com.emergencia.prontosocorro.DTO.Request.DeathRequest;
 import com.emergencia.prontosocorro.DTO.Request.FirstCareRequest;
 import com.emergencia.prontosocorro.DTO.Request.StateEvolutionRequest;
@@ -20,6 +23,7 @@ import com.emergencia.prontosocorro.DTO.Response.FirstCareResponse;
 import com.emergencia.prontosocorro.Domain.Entity.FirstCare;
 import com.emergencia.prontosocorro.Domain.Entity.Hospital;
 import com.emergencia.prontosocorro.Domain.Entity.People;
+import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
@@ -74,6 +78,8 @@ public class FirstCareController {
         return ResponseEntity.ok().build();
     }
 
+    
+
 
     @GetMapping
     public List<FirstCareResponse> findAll() {
@@ -99,8 +105,9 @@ public class FirstCareController {
                 firstCare.getPeople().getName(),
                 firstCare.getHospital().getId(),
                 firstCare.getHospital().getNameHospital(),
-                firstCare.getCid() != null ? firstCare.getCid().getCode() : null);
-          
+                firstCare.getCid() != null ? firstCare.getCid().getCode() : null,
+                firstCare.getSector()
+        );
     }
 
     @GetMapping("{id}")
@@ -155,6 +162,11 @@ public class FirstCareController {
         careService.registerDeath(firstCare, deathRequest.deathCause(), deathRequest.deathTime());
 
         return responsePatiente(firstCare);
+    }
+
+    @PatchMapping("{id}/sector")
+    public void changeSector(@PathVariable Long id, @RequestBody ChangeSectorRequest request){
+        careService.changeSector(id, request.sector());
     }
 
 }
