@@ -11,13 +11,18 @@
 
 ---
 
-## 📌 Visão Geral
+📌 Visão Geral
+O ProntoSocorro é um sistema de atendimento hospitalar desenvolvido com foco em:
 
-Este projeto foi desenvolvido seguindo o princípio:
+🧠 Domain-Driven Design (DDD)
 
-> **Domínio primeiro, infraestrutura depois**
+🧩 Boas práticas de orientação a objetos
 
-A ideia central é modelar corretamente o **negócio hospitalar**, garantindo que regras clínicas, estados do paciente e fluxo de atendimento estejam bem definidos antes de qualquer integração com banco de dados ou API REST.
+🔄 Arquitetura orientada a eventos (Event-Driven)
+
+🏥 Modelagem realista de fluxo hospitalar
+
+Domínio primeiro, infraestrutura depois
 
 ---
 
@@ -65,9 +70,24 @@ src/main/java/com/emergencia/prontosocorro
 │   │   ├── StateEvolutionRequest.java
 │   │   └── StatePatientRequest.java
 │   │
-│   └── Response
+│   ├── Response
 │       ├── FirstCareResponse.java
 │       └── PeopleResponse.java
+│   
+└── Message
+│       ├── config
+│       │   └── RabbitMQConfig.java
+│       │
+│       ├── consumer
+│       │   ├── HospitalEventConsumer.java
+│       │   └── SectorEventConsumer.java
+│       │
+│       ├── event
+│       │   ├── PatientTransferredEvent.java
+│       │   └── SectorChangedEvent.java
+│       │
+│       └── producer
+│           └── HospitalEventProducer.java
 │
 ├── Repository
 │   ├── LoaderRepository
@@ -161,8 +181,14 @@ POST /people
 - Mockito
 - JaCoCo
 
+🧩 Arquitetura de Mensageria (RabbitMQ)
+O sistema utiliza RabbitMQ para comunicação assíncrona entre componentes.
+
+🔄 Fluxo de Eventos
+Service → Producer → RabbitMQ → Consumer → Service
 
 ## 🌐 Endpoints Principais
+
 
 ### Pacientes
 POST /people  
@@ -175,8 +201,11 @@ GET /hospital
 
 ### Atendimento
 POST /first-care  
+POST/ first-care/transfer
 PUT /first-care/{id}/add-comorbidity  
 PUT /first-care/{id}/register-death
+PATCH /first-care/{id}/sector
+
 
 🏁 Conclusão
 Este projeto prioriza qualidade de modelagem, clareza de domínio e arquitetura limpa, servindo como base sólida para evolução com API REST, persistência e integrações futuras.
@@ -184,7 +213,7 @@ Este projeto prioriza qualidade de modelagem, clareza de domínio e arquitetura 
 ▶️ Como Executar o Projeto
 Clone o repositório:
 
-git clone https://github.com/seu-usuario/prontosocorro.git
+git clone https://github.com/Danielpernnasc/emergencia
 Entre na pasta do projeto:
 
 cd prontosocorro
