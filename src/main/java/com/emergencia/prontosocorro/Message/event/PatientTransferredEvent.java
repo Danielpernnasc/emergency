@@ -3,7 +3,7 @@ package com.emergencia.prontosocorro.Message.event;
 public class PatientTransferredEvent {
     private Long patientId;
     private Long fromHospitalId;
-    private long toHospitalId;
+    private Long toHospitalId;
 
     public PatientTransferredEvent() {}
 
