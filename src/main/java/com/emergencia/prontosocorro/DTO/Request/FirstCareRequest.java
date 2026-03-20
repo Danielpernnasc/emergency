@@ -39,10 +39,6 @@ public record FirstCareRequest(
         return cidCode;
     }
 
-    // public CareSector getCareSector(){
-    //     return sector;
-    // }
-
     public FirstCareRequest toPeopleRequest() {
         return new FirstCareRequest(
             this.peopleId,

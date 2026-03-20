@@ -6,5 +6,6 @@ public enum CareSector {
     ENFERMAGEM,
     SETOR_UTI,
     SETOR_CTI,
-    CENTRO_CIRURGICO
+    CENTRO_CIRURGICO,
+    LIBERADO_ALTA
 }

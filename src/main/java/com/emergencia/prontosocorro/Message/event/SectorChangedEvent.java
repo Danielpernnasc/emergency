@@ -20,6 +20,6 @@ public class SectorChangedEvent {
 
     public long getPatientId() { return patientId; }
     public CareSector getFrom() { return from; }
-    public CareSector To() { return to; }
+    public CareSector getTo() { return to; }
 
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,8 +33,12 @@ import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
 
+import org.slf4j.Logger;
+
 @Service
 public class CareService {
+
+     private static final Logger log = LoggerFactory.getLogger(CareService.class);
 
     private final RepositoryPeople repositoryPeople;
     private final RepositoryFirstCare repositoryFirstCare;
@@ -252,15 +257,30 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
 
             Hospital newHospital = repositoryHospital.findById(toHospital)
             .orElseThrow(() -> new RuntimeException("Hospital destino não encontrado"));
-
+            log.error("🚨 SERVICE TO HOSPITAL: {}", toHospital);
 
           firstCare.setHospital(newHospital);
+          repositoryFirstCare.save(firstCare);
 
-
-            repositoryFirstCare.save(firstCare);
+          log.info("🔥🔥 ENTREI NO TRANSFER PATIENT 🔥🔥");
+    
 
          PatientTransferredEvent event = new PatientTransferredEvent(patientId, fromHospital, toHospital);
          hospitalEventProducer.sendPatientTransfer(event);
+    }
+
+    
+	public void handleTransfer(PatientTransferredEvent event) {
+
+        FirstCare firstCare = repositoryFirstCare.findById(event.getPatientId())
+                .orElseThrow(() -> new RuntimeException("Atendimento não encontrado"));
+
+        Hospital newHospital = repositoryHospital.findById(event.getToHospitalId()) // ✅ CORRETO
+                .orElseThrow(() -> new RuntimeException("Hospital destino não encontrado"));
+
+        firstCare.setHospital(newHospital);
+
+        repositoryFirstCare.save(firstCare);
     }
 
     public void changeSector(Long patientId, CareSector newSector){
@@ -288,9 +308,16 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
             newSector
     );
 
-    hospitalEventProducer.sendPatienttoSector(event);
+       hospitalEventProducer.sendPatienttoSector(event);
     }
 
- 
 
+    public void handleTransferSector(SectorChangedEvent event){
+        	FirstCare firstCare = repositoryFirstCare.findById(event.getPatientId())
+                                .orElseThrow(() -> new RuntimeException("Atendimento não econtrado"));
+            
+            firstCare.setSector(event.getTo());
+             repositoryFirstCare.save(firstCare);
+             System.out.println("Transferencia de setor via evento");
+    }
 }

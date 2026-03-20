@@ -31,8 +31,12 @@ import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
 import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 import com.emergencia.prontosocorro.Domain.enums.StatusType;
+import com.emergencia.prontosocorro.Message.event.PatientTransferredEvent;
+import com.emergencia.prontosocorro.Message.event.SectorChangedEvent;
+import com.emergencia.prontosocorro.Message.producer.HospitalEventProducer;
 import com.emergencia.prontosocorro.Repository.RepositoryCIDKeywordRule;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
+import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
 
@@ -49,6 +53,10 @@ public class CareServiceTest {
     RepositoryPeople repositoryPeople;
     @Mock
     RepositoryCID repositoryCID;
+    @Mock
+    RepositoryHospital repositoryHospital;
+    @Mock
+    HospitalEventProducer hospitalEventProducer;
 
     @InjectMocks
     CareService careService;
@@ -349,11 +357,168 @@ void shouldReturnFalseWhenNoProcedures() {
         assertTrue(firstCare.getProcedures().isEmpty());
 
     }
+
+
+    @Test
+    void shouldTransferPatient(){
+
+        Long patientId = 1L;
+        Long fromHospital = 1L;
+        long toHospital = 4L;
+
+        Hospital newHospital = new Hospital();
+        newHospital.setId(patientId);
+
+
+        FirstCare firstCare = new FirstCare();
+        firstCare.setHospital(newHospital);
+
+        when(repositoryFirstCare.findById(patientId))
+                .thenReturn(Optional.of(firstCare));
+
+        when(repositoryHospital.findById(toHospital))
+            .thenReturn(Optional.of(newHospital));
+
+        // act
+        careService.transferPatient(patientId, fromHospital, toHospital);
+
+        // assert
+        assertEquals(1L, firstCare.getHospital().getId());
+
+        verify(repositoryFirstCare).save(firstCare);
+        verify(hospitalEventProducer).sendPatientTransfer(any());
+
+    }
+
+    @Test
+    void shouldErrorTransferPatient(){
+         Long patientId = 1L;
+        Long fromHospital = 1L;
+        long toHospital = 5L;
+
+         Hospital newHospital = new Hospital();
+        newHospital.setId(toHospital);
+
+
+        FirstCare firstCare = new FirstCare();
+        firstCare.setHospital(newHospital);
+
+        when(repositoryFirstCare.findById(patientId)).thenReturn(Optional.of(firstCare));
+
+        RuntimeException exception = assertThrows(
+            RuntimeException.class,
+            () -> careService.transferPatient(patientId, fromHospital, 2L)
+        );
+
+        assertEquals("Paciente não está nesse hospital", exception.getMessage());
+
+    }
+
+    @Test
+    void shouldChangeSector(){
+
+        Long patientId = 1L;
+
+        FirstCare firstCare = new FirstCare();
+        firstCare.setId(patientId);
+        firstCare.setSector(CareSector.TRIAGEM);
+        
+
+        when(repositoryFirstCare.findById(patientId))
+            .thenReturn(Optional.of(firstCare));
+
+        careService.changeSector(patientId, CareSector.SETOR_UTI);
+
+         assertEquals(patientId, firstCare.getId());
+         assertEquals(CareSector.SETOR_UTI, firstCare.getSector());
+        verify(repositoryFirstCare).save(firstCare);
+
+        verify(hospitalEventProducer).sendPatienttoSector(any());
+    }
+
+     @Test
+    void shouldnotSouldbackTRIAGEM(){
+          Long patientId = 1L;
+
+            FirstCare firstCare = new FirstCare();
+            firstCare.setId(patientId);
+            firstCare.setSector(CareSector.SETOR_UTI);
+
+            when(repositoryFirstCare.findById(patientId))
+            .thenReturn(Optional.of(firstCare));
+
+                RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> careService.changeSector(patientId, CareSector.TRIAGEM)
+        );
+
+        assertEquals("Paciente não pode voltar para triagem", exception.getMessage());
+    }
+ 
+    @Test
+    void shouldhandleTransfer(){
+        Long patientId = 1L;
+         Hospital oldHospital = new Hospital();
+        oldHospital.setId(1L);
+
+        Hospital newHospital = new Hospital();
+        newHospital.setId(4L);
+
+        FirstCare firstCare = new FirstCare();
+        firstCare.setId(patientId);
+        firstCare.setHospital(oldHospital);
+
+        PatientTransferredEvent event = new PatientTransferredEvent(
+                patientId,
+                1L,
+                4L
+        );
+
+        when(repositoryFirstCare.findById(patientId))
+                .thenReturn(Optional.of(firstCare));
+
+       when(repositoryHospital.findById(anyLong()))
+        .thenReturn(Optional.of(newHospital));
+
+        // Act
+        careService.handleTransfer(event);
+
+        // Assert
+        assertEquals(4L, firstCare.getHospital().getId());
+        verify(repositoryFirstCare).save(firstCare);
+    }
+    
+      @Test
+    void shouldHandleTransferSector(){
+           Long patientId = 1L;
+            FirstCare firstCare = new FirstCare();
+            firstCare.setId(patientId);
+            firstCare.setSector(CareSector.TRIAGEM);
+
+              SectorChangedEvent event = new SectorChangedEvent(
+                patientId,
+                CareSector.TRIAGEM,
+                CareSector.CONSULTORIO
+        );
+
+        when(repositoryFirstCare.findById(patientId))
+                .thenReturn(Optional.of(firstCare));
+
+        // Act
+        careService.handleTransferSector(event);
+
+        // Assert
+        assertEquals(CareSector.CONSULTORIO, firstCare.getSector());
+        verify(repositoryFirstCare).save(firstCare);
+       
+    }
+
+}
         
     
 
 
-}
+
 
    
 

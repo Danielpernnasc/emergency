@@ -23,7 +23,6 @@ import com.emergencia.prontosocorro.DTO.Response.FirstCareResponse;
 import com.emergencia.prontosocorro.Domain.Entity.FirstCare;
 import com.emergencia.prontosocorro.Domain.Entity.Hospital;
 import com.emergencia.prontosocorro.Domain.Entity.People;
-import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
@@ -67,7 +66,7 @@ public class FirstCareController {
     }
 
 
-     @PostMapping("/transfer")
+    @PostMapping("/transfer")
     public ResponseEntity<Void> transfer(
         @RequestParam Long patientId,
         @RequestParam Long fromHospital,
@@ -78,14 +77,10 @@ public class FirstCareController {
         return ResponseEntity.ok().build();
     }
 
-    
-
-
     @GetMapping
     public List<FirstCareResponse> findAll() {
           System.out.println("ENTROU NO FIND ALL 🚑");
         return repositoryFirstCare.findAll()
-        
                 .stream()
                 .map(this::responsePatiente)
                 .toList();
@@ -115,10 +110,7 @@ public class FirstCareController {
         FirstCare firstCare = repositoryFirstCare.findById(id)
                 .orElseThrow(() -> new RuntimeException("FirstCare not found with id " + id));
         return responsePatiente(firstCare);
-
     }
-
-  
 
      @PutMapping("{id}/add-comorbidity")
      public FirstCareResponse addComorbidity(
