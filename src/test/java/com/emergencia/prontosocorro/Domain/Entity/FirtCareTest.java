@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Domain.enums.CareStatus;
 import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
 import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
@@ -17,26 +18,31 @@ public class FirtCareTest {
     @Test
     void shouldCreateFirstCareUsingConstructor(){
         Hospital hospital = new Hospital();
-        People patiente = new People();
+        People patient = new People();
         CID cid = new CID(
             "V49",
             "Acidente de transporte",
             SeverityLevel.GRAVE,
             SpecialistMedic.CARDIOLOGIST
+       
         );
        
-        Set<SpecialistMedic> medics = Set.of(SpecialistMedic.CARDIOLOGIST);
-        Set<CareStatus> status = Set.of(CareStatus.EM_ATENDIMENTO);
+        SpecialistMedic medics = SpecialistMedic.CARDIOLOGIST;
+        CareStatus status = CareStatus.EM_ATENDIMENTO;
+        CareSector sector = CareSector.TRIAGEM;
 
+    
         FirstCare firstCare = new FirstCare(
-            patiente,
+            patient,
             cid,
             hospital,
             medics,
-            status
+            status,
+            sector
+
         );
 
-        assertEquals(patiente, firstCare.getPeople());
+        assertEquals(patient, firstCare.getPeople());
         assertEquals("V49", cid.getCode());
         assertEquals("Acidente de transporte", cid.getDescription());
         assertEquals(hospital, firstCare.getHospital());
@@ -44,6 +50,7 @@ public class FirtCareTest {
         assertEquals(CareStatus.EM_ATENDIMENTO, firstCare.getCareStatus());
         assertNotNull(firstCare.getCareDateTime());
         assertTrue(firstCare.getProcedures().isEmpty());
+        assertEquals(sector, firstCare.getSector());
     }
 
     @Test
@@ -104,6 +111,8 @@ public class FirtCareTest {
 
         assertEquals(procedures, firstCare.getProcedures());
     }
+
+   
 
 
 

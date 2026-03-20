@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Domain.enums.CareStatus;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 
@@ -15,7 +16,8 @@ public class FirstCareRequestTest {
             2L,
             SpecialistMedic.CARDIOLOGIST,
             CareStatus.EM_ATENDIMENTO,
-            "A00"
+            "A00",
+            CareSector.CONSULTORIO
         );
 
 
@@ -32,7 +34,7 @@ public class FirstCareRequestTest {
     @Test 
     void  ShouldConstructor(){
          FirstCareRequest request = new FirstCareRequest(
-            null, null, null, null, null
+            null, null, null, null, null, null
          );
 
          request.getPeopleId();

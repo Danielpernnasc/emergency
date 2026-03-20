@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Domain.enums.CareStatus;
 import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
@@ -26,7 +27,8 @@ public class FirstCareResponseTest {
             "Alexandre Grande",
             1L,
             "Hospital Central",
-            "A00"
+            "A00",
+            CareSector.CONSULTORIO
         );
 
         assertEquals(1L, firstCareResponse.id());

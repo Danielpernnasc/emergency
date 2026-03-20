@@ -1,5 +1,6 @@
 package com.emergencia.prontosocorro.DTO.Request;
 
+import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Domain.enums.CareStatus;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 
@@ -9,10 +10,11 @@ public record FirstCareRequest(
     Long hospitalId,
     SpecialistMedic specialistMedic,
     CareStatus careStatus,
-    String cidCode
+    String cidCode,
+    CareSector sector
 ) {
     public FirstCareRequest() {
-        this(null, null, null, null, null);
+        this(null, null, null, null, null, null);
     }
 
     public Long getPeopleId() {
@@ -43,7 +45,8 @@ public record FirstCareRequest(
             this.hospitalId,
             this.specialistMedic,
             this.careStatus,
-            this.cidCode
+            this.cidCode,
+            this.sector
         );
     }
    
