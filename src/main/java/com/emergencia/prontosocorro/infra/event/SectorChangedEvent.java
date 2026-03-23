@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Message.event;
+package com.emergencia.prontosocorro.infra.event;
 
 import com.emergencia.prontosocorro.Domain.enums.CareSector;
 
