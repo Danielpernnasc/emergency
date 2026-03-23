@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Message.Config;
+package com.emergencia.prontosocorro.infra.Config;
 
 
 

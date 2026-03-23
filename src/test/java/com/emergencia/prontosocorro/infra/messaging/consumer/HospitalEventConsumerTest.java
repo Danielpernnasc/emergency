@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Message.consumer;
+package com.emergencia.prontosocorro.infra.messaging.consumer;
 
 import static org.mockito.Mockito.*;
 
@@ -8,8 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.emergencia.prontosocorro.Message.event.PatientTransferredEvent;
 import com.emergencia.prontosocorro.Service.CareService;
+import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
+
 
 @ExtendWith(MockitoExtension.class)
 public class HospitalEventConsumerTest {

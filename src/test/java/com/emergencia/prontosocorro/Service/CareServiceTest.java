@@ -31,14 +31,14 @@ import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
 import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 import com.emergencia.prontosocorro.Domain.enums.StatusType;
-import com.emergencia.prontosocorro.Message.event.PatientTransferredEvent;
-import com.emergencia.prontosocorro.Message.event.SectorChangedEvent;
-import com.emergencia.prontosocorro.Message.producer.HospitalEventProducer;
 import com.emergencia.prontosocorro.Repository.RepositoryCIDKeywordRule;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
+import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
+import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
+import com.emergencia.prontosocorro.infra.producer.HospitalEventProducer;
 
 
 

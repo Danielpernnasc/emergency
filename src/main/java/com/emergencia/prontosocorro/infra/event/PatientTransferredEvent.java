@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Message.event;
+package com.emergencia.prontosocorro.infra.event;
 
 public class PatientTransferredEvent {
     private Long patientId;

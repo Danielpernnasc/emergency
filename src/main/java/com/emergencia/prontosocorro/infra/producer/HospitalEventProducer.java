@@ -1,11 +1,13 @@
-package com.emergencia.prontosocorro.Message.producer;
+package com.emergencia.prontosocorro.infra.producer;
 
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
-import com.emergencia.prontosocorro.Message.event.PatientTransferredEvent;
-import com.emergencia.prontosocorro.Message.event.SectorChangedEvent;
+import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
+import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
+
+
 
 
 

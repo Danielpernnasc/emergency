@@ -1,11 +1,11 @@
-package com.emergencia.prontosocorro.Message.consumer;
+package com.emergencia.prontosocorro.infra.messaging.consumer;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import com.emergencia.prontosocorro.Message.Config.RabbitMQConfig;
-import com.emergencia.prontosocorro.Message.event.SectorChangedEvent;
 import com.emergencia.prontosocorro.Service.CareService;
+import com.emergencia.prontosocorro.infra.Config.RabbitMQConfig;
+import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
 
 @Component
 public class SectorEventConsumer {

@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Message.procuder;
+package com.emergencia.prontosocorro.infra.procuder;
 
 import static org.mockito.Mockito.*;
 
@@ -10,9 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import com.emergencia.prontosocorro.Domain.enums.CareSector;
-import com.emergencia.prontosocorro.Message.event.PatientTransferredEvent;
-import com.emergencia.prontosocorro.Message.event.SectorChangedEvent;
-import com.emergencia.prontosocorro.Message.producer.HospitalEventProducer;
+import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
+import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
+import com.emergencia.prontosocorro.infra.producer.HospitalEventProducer;
 
 @ExtendWith(MockitoExtension.class)
 public class HospitalEventProducerTest {

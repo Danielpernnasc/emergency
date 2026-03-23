@@ -1,8 +1,10 @@
-package com.emergencia.prontosocorro.Message.event;
+package com.emergencia.prontosocorro.infra.event;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+
+import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
 
 public class PatientTransferredEventTest {
 
