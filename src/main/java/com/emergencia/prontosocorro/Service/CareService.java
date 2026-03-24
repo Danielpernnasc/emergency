@@ -225,7 +225,7 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
     }
 
     public void registerDeath(FirstCare firstCare, String cause, LocalDateTime deathTime) {
-         observabilityService.incrementDeathRegister();
+         observabilityService.incrementDeathCounter();
         firstCare.getPeople().ensureAlive();
         People people = firstCare.getPeople();
         if(people.getStatusPatient() == StatusType.MORTO) {

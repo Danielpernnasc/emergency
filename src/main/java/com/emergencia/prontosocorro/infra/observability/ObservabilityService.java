@@ -32,7 +32,7 @@ public class ObservabilityService {
         meterRegistry.counter(TRANSFER_METRIC,"status", "success").increment();
     }
 
-    public void incrementDeathRegister(){
+    public void incrementDeathCounter(){
         meterRegistry.counter(DEATH_METRIC, "status", "success").increment();
     }
 

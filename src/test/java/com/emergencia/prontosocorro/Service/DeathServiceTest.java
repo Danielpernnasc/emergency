@@ -52,7 +52,7 @@ public class DeathServiceTest {
 
 
         assertEquals(StatusType.MORTO, people.getStatusPatient());
-        verify(observabilityService).incrementDeathRegister();
+        verify(observabilityService).incrementDeathCounter();
     }
 
     @Test

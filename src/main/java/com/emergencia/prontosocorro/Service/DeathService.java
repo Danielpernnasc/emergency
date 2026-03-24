@@ -34,7 +34,7 @@ public class DeathService {
             throw new IllegalStateException("justification is mandatadory");
         }
 
-       observabilityService.incrementDeathRegister();
+       observabilityService.incrementDeathCounter();
         LocalDateTime deathTime =  date != null ? date : LocalDateTime.now();
 
         people.registerDeath(justification, deathTime);
