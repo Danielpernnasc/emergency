@@ -39,7 +39,9 @@ public class RabbitMQConfig {
     public static final String SECTOR_QUEUE = "hospital.sector.queue";
     public static final String SECTOR_ROUTING_KEY = "patient.sector.changed";
     
-   
+
+    
+
   //🔥 2. FILA PRINCIPAL (com DLQ)
     @Bean
     public Queue queue(){
@@ -96,7 +98,6 @@ public class RabbitMQConfig {
             .to(exchange())
             .with(SECTOR_ROUTING_KEY);
     }
-
 
     // 🔥CONVERTER JSON (ESSENCIAL)
 

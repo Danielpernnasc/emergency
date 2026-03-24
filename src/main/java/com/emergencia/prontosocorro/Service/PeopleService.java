@@ -11,6 +11,7 @@ import com.emergencia.prontosocorro.Domain.Entity.People;
 import com.emergencia.prontosocorro.Domain.enums.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
+import com.emergencia.prontosocorro.infra.observability.ObservabilityService;
 
 @Service
 public class PeopleService {
@@ -18,19 +19,27 @@ public class PeopleService {
       private final RepositoryPeople repositoryPeople;
       private final DeathService deathService;
       private final RepositoryHospital repositoryHospital;
+     private final ObservabilityService observabilityService;
 
-    public PeopleService(RepositoryPeople repositoryPeople, DeathService deathService, RepositoryHospital repositoryHospital) {
+    public PeopleService(
+        RepositoryPeople repositoryPeople, 
+        DeathService deathService, 
+        RepositoryHospital repositoryHospital,
+        ObservabilityService observabilityService
+    ) {
         this.repositoryPeople = repositoryPeople;
         this.deathService = deathService;
         this.repositoryHospital = repositoryHospital;
+        this.observabilityService = observabilityService;
 
     }
 
     public People createPatient(People people, PeopleRequest reqPeople) {
+        observabilityService.incrementCreateCounter();
         Hospital hospital = repositoryHospital.findById(reqPeople.hospitalId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Hospital not found with id " + reqPeople.hospitalId()));
-        people.setHospital(hospital);
+        .orElseThrow(() -> new RuntimeException(
+            "Hospital not found with id " + reqPeople.hospitalId()));
+            people.setHospital(hospital);
         people.setStatusPatient(StatusType.ENFERMO);
         return repositoryPeople.save(people);
     }
