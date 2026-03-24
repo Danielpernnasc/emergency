@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
 import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
 import com.emergencia.prontosocorro.infra.messaging.consumer.HospitalEventConsumer;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 
 @Service
@@ -21,17 +22,25 @@ public class HospitalEventProducer {
      this.rabbitTemplate = rabbitTemplate;
    }
 
-    public void sendPatientTransfer(PatientTransferredEvent event) {
-        log.info("📤 Enviando evento {} para paciente {}", 
+   @CircuitBreaker(name = "rabbitMq", fallbackMethod = "fallbackSend")
+   public void sendPatientTransfer(PatientTransferredEvent event) {
+
+    log.info("📤 Enviando evento {} para paciente {}",
         event.getEventId(), event.getPatientId());
 
-        rabbitTemplate.convertAndSend(
-                "hospital.exchange",
-                "patient.transfer",
-                event
-        );
+    rabbitTemplate.convertAndSend(
+            "hospital.exchange",
+            "patient.transfer",
+            event
+    );
+  }
 
+    // 🔥 FALLBACK
+    public void fallbackSend(PatientTransferredEvent event, Throwable ex) {
+        System.out.println("⚠️ Rabbit fora do ar, fallback ativado");
     }
+
+   
 
     public void sendPatienttoSector(SectorChangedEvent event){
       
