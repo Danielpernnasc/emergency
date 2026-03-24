@@ -27,22 +27,23 @@ Domínio primeiro, infraestrutura depois
 ---
 
 ## 🧠 Arquitetura (Visão Conceitual)
+
 src/main/java/com/emergencia/prontosocorro
 │
-├── Controller
+├── Controller → Camada de entrada (API REST)
 │   ├── FirstCareController.java
 │   ├── HospitalController.java
 │   └── PeopleController.java
 │
-├── Domain
-│   ├── Entity
+├── Domain → Núcleo do sistema (regras de negócio)
+│   ├── Entity → Entidades do domínio (não são apenas banco)
 │   │   ├── Cid.java
 │   │   ├── CIDKeywordRule.java
 │   │   ├── FirstCare.java
 │   │   ├── Hospital.java
 │   │   └── People.java
 │   │
-│   ├── enums
+│   ├── enums → Tipos de domínio (imutáveis)
 │   │   ├── CareofPacients.java
 │   │   ├── CareStatus.java
 │   │   ├── ComorbidityType.java
@@ -50,7 +51,7 @@ src/main/java/com/emergencia/prontosocorro
 │   │   ├── SpecialistMedic.java
 │   │   └── StatusType.java
 │   │
-│   └── State
+│   └── State → Implementação do State Pattern
 │       ├── Status
 │       │   ├── Critical.java
 │       │   ├── Dead.java
@@ -61,8 +62,8 @@ src/main/java/com/emergencia/prontosocorro
 │       ├── StatePatient.java
 │       └── StatePeopleFactory.java
 │
-├── DTO
-│   ├── Request
+├── DTO → Objetos de transferência de dados (entrada/saída da API)
+│   ├── Request → Dados recebidos pela API
 │   │   ├── DeathRequest.java
 │   │   ├── FirstCareRequest.java
 │   │   ├── HospitalRequest.java
@@ -70,7 +71,7 @@ src/main/java/com/emergencia/prontosocorro
 │   │   ├── StateEvolutionRequest.java
 │   │   └── StatePatientRequest.java
 │   │
-│   ├── Response
+│   ├── Response → Dados retornados pela API
 │       ├── FirstCareResponse.java
 │       └── PeopleResponse.java
 │   
@@ -89,7 +90,12 @@ src/main/java/com/emergencia/prontosocorro
 │       └── producer
 │           └── HospitalEventProducer.java
 │
-├── Repository
+├── Service → Orquestração das regras de negócio
+│   ├── CareService.java
+│   ├── DeathService.java
+│   └── PeopleService.java
+│
+├── Repository → Persistência (acesso a dados)
 │   ├── LoaderRepository
 │   │   ├── RepositoryCID.java
 │   │   └── RepositoryCIDKeywordRule.java
@@ -98,11 +104,24 @@ src/main/java/com/emergencia/prontosocorro
 │   ├── RepositoryHospital.java
 │   └── RepositoryPeople.java
 │
-├── Service
-│   ├── CareService.java
-│   ├── DeathService.java
-│   └── PeopleService.java
-│
+└── infra → Infraestrutura (detalhes técnicos)
+        ├── config
+        │   └── RabbitMQConfig.java
+        │
+        ├── messaging → consumidores (entrada de eventos)
+        │   ├── HospitalEventConsumer.java
+        │   └── SectorEventConsumer.java
+        │
+        ├── producer → saída de eventos
+        │   └── HospitalEventProducer.java
+        │
+        ├── event → contratos de eventos
+        │   ├── PatientTransferredEvent.java
+        │   └── SectorChangedEvent.java
+        │
+        └── observability → métricas de negócio com Micrometer (monitoramento e análise do sistema)
+            └── ObservabilityService.java
+
 └── ProntosocorroApplication.java
 
 # 📐 Padrões de Projeto Utilizados
@@ -221,3 +240,86 @@ Execute o projeto:
 
 mvn spring-boot:run
 
+
+## 🐰 RabbitMQ
+
+O sistema utiliza RabbitMQ para mensageria assíncrona.
+
+### ▶️ Executar com Docker
+
+```bash
+docker start rabbitmq
+
+docker run -d \
+  --name rabbitmq \
+  -p 5672:5672 \
+  -p 15672:15672 \
+  rabbitmq:3-management
+
+🌐 Acessos
+Aplicação (AMQP): amqp://localhost:5672
+
+Painel Web: http://localhost:15672
+
+Login:
+
+user: guest
+
+password: guest
+
+
+🔧 Versão melhorada (pode copiar)
+📊 Observabilidade
+O projeto possui observabilidade básica e avançada, permitindo monitorar o comportamento das regras de negócio em tempo real.
+
+🔹 Observabilidade Simples (Spring Boot Actuator)
+Métricas são expostas via Spring Boot Actuator + Micrometer, sem necessidade de ferramentas externas.
+
+▶️ Como acessar
+Após iniciar a aplicação:
+
+http://localhost:8080/actuator/metrics
+🔎 Métricas de negócio disponíveis
+patient.create.total → criação de paciente / atendimento inicial
+
+patient.update.total → atualização do estado do paciente
+
+patient.transfer.total → transferência entre setor/hospital
+
+patient.death.total → registro de óbito
+
+📌 Exemplo
+http://localhost:8080/actuator/metrics/patient.transfer.total
+🔥 Observabilidade Avançada (Prometheus)
+O projeto também suporta integração com Prometheus, permitindo coleta contínua e análise histórica das métricas.
+
+▶️ Pré-requisitos
+Aplicação rodando (localhost:8080)
+
+RabbitMQ ativo (necessário para o sistema)
+
+📁 Arquivo prometheus.yml
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'prontosocorro'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8080']
+▶️ Subir o Prometheus
+docker run -d \
+  -p 9090:9090 \
+  --add-host=host.docker.internal:host-gateway \
+  -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml \
+  prom/prometheus
+🌐 Acessos
+Prometheus UI:
+
+http://localhost:9090
+🔎 Consultar métricas
+No campo de busca do Prometheus:
+
+patient_transfer_total
+📈 Exemplo de retorno
+patient_transfer_total{status="success"} 5

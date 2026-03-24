@@ -1,6 +1,8 @@
-package com.emergencia.prontosocorro.Message.procuder;
+package com.emergencia.prontosocorro.infra.procuder;
 
 import static org.mockito.Mockito.*;
+
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,9 +12,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import com.emergencia.prontosocorro.Domain.enums.CareSector;
-import com.emergencia.prontosocorro.Message.event.PatientTransferredEvent;
-import com.emergencia.prontosocorro.Message.event.SectorChangedEvent;
-import com.emergencia.prontosocorro.Message.producer.HospitalEventProducer;
+import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
+import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
+import com.emergencia.prontosocorro.infra.producer.HospitalEventProducer;
 
 @ExtendWith(MockitoExtension.class)
 public class HospitalEventProducerTest {
@@ -28,7 +30,7 @@ public class HospitalEventProducerTest {
 
         
         PatientTransferredEvent event = new PatientTransferredEvent(
-                1L, 1L, 4L
+               "Teste", 1L, 1L, 4L
         );
 
         producer.sendPatientTransfer(event);
@@ -43,6 +45,7 @@ public class HospitalEventProducerTest {
     @Test
     void shouldSendSectorChangedEvent(){
         SectorChangedEvent sectorChangedEvent = new SectorChangedEvent(
+            UUID.randomUUID().toString(),
             1L,
             CareSector.TRIAGEM,
             CareSector.CONSULTORIO

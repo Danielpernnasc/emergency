@@ -1,10 +1,13 @@
-package com.emergencia.prontosocorro.Message.event;
+package com.emergencia.prontosocorro.infra.event;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
 import com.emergencia.prontosocorro.Domain.enums.CareSector;
+
 
 public class SectorChangedEventTest {
 
@@ -15,6 +18,7 @@ public class SectorChangedEventTest {
 
 
         SectorChangedEvent sectorChangedEvent = new SectorChangedEvent(
+            UUID.randomUUID().toString(),
             1L,
             CareSector.CENTRO_CIRURGICO,
             CareSector.SETOR_CTI

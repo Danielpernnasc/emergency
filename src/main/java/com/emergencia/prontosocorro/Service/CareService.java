@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,14 +27,17 @@ import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
 import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 import com.emergencia.prontosocorro.Domain.enums.StatusType;
-import com.emergencia.prontosocorro.Message.event.PatientTransferredEvent;
-import com.emergencia.prontosocorro.Message.event.SectorChangedEvent;
-import com.emergencia.prontosocorro.Message.producer.HospitalEventProducer;
 import com.emergencia.prontosocorro.Repository.RepositoryCIDKeywordRule;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
+import com.emergencia.prontosocorro.Repository.EventRepository.ProcessedEventRepository;
 import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
+import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
+import com.emergencia.prontosocorro.infra.event.ProcessedEvent;
+import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
+import com.emergencia.prontosocorro.infra.observability.ObservabilityService;
+import com.emergencia.prontosocorro.infra.producer.HospitalEventProducer;
 
 import org.slf4j.Logger;
 
@@ -44,8 +50,11 @@ public class CareService {
     private final RepositoryFirstCare repositoryFirstCare;
     private final RepositoryCID repositoryCID;
     private final RepositoryCIDKeywordRule repositoryCIDKeywordRule;
-     private final HospitalEventProducer hospitalEventProducer;
-     private final RepositoryHospital repositoryHospital;
+    private final HospitalEventProducer hospitalEventProducer;
+    private final RepositoryHospital repositoryHospital;
+    private final ProcessedEventRepository processedEventRepository;
+
+   private final ObservabilityService observabilityService;
 
     public CareService(
             RepositoryFirstCare repositoryFirstCare,
@@ -53,7 +62,9 @@ public class CareService {
             RepositoryCIDKeywordRule repositoryCIDKeywordRule,
             RepositoryCID repositoryCID,
             HospitalEventProducer hospitalEventProducer,
-            RepositoryHospital repositoryHospital
+            RepositoryHospital repositoryHospital,
+            ProcessedEventRepository processedEventRepository,
+            ObservabilityService observabilityService
         ) {
         this.repositoryPeople = repositoryPeople;
         this.repositoryFirstCare = repositoryFirstCare;
@@ -61,8 +72,8 @@ public class CareService {
         this.repositoryCID = repositoryCID;
         this.hospitalEventProducer = hospitalEventProducer;
         this.repositoryHospital = repositoryHospital;
-
-
+        this.processedEventRepository = processedEventRepository;
+        this.observabilityService = observabilityService;
     }
 
     public SpecialistMedic defineSpecialistMedic(String description) {
@@ -105,6 +116,7 @@ public class CareService {
     }
 
     public FirstCare createFirstCare(People people, Hospital hospital, FirstCareRequest req) {
+        observabilityService.incrementCreateCounter();
         // Lógica para criar um atendimento inicial
         if (people == null || hospital == null) {
             throw new IllegalArgumentException("People and Hospital must not be null");
@@ -113,6 +125,8 @@ public class CareService {
         if (people.getStatusPatient() == null) {
             throw new IllegalArgumentException("StatePatient must not be null");
         }
+
+
 
         people.ensureAlive();
 
@@ -158,7 +172,7 @@ public class CareService {
 
     public void applyProcedures(Long id,  FirstCare firstCare, Set<CareofPacients> proceduresToAdd, CareStatus newStatus) {
 
-     
+         observabilityService.incrementUpdateCounter();
         if (firstCare == null) {
             throw new IllegalArgumentException("FirstCare must not be null");
         }
@@ -187,8 +201,6 @@ private boolean hasProcedures(FirstCare fc) {
     return !fc.getProcedures().isEmpty();
 }
 
-
-
 public boolean canBeDiscarged(People people, FirstCare firstCare) {
         boolean isGrave = people.getSeverity() == SeverityLevel.GRAVE;
         if (isGrave) {
@@ -213,6 +225,7 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
     }
 
     public void registerDeath(FirstCare firstCare, String cause, LocalDateTime deathTime) {
+         observabilityService.incrementDeathRegister();
         firstCare.getPeople().ensureAlive();
         People people = firstCare.getPeople();
         if(people.getStatusPatient() == StatusType.MORTO) {
@@ -227,7 +240,8 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
     }
     
     public void addComorbidity(FirstCare firstCare,  List<ComorbidityType> comorbidites) {
-
+         
+        observabilityService.incrementUpdateCounter();
         if (firstCare == null) {
             throw new IllegalArgumentException("FirstCare must not be null");
         }
@@ -247,44 +261,64 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
         repositoryPeople.save(people);
     }
 
-    public void transferPatient(long patientId, Long fromHospital, Long toHospital){
+    public void transferPatient(Long patientId, Long fromHospital, Long toHospital){
 
-        FirstCare firstCare = repositoryFirstCare.findById(patientId)
-                        .orElseThrow(() -> new RuntimeException("FirstCare not found"));
-            if(!firstCare.getHospital().getId().equals(fromHospital)){
-                throw new RuntimeException("Paciente não está nesse hospital");
-            }
+        observabilityService.incrementTransferCounter();
+        PatientTransferredEvent event = new PatientTransferredEvent(
+                UUID.randomUUID().toString(), 
+                patientId,
+                fromHospital,
+                toHospital
+            );
+        if(processedEventRepository.existsById(event.getEventId())){
+            log.info("Event already processed: {}",  event.getEventId());
+            return;
+        }
 
-            Hospital newHospital = repositoryHospital.findById(toHospital)
-            .orElseThrow(() -> new RuntimeException("Hospital destino não encontrado"));
-            log.error("🚨 SERVICE TO HOSPITAL: {}", toHospital);
-
-          firstCare.setHospital(newHospital);
-          repositoryFirstCare.save(firstCare);
-
-          log.info("🔥🔥 ENTREI NO TRANSFER PATIENT 🔥🔥");
-    
-
-         PatientTransferredEvent event = new PatientTransferredEvent(patientId, fromHospital, toHospital);
-         hospitalEventProducer.sendPatientTransfer(event);
+        hospitalEventProducer.sendPatientTransfer(event);
+        log.info("Event sent - Evento enviado: {}", event.getEventId());
     }
 
-    
+
 	public void handleTransfer(PatientTransferredEvent event) {
+        
+        log.info("🔄 Processando evento {}", event.getEventId());
+
+        if(processedEventRepository.existsById(event.getEventId())){
+            log.info("Event already processed: {}", event.getEventId());
+            return;
+        }
 
         FirstCare firstCare = repositoryFirstCare.findById(event.getPatientId())
-                .orElseThrow(() -> new RuntimeException("Atendimento não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Care Assistant not find - Atendimento não encontrado"));
 
-        Hospital newHospital = repositoryHospital.findById(event.getToHospitalId()) // ✅ CORRETO
-                .orElseThrow(() -> new RuntimeException("Hospital destino não encontrado"));
+        Hospital newHospital = repositoryHospital.findById(event.getToHospitalId()) 
+                .orElseThrow(() -> new RuntimeException("Hospital destiny not find - Hospital destino não encontrado"));
+                
+          if(!Objects.equals(firstCare.getHospital().getId(), event.getFromHospitalId())){
+            throw new RuntimeException("Paciente não está nesse hospital");
+        }
 
         firstCare.setHospital(newHospital);
 
         repositoryFirstCare.save(firstCare);
+      
+
+        processedEventRepository.save(
+            ProcessedEvent.of(event.getEventId())
+        );
+
+        System.out.println("FirstCare hospital: " + firstCare.getHospital().getId());
+        System.out.println("Event fromHospital: " + event.getFromHospitalId());
+
+        log.info("Event processed successfully - Evento processado com sucesso: {}", event.getEventId());
+     
+      
     }
 
     public void changeSector(Long patientId, CareSector newSector){
-
+       
+        observabilityService.incrementTransferCounter();
         FirstCare firstCare = repositoryFirstCare.findById(patientId)
                         .orElseThrow(() -> new RuntimeException("Atendimento não encontrado"));
 
@@ -298,11 +332,10 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
             throw new RuntimeException("Fluxo inválido");
         }
 
-       
         firstCare.setSector(newSector);
-
         repositoryFirstCare.save(firstCare);
            SectorChangedEvent event = new SectorChangedEvent(
+            UUID.randomUUID().toString(),
             patientId,
             current,
             newSector
@@ -311,13 +344,25 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
        hospitalEventProducer.sendPatienttoSector(event);
     }
 
-
     public void handleTransferSector(SectorChangedEvent event){
-        	FirstCare firstCare = repositoryFirstCare.findById(event.getPatientId())
-                                .orElseThrow(() -> new RuntimeException("Atendimento não econtrado"));
+
+        log.info("Processing event - Processando evento {}", event.getEventString());
+
+        if(processedEventRepository.existsById(event.getEventString())){
+            log.info("Event already processed - Evento já processado: {}", event.getEventString());
+            return;
+        }
+
+        FirstCare firstCare = repositoryFirstCare.findById(event.getPatientId())
+                            .orElseThrow(() -> new RuntimeException("Atendimento não econtrado"));
             
             firstCare.setSector(event.getTo());
-             repositoryFirstCare.save(firstCare);
-             System.out.println("Transferencia de setor via evento");
+            
+            repositoryFirstCare.save(firstCare);
+           processedEventRepository.save(
+              ProcessedEvent.of(event.getEventString())
+            );
+
+            log.info("Event processed successfully - Evento processado com sucesso: {}", event.getEventString());
     }
 }
