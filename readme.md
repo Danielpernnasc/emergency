@@ -220,3 +220,27 @@ cd prontosocorro
 Execute o projeto:
 
 mvn spring-boot:run
+<<<<<<< HEAD
+=======
+
+
+## 🐰 RabbitMQ
+
+O sistema utiliza RabbitMQ para mensageria assíncrona.
+
+### ▶️ Executar com Docker
+
+```bash
+docker start rabbitmq
+
+🌐 Acessos
+Aplicação (AMQP): amqp://localhost:5672
+
+Painel Web: http://localhost:15672
+
+Login:
+
+user: guest
+
+password: guest
+>>>>>>> b27f087 (messageria RabbitMQ)
