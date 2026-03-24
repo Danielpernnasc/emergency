@@ -2,6 +2,8 @@ package com.emergencia.prontosocorro.infra.procuder;
 
 import static org.mockito.Mockito.*;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +30,7 @@ public class HospitalEventProducerTest {
 
         
         PatientTransferredEvent event = new PatientTransferredEvent(
-                1L, 1L, 4L
+               "Teste", 1L, 1L, 4L
         );
 
         producer.sendPatientTransfer(event);
@@ -43,6 +45,7 @@ public class HospitalEventProducerTest {
     @Test
     void shouldSendSectorChangedEvent(){
         SectorChangedEvent sectorChangedEvent = new SectorChangedEvent(
+            UUID.randomUUID().toString(),
             1L,
             CareSector.TRIAGEM,
             CareSector.CONSULTORIO

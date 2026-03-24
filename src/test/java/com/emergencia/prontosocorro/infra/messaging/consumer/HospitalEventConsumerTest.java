@@ -25,7 +25,7 @@ public class HospitalEventConsumerTest {
     void shouldCallServiceWhenEventReceived(){
 
         PatientTransferredEvent event = new PatientTransferredEvent(
-                1L, 1L, 4L
+                "Teste",1L, 1L, 4L
         );
 
         // act

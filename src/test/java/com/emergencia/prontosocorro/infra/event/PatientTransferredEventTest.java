@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
 
 public class PatientTransferredEventTest {
 
@@ -17,6 +16,7 @@ public class PatientTransferredEventTest {
     
 
         PatientTransferredEvent eventTransfer = new PatientTransferredEvent(
+            "Teste",
             1L,
             1L,
             4L
