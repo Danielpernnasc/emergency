@@ -1,3 +1,4 @@
+
 name: CI Pipeline
 
 on:
@@ -27,3 +28,11 @@ jobs:
         with:
           name: coverage-report
           path: target/site/jacoco/
+
+      - name: SonarCloud Scan
+        run: mvn verify sonar:sonar \
+          -Dsonar.projectKey=prontosocorro \
+          -Dsonar.organization=daniel \
+          -Dsonar.host.url=https://sonarcloud.io/project/overview?id=Danielpernnasc_emergencia \
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+          -Dsonar.login=${{ secrets.EMERGENCIATOKEN }}
