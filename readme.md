@@ -104,7 +104,7 @@ src/main/java/com/emergencia/prontosocorro
         │   ├── PatientTransferredEvent.java
         │   └── SectorChangedEvent.java
         │
-        └── observability → métricas e monitoramento (cross-cutting concern)
+        └── observability → métricas de negócio com Micrometer (monitoramento e análise do sistema)
             └── ObservabilityService.java
 
 └── ProntosocorroApplication.java
