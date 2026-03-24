@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,14 +32,15 @@ import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
 import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 import com.emergencia.prontosocorro.Domain.enums.StatusType;
-import com.emergencia.prontosocorro.Message.event.PatientTransferredEvent;
-import com.emergencia.prontosocorro.Message.event.SectorChangedEvent;
-import com.emergencia.prontosocorro.Message.producer.HospitalEventProducer;
 import com.emergencia.prontosocorro.Repository.RepositoryCIDKeywordRule;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
+import com.emergencia.prontosocorro.Repository.EventRepository.ProcessedEventRepository;
 import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
+import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
+import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
+import com.emergencia.prontosocorro.infra.producer.HospitalEventProducer;
 
 
 
@@ -57,6 +59,8 @@ public class CareServiceTest {
     RepositoryHospital repositoryHospital;
     @Mock
     HospitalEventProducer hospitalEventProducer;
+    @Mock
+     ProcessedEventRepository processedEventRepository;
 
     @InjectMocks
     CareService careService;
@@ -364,54 +368,73 @@ void shouldReturnFalseWhenNoProcedures() {
 
         Long patientId = 1L;
         Long fromHospital = 1L;
-        long toHospital = 4L;
+        Long toHospital = 4L;
 
-        Hospital newHospital = new Hospital();
-        newHospital.setId(patientId);
-
+        Hospital currentHospital = new Hospital();
+        currentHospital.setId(fromHospital);
 
         FirstCare firstCare = new FirstCare();
-        firstCare.setHospital(newHospital);
+        firstCare.setHospital(currentHospital);
+
+        Hospital newHospital = new Hospital();
+        newHospital.setId(toHospital);
+
+        when(processedEventRepository.existsById(anyString()))
+                .thenReturn(false);
 
         when(repositoryFirstCare.findById(patientId))
                 .thenReturn(Optional.of(firstCare));
 
         when(repositoryHospital.findById(toHospital))
-            .thenReturn(Optional.of(newHospital));
+                .thenReturn(Optional.of(newHospital));
+
+        PatientTransferredEvent event = new PatientTransferredEvent(
+            "Test",
+            patientId,
+            fromHospital,
+            toHospital
+        );
 
         // act
-        careService.transferPatient(patientId, fromHospital, toHospital);
+        careService.handleTransfer(event);
 
         // assert
-        assertEquals(1L, firstCare.getHospital().getId());
+        assertEquals(toHospital, firstCare.getHospital().getId());
 
         verify(repositoryFirstCare).save(firstCare);
-        verify(hospitalEventProducer).sendPatientTransfer(any());
-
     }
-
     @Test
     void shouldErrorTransferPatient(){
+        
          Long patientId = 1L;
         Long fromHospital = 1L;
         long toHospital = 5L;
 
-         Hospital newHospital = new Hospital();
-        newHospital.setId(toHospital);
-
+        Hospital newHospital = new Hospital();
+        newHospital.setId(99L);
 
         FirstCare firstCare = new FirstCare();
         firstCare.setHospital(newHospital);
 
-        when(repositoryFirstCare.findById(patientId)).thenReturn(Optional.of(firstCare));
+          PatientTransferredEvent event = new PatientTransferredEvent(
+            "123",
+            patientId,
+            fromHospital,
+            toHospital
+        );
+
+        when(processedEventRepository.existsById(anyString()))
+        .thenReturn(false);
+
+        when(repositoryFirstCare.findById(patientId))
+            .thenReturn(Optional.of(firstCare));
 
         RuntimeException exception = assertThrows(
             RuntimeException.class,
-            () -> careService.transferPatient(patientId, fromHospital, 2L)
+            () -> careService.handleTransfer(event)
         );
 
-        assertEquals("Paciente não está nesse hospital", exception.getMessage());
-
+        assertEquals("Hospital destiny not find - Hospital destino não encontrado", exception.getMessage());
     }
 
     @Test
@@ -422,7 +445,6 @@ void shouldReturnFalseWhenNoProcedures() {
         FirstCare firstCare = new FirstCare();
         firstCare.setId(patientId);
         firstCare.setSector(CareSector.TRIAGEM);
-        
 
         when(repositoryFirstCare.findById(patientId))
             .thenReturn(Optional.of(firstCare));
@@ -469,6 +491,7 @@ void shouldReturnFalseWhenNoProcedures() {
         firstCare.setHospital(oldHospital);
 
         PatientTransferredEvent event = new PatientTransferredEvent(
+              UUID.randomUUID().toString(),
                 patientId,
                 1L,
                 4L
@@ -487,15 +510,34 @@ void shouldReturnFalseWhenNoProcedures() {
         assertEquals(4L, firstCare.getHospital().getId());
         verify(repositoryFirstCare).save(firstCare);
     }
+
+    @Test
+    void shouldSendTransferEvent(){
+
+        Long patientId = 1L;
+        Long fromHospital = 1L;
+        Long toHospital = 2L;
+
+        // 👇 IMPORTANTE (senão não entra no fluxo)
+        when(processedEventRepository.existsById(anyString()))
+                .thenReturn(false);
+
+        // act
+        careService.transferPatient(patientId, fromHospital, toHospital);
+
+        // assert
+        verify(hospitalEventProducer).sendPatientTransfer(any());
+    }
     
       @Test
-    void shouldHandleTransferSector(){
+        void shouldHandleTransferSector(){
            Long patientId = 1L;
             FirstCare firstCare = new FirstCare();
             firstCare.setId(patientId);
             firstCare.setSector(CareSector.TRIAGEM);
 
               SectorChangedEvent event = new SectorChangedEvent(
+                UUID.randomUUID().toString(),
                 patientId,
                 CareSector.TRIAGEM,
                 CareSector.CONSULTORIO
