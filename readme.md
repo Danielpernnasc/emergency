@@ -233,6 +233,12 @@ O sistema utiliza RabbitMQ para mensageria assíncrona.
 ```bash
 docker start rabbitmq
 
+docker run -d \
+  --name rabbitmq \
+  -p 5672:5672 \
+  -p 15672:15672 \
+  rabbitmq:3-management
+
 🌐 Acessos
 Aplicação (AMQP): amqp://localhost:5672
 
