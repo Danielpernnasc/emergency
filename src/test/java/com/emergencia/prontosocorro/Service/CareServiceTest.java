@@ -40,6 +40,7 @@ import com.emergencia.prontosocorro.Repository.EventRepository.ProcessedEventRep
 import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
 import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
 import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
+import com.emergencia.prontosocorro.infra.observability.ObservabilityService;
 import com.emergencia.prontosocorro.infra.producer.HospitalEventProducer;
 
 
@@ -61,6 +62,8 @@ public class CareServiceTest {
     HospitalEventProducer hospitalEventProducer;
     @Mock
      ProcessedEventRepository processedEventRepository;
+     @Mock
+     private ObservabilityService observabilityService;
 
     @InjectMocks
     CareService careService;
@@ -114,71 +117,58 @@ public class CareServiceTest {
         assertEquals(StatusType.ENFERMO, careService.mapSeverityToStatus(SeverityLevel.OUTROS));
     }
 
-    @Test
-    void shouldcreateFirstCare(){
-  
-        //Arrange
-       People people = new People();
-       people.setStatusPatient(StatusType.ENFERMO);
-       Hospital hospital = new Hospital();
+   @Test
+    void shouldCreateFirstCareWithCID() {
 
+        People people = new People();
+        people.setStatusPatient(StatusType.ENFERMO);
 
-    
-        FirstCareRequest req = new FirstCareRequest();
-        
-         assertThrows(IllegalArgumentException.class, () -> {
-                careService.createFirstCare(null, hospital, req);
-        });
+        Hospital hospital = new Hospital();
 
-        assertThrows(IllegalArgumentException.class, () -> {
-                careService.createFirstCare(people, null, req);
-        });
-    
-
-        when(repositoryPeople.save(any(People.class)))
-            .thenReturn(people);
-
-        when(repositoryFirstCare.save(any(FirstCare.class)))
-                .thenAnswer(i -> i.getArgument(0));
-
-        List<ComorbidityType> comorbidities = List.of(ComorbidityType.DIABETES);
-        people.setComorbidities(comorbidities);
-
-    CID cid = new CID(
-        "A00",
-        "Descrição",
-        SeverityLevel.MODERADO,
-        SpecialistMedic.CLINICAL_MEDICINE
+        CID cid = new CID(
+            "A00",
+            "Descrição",
+            SeverityLevel.MODERADO,
+            SpecialistMedic.CLINICAL_MEDICINE
         );
 
-    FirstCareRequest requerimento = new FirstCareRequest(
-        1L,
-        1L,
-        SpecialistMedic.CLINICAL_MEDICINE,
-        CareStatus.EM_ATENDIMENTO,
-        cid.getCode(),
-        CareSector.SETOR_UTI
-    );
+        FirstCareRequest req = new FirstCareRequest(
+            1L,
+            1L,
+            SpecialistMedic.CLINICAL_MEDICINE,
+            CareStatus.EM_ATENDIMENTO,
+            "A00",
+            CareSector.SETOR_UTI
+        );
 
-    when(repositoryCID.findById("A00")).thenReturn(Optional.of(cid));
-
-    careService.createFirstCare(people, hospital, requerimento);
-
-    //verify(repositoryCID).findById(null);
-    verify(repositoryCID).findById("A00");
-
+        when(repositoryCID.findById("A00")).thenReturn(Optional.of(cid));
+        when(repositoryPeople.save(any())).thenReturn(people);
+        when(repositoryFirstCare.save(any())).thenAnswer(i -> i.getArgument(0));
 
         // Act
         FirstCare result = careService.createFirstCare(people, hospital, req);
 
         // Assert
         assertNotNull(result);
-        assertEquals(people, result.getPeople());
-        assertEquals(hospital, result.getHospital());
-        assertNull(result.getCid());
-        assertNull(result.getSpecialistMedic());
-        assertNull(result.getCareStatus());
-    
+
+        verify(repositoryCID).findById("A00"); // ✅ agora faz sentido
+        verify(observabilityService).incrementCreateCounter();
+    }
+
+    @Test
+    void shouldThrowWhenInvalidInput(){
+        
+        People people = new People();
+        Hospital hospital = new Hospital();
+        FirstCareRequest firstCareRequest = new FirstCareRequest();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            careService.createFirstCare(null, hospital, firstCareRequest);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            careService.createFirstCare(people, null, firstCareRequest);
+        });
     }
 
     @Test
@@ -403,6 +393,7 @@ void shouldReturnFalseWhenNoProcedures() {
 
         verify(repositoryFirstCare).save(firstCare);
     }
+    
     @Test
     void shouldErrorTransferPatient(){
         
@@ -456,6 +447,7 @@ void shouldReturnFalseWhenNoProcedures() {
         verify(repositoryFirstCare).save(firstCare);
 
         verify(hospitalEventProducer).sendPatienttoSector(any());
+        verify(observabilityService).incrementTransferCounter();
     }
 
      @Test

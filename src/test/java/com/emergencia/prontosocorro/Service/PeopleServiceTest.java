@@ -1,6 +1,7 @@
 package com.emergencia.prontosocorro.Service;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
@@ -16,6 +17,7 @@ import com.emergencia.prontosocorro.Domain.Entity.Hospital;
 import com.emergencia.prontosocorro.Domain.Entity.People;
 import com.emergencia.prontosocorro.Domain.enums.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
+import com.emergencia.prontosocorro.infra.observability.ObservabilityService;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 
 
@@ -27,6 +29,9 @@ public class PeopleServiceTest {
 
     @Mock
     RepositoryHospital repositoryHospital;
+
+    @Mock
+    ObservabilityService observabilityService;
 
     @InjectMocks
     PeopleService peopleService;
@@ -65,6 +70,8 @@ public class PeopleServiceTest {
         assertNotNull(created);
         assertEquals(StatusType.ENFERMO, created.getStatusPatient());
 
+        verify(observabilityService).incrementCreateCounter();
+
     }
 
     @Test
@@ -76,7 +83,7 @@ public class PeopleServiceTest {
                 .thenReturn(Optional.of(people));
 
         DeathService deathService = mock(DeathService.class);
-        peopleService = new PeopleService(repositoryPeople, deathService, null);
+        peopleService = new PeopleService(repositoryPeople, deathService, null, null);
         peopleService.registerDeath(1L, "test", null);
 
         assertEquals(StatusType.MORTO, people.getStatusPatient());

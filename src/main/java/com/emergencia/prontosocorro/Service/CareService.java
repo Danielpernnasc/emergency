@@ -36,6 +36,7 @@ import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
 import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
 import com.emergencia.prontosocorro.infra.event.ProcessedEvent;
 import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
+import com.emergencia.prontosocorro.infra.observability.ObservabilityService;
 import com.emergencia.prontosocorro.infra.producer.HospitalEventProducer;
 
 import org.slf4j.Logger;
@@ -49,9 +50,11 @@ public class CareService {
     private final RepositoryFirstCare repositoryFirstCare;
     private final RepositoryCID repositoryCID;
     private final RepositoryCIDKeywordRule repositoryCIDKeywordRule;
-     private final HospitalEventProducer hospitalEventProducer;
-     private final RepositoryHospital repositoryHospital;
-     private final ProcessedEventRepository processedEventRepository;
+    private final HospitalEventProducer hospitalEventProducer;
+    private final RepositoryHospital repositoryHospital;
+    private final ProcessedEventRepository processedEventRepository;
+
+   private final ObservabilityService observabilityService;
 
     public CareService(
             RepositoryFirstCare repositoryFirstCare,
@@ -60,7 +63,8 @@ public class CareService {
             RepositoryCID repositoryCID,
             HospitalEventProducer hospitalEventProducer,
             RepositoryHospital repositoryHospital,
-            ProcessedEventRepository processedEventRepository
+            ProcessedEventRepository processedEventRepository,
+            ObservabilityService observabilityService
         ) {
         this.repositoryPeople = repositoryPeople;
         this.repositoryFirstCare = repositoryFirstCare;
@@ -69,6 +73,7 @@ public class CareService {
         this.hospitalEventProducer = hospitalEventProducer;
         this.repositoryHospital = repositoryHospital;
         this.processedEventRepository = processedEventRepository;
+        this.observabilityService = observabilityService;
     }
 
     public SpecialistMedic defineSpecialistMedic(String description) {
@@ -111,6 +116,7 @@ public class CareService {
     }
 
     public FirstCare createFirstCare(People people, Hospital hospital, FirstCareRequest req) {
+        observabilityService.incrementCreateCounter();
         // Lógica para criar um atendimento inicial
         if (people == null || hospital == null) {
             throw new IllegalArgumentException("People and Hospital must not be null");
@@ -119,6 +125,8 @@ public class CareService {
         if (people.getStatusPatient() == null) {
             throw new IllegalArgumentException("StatePatient must not be null");
         }
+
+
 
         people.ensureAlive();
 
@@ -164,7 +172,7 @@ public class CareService {
 
     public void applyProcedures(Long id,  FirstCare firstCare, Set<CareofPacients> proceduresToAdd, CareStatus newStatus) {
 
-     
+         observabilityService.incrementUpdateCounter();
         if (firstCare == null) {
             throw new IllegalArgumentException("FirstCare must not be null");
         }
@@ -193,8 +201,6 @@ private boolean hasProcedures(FirstCare fc) {
     return !fc.getProcedures().isEmpty();
 }
 
-
-
 public boolean canBeDiscarged(People people, FirstCare firstCare) {
         boolean isGrave = people.getSeverity() == SeverityLevel.GRAVE;
         if (isGrave) {
@@ -219,6 +225,7 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
     }
 
     public void registerDeath(FirstCare firstCare, String cause, LocalDateTime deathTime) {
+         observabilityService.incrementDeathRegister();
         firstCare.getPeople().ensureAlive();
         People people = firstCare.getPeople();
         if(people.getStatusPatient() == StatusType.MORTO) {
@@ -233,7 +240,8 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
     }
     
     public void addComorbidity(FirstCare firstCare,  List<ComorbidityType> comorbidites) {
-
+         
+        observabilityService.incrementUpdateCounter();
         if (firstCare == null) {
             throw new IllegalArgumentException("FirstCare must not be null");
         }
@@ -255,6 +263,7 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
 
     public void transferPatient(Long patientId, Long fromHospital, Long toHospital){
 
+        observabilityService.incrementTransferCounter();
         PatientTransferredEvent event = new PatientTransferredEvent(
                 UUID.randomUUID().toString(), 
                 patientId,
@@ -308,7 +317,8 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
     }
 
     public void changeSector(Long patientId, CareSector newSector){
-
+       
+        observabilityService.incrementTransferCounter();
         FirstCare firstCare = repositoryFirstCare.findById(patientId)
                         .orElseThrow(() -> new RuntimeException("Atendimento não encontrado"));
 

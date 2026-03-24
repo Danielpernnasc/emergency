@@ -1,6 +1,7 @@
 package com.emergencia.prontosocorro.Service;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 
@@ -13,12 +14,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.emergencia.prontosocorro.Domain.Entity.People;
 import com.emergencia.prontosocorro.Domain.enums.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
+import com.emergencia.prontosocorro.infra.observability.ObservabilityService;
 
 
 @ExtendWith(MockitoExtension.class)
 public class DeathServiceTest {
     @Mock
       RepositoryPeople repositoryPeople;
+    @Mock
+    ObservabilityService observabilityService;
 
       @InjectMocks
         DeathService deathService;
@@ -48,6 +52,7 @@ public class DeathServiceTest {
 
 
         assertEquals(StatusType.MORTO, people.getStatusPatient());
+        verify(observabilityService).incrementDeathRegister();
     }
 
     @Test

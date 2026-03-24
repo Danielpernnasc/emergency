@@ -7,16 +7,18 @@ import org.springframework.stereotype.Service;
 import com.emergencia.prontosocorro.Domain.Entity.People;
 import com.emergencia.prontosocorro.Domain.enums.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
+import com.emergencia.prontosocorro.infra.observability.ObservabilityService;
 
 @Service
 public class DeathService {
 
     private final RepositoryPeople repositoryPeople;
+    private final ObservabilityService observabilityService;
 
 
-    public DeathService(RepositoryPeople repositoryPeople) {
+    public DeathService(RepositoryPeople repositoryPeople, ObservabilityService observabilityService) {
         this.repositoryPeople = repositoryPeople;
-
+        this.observabilityService = observabilityService;
     }
 
     public void registerDeath(
@@ -32,6 +34,7 @@ public class DeathService {
             throw new IllegalStateException("justification is mandatadory");
         }
 
+       observabilityService.incrementDeathRegister();
         LocalDateTime deathTime =  date != null ? date : LocalDateTime.now();
 
         people.registerDeath(justification, deathTime);
