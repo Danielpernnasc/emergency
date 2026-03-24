@@ -285,10 +285,15 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
 
         Hospital newHospital = repositoryHospital.findById(event.getToHospitalId()) 
                 .orElseThrow(() -> new RuntimeException("Hospital destiny not find - Hospital destino não encontrado"));
+                
+          if(!Objects.equals(firstCare.getHospital().getId(), event.getFromHospitalId())){
+            throw new RuntimeException("Paciente não está nesse hospital");
+        }
 
         firstCare.setHospital(newHospital);
 
         repositoryFirstCare.save(firstCare);
+      
 
         processedEventRepository.save(
             ProcessedEvent.of(event.getEventId())
