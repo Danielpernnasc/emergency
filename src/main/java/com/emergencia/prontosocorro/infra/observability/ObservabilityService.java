@@ -3,6 +3,7 @@ package com.emergencia.prontosocorro.infra.observability;
 import org.springframework.stereotype.Component;
 
 import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class ObservabilityService {
@@ -33,6 +34,11 @@ public class ObservabilityService {
 
     public void incrementDeathRegister(){
         meterRegistry.counter(DEATH_METRIC, "status", "success").increment();
+    }
+
+   @PostConstruct
+    public void testMetric() {
+        meterRegistry.counter("patient.create.total").increment();
     }
 
 

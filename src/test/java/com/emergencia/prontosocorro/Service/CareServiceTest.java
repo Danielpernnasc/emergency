@@ -190,8 +190,6 @@ public class CareServiceTest {
     }
 
 
-
-
     @Test 
     void shouldcanBeDiscarged(){
 
@@ -393,7 +391,7 @@ void shouldReturnFalseWhenNoProcedures() {
 
         verify(repositoryFirstCare).save(firstCare);
     }
-    
+
     @Test
     void shouldErrorTransferPatient(){
         
