@@ -7,10 +7,29 @@ spring:
     username: 43g3dmxQjes9pvD.root
     password: ${DB_PASSWORD}
 
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 20000
+
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update   # ⚠️ em produção usar: validate
+
     show-sql: true
+
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 1000
+        order_inserts: true
+        order_updates: true
+
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
 
 resilience4j:
   circuitbreaker:

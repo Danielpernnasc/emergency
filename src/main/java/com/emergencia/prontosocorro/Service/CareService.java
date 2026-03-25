@@ -146,7 +146,14 @@ public class CareService {
                     .orElseThrow(() -> new RuntimeException("CID not found"));
 
             people.setSeverity(cid.getSeverityLevel());
-            people.changeStatus(cid.getSeverityLevel());
+            
+            SeverityLevel severity = cid.getSeverityLevel();
+
+            if (severity == null) {
+                severity = SeverityLevel.LEVE; // fallback
+            }
+
+            people.changeStatus(severity);
         }
 
         repositoryPeople.save(people);

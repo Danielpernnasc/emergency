@@ -23,7 +23,7 @@ public class CID {
     @Enumerated(EnumType.STRING)
     private SpecialistMedic specialistMedic;
 
-    protected CID() {
+    public CID() {
     // obrigatório para JPA
     }
 
