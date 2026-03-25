@@ -11,9 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.emergencia.prontosocorro.Domain.Entity.People;
-import com.emergencia.prontosocorro.Domain.enums.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
+import com.emergencia.prontosocorro.domain.entity.People;
+import com.emergencia.prontosocorro.domain.enums.StatusType;
 import com.emergencia.prontosocorro.infra.observability.ObservabilityService;
 
 

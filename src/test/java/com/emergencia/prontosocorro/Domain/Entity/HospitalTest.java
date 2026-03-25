@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergencia.prontosocorro.Domain.Entity.Hospital;
+import com.emergencia.prontosocorro.domain.entity.Hospital;
 
 public class HospitalTest {
 

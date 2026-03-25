@@ -15,24 +15,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.emergencia.prontosocorro.DTO.Request.FirstCareRequest;
-import com.emergencia.prontosocorro.Domain.Entity.CID;
-import com.emergencia.prontosocorro.Domain.Entity.CIDKeywordRule;
-import com.emergencia.prontosocorro.Domain.Entity.FirstCare;
-import com.emergencia.prontosocorro.Domain.Entity.Hospital;
-import com.emergencia.prontosocorro.Domain.Entity.People;
-import com.emergencia.prontosocorro.Domain.enums.CareSector;
-import com.emergencia.prontosocorro.Domain.enums.CareStatus;
-import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
-import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
-import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
-import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
-import com.emergencia.prontosocorro.Domain.enums.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryCIDKeywordRule;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 import com.emergencia.prontosocorro.Repository.EventRepository.ProcessedEventRepository;
 import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
+import com.emergencia.prontosocorro.domain.entity.CID;
+import com.emergencia.prontosocorro.domain.entity.CIDKeywordRule;
+import com.emergencia.prontosocorro.domain.entity.FirstCare;
+import com.emergencia.prontosocorro.domain.entity.Hospital;
+import com.emergencia.prontosocorro.domain.entity.People;
+import com.emergencia.prontosocorro.domain.enums.CareSector;
+import com.emergencia.prontosocorro.domain.enums.CareStatus;
+import com.emergencia.prontosocorro.domain.enums.CareofPacients;
+import com.emergencia.prontosocorro.domain.enums.ComorbidityType;
+import com.emergencia.prontosocorro.domain.enums.SeverityLevel;
+import com.emergencia.prontosocorro.domain.enums.SpecialistMedic;
+import com.emergencia.prontosocorro.domain.enums.StatusType;
 import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
 import com.emergencia.prontosocorro.infra.event.ProcessedEvent;
 import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
@@ -146,7 +146,14 @@ public class CareService {
                     .orElseThrow(() -> new RuntimeException("CID not found"));
 
             people.setSeverity(cid.getSeverityLevel());
-            people.changeStatus(cid.getSeverityLevel());
+            
+            SeverityLevel severity = cid.getSeverityLevel();
+
+            if (severity == null) {
+                severity = SeverityLevel.LEVE; // fallback
+            }
+
+            people.changeStatus(severity);
         }
 
         repositoryPeople.save(people);

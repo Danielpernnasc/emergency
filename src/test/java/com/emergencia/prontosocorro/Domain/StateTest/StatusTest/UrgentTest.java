@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergencia.prontosocorro.Domain.State.Status.Urgent;
-import com.emergencia.prontosocorro.Domain.enums.StatusType;
+import com.emergencia.prontosocorro.domain.state.status.Urgent;
+import com.emergencia.prontosocorro.domain.enums.StatusType;
 
 public class UrgentTest {
 

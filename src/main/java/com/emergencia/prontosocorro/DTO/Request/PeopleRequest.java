@@ -1,8 +1,8 @@
 package com.emergencia.prontosocorro.DTO.Request;
 import java.util.List;
 
-import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
-import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
+import com.emergencia.prontosocorro.domain.enums.ComorbidityType;
+import com.emergencia.prontosocorro.domain.enums.SeverityLevel;
 
 public record PeopleRequest(
     String name,

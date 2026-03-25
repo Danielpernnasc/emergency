@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.emergencia.prontosocorro.Domain.Entity.CIDKeywordRule;
+import com.emergencia.prontosocorro.domain.entity.CIDKeywordRule;
 
 public interface RepositoryCIDKeywordRule  extends JpaRepository<CIDKeywordRule, Long> {
      @Query("""

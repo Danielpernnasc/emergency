@@ -2,8 +2,8 @@ package com.emergencia.prontosocorro.DTO.Response;
 
 import java.util.List;
 
-import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
-import com.emergencia.prontosocorro.Domain.enums.StatusType;
+import com.emergencia.prontosocorro.domain.enums.ComorbidityType;
+import com.emergencia.prontosocorro.domain.enums.StatusType;
 
 public record PeopleResponse(
     Long id,

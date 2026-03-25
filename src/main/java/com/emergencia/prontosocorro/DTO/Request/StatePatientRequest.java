@@ -2,8 +2,8 @@ package com.emergencia.prontosocorro.DTO.Request;
 
 import java.time.LocalDateTime;
 
-import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
-import com.emergencia.prontosocorro.Domain.enums.StatusType;
+import com.emergencia.prontosocorro.domain.enums.SeverityLevel;
+import com.emergencia.prontosocorro.domain.enums.StatusType;
 
 public record StatePatientRequest(StatusType statusType, String justification, LocalDateTime date) {
     public StatePatientRequest() {

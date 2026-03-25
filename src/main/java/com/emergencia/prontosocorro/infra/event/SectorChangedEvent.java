@@ -2,7 +2,7 @@ package com.emergencia.prontosocorro.infra.event;
 
 import java.time.LocalDateTime;
 
-import com.emergencia.prontosocorro.Domain.enums.CareSector;
+import com.emergencia.prontosocorro.domain.enums.CareSector;
 
 public class SectorChangedEvent {
     

@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergencia.prontosocorro.Domain.State.Status.Critical;
-import com.emergencia.prontosocorro.Domain.enums.StatusType;
+import com.emergencia.prontosocorro.domain.state.status.Critical;
+import com.emergencia.prontosocorro.domain.enums.StatusType;
 
 public class CriticalTest {
     @Test
