@@ -28,7 +28,7 @@ public class CID {
 
 
 
-    protected CID() {
+    public CID() {
     // obrigatório para JPA
     }
 
