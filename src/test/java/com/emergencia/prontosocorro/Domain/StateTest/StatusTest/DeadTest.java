@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergencia.prontosocorro.Domain.State.Status.Dead;
+import com.emergencia.prontosocorro.domain.state.status.Dead;
 
 public class DeadTest {
     @Test
@@ -32,7 +32,7 @@ public class DeadTest {
 
         var statusType = dead.getStatusType();
 
-        assertEquals(com.emergencia.prontosocorro.Domain.enums.StatusType.MORTO, statusType);
+        assertEquals(com.emergencia.prontosocorro.domain.enums.StatusType.MORTO, statusType);
     }   
         
 

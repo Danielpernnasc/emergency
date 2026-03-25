@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Domain.enums;
+package com.emergencia.prontosocorro.domain.enums;
 
 public enum ComorbidityType {
     HIPERTENSAO,

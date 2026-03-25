@@ -1,6 +1,6 @@
-package com.emergencia.prontosocorro.Domain.Entity;
+package com.emergencia.prontosocorro.domain.entity;
 
-import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
+import com.emergencia.prontosocorro.domain.enums.SpecialistMedic;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

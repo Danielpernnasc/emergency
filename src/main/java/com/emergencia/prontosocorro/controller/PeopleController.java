@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Controller;
+package com.emergencia.prontosocorro.controller;
 
 import com.emergencia.prontosocorro.Service.CareService;
 import java.util.List;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.emergencia.prontosocorro.DTO.Request.PeopleRequest;
 import com.emergencia.prontosocorro.DTO.Request.StatePatientRequest;
 import com.emergencia.prontosocorro.DTO.Response.PeopleResponse;
-import com.emergencia.prontosocorro.Domain.Entity.People;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 import com.emergencia.prontosocorro.Service.PeopleService;
+import com.emergencia.prontosocorro.domain.entity.People;
 
 @RestController
 @RequestMapping("/people")

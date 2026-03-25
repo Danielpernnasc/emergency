@@ -1,15 +1,15 @@
-package com.emergencia.prontosocorro.Domain.Entity;
+package com.emergencia.prontosocorro.domain.entity;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.emergencia.prontosocorro.Domain.enums.CareSector;
-import com.emergencia.prontosocorro.Domain.enums.CareStatus;
-import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
-import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
-import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
-import com.emergencia.prontosocorro.Domain.enums.StatusType;
+import com.emergencia.prontosocorro.domain.enums.CareSector;
+import com.emergencia.prontosocorro.domain.enums.CareStatus;
+import com.emergencia.prontosocorro.domain.enums.CareofPacients;
+import com.emergencia.prontosocorro.domain.enums.ComorbidityType;
+import com.emergencia.prontosocorro.domain.enums.SpecialistMedic;
+import com.emergencia.prontosocorro.domain.enums.StatusType;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;

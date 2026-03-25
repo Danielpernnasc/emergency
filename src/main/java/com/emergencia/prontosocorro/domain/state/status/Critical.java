@@ -1,7 +1,7 @@
-package com.emergencia.prontosocorro.Domain.State.Status;
+package com.emergencia.prontosocorro.domain.state.status;
 
-import com.emergencia.prontosocorro.Domain.State.StatePatient;
-import com.emergencia.prontosocorro.Domain.enums.StatusType;
+import com.emergencia.prontosocorro.domain.state.StatePatient;
+import com.emergencia.prontosocorro.domain.enums.StatusType;
 
 public class Critical implements StatePatient {
     @Override

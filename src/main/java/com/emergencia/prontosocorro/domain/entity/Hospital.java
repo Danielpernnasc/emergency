@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Domain.Entity;
+package com.emergencia.prontosocorro.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

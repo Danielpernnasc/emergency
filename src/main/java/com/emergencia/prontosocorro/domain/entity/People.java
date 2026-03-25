@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Domain.Entity;
+package com.emergencia.prontosocorro.domain.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
-import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
-import com.emergencia.prontosocorro.Domain.enums.StatusType;
+import com.emergencia.prontosocorro.domain.enums.ComorbidityType;
+import com.emergencia.prontosocorro.domain.enums.SeverityLevel;
+import com.emergencia.prontosocorro.domain.enums.StatusType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CollectionTable;

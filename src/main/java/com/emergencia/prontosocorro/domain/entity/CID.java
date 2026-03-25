@@ -1,7 +1,7 @@
-package com.emergencia.prontosocorro.Domain.Entity;
+package com.emergencia.prontosocorro.domain.entity;
 
-import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
-import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
+import com.emergencia.prontosocorro.domain.enums.SeverityLevel;
+import com.emergencia.prontosocorro.domain.enums.SpecialistMedic;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

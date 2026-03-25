@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/sys?sslMode=REQUIRED
+    url: jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/prontosocorro?sslMode=REQUIRED
     username: 43g3dmxQjes9pvD.root
-    password: jEqsWU7pkeDiPLGh
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:

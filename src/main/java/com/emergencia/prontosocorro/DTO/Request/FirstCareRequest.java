@@ -1,8 +1,8 @@
 package com.emergencia.prontosocorro.DTO.Request;
 
-import com.emergencia.prontosocorro.Domain.enums.CareSector;
-import com.emergencia.prontosocorro.Domain.enums.CareStatus;
-import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
+import com.emergencia.prontosocorro.domain.enums.CareSector;
+import com.emergencia.prontosocorro.domain.enums.CareStatus;
+import com.emergencia.prontosocorro.domain.enums.SpecialistMedic;
 
 
 public record FirstCareRequest(

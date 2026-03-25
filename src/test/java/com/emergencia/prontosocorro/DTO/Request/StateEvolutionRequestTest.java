@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Set;
 
-import com.emergencia.prontosocorro.Domain.enums.CareStatus;
-import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
-
 import org.junit.jupiter.api.Test;
+
+import com.emergencia.prontosocorro.domain.enums.CareStatus;
+import com.emergencia.prontosocorro.domain.enums.CareofPacients;
 
 public class StateEvolutionRequestTest {
 

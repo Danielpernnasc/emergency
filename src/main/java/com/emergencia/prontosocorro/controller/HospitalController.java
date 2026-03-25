@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.Controller;
+package com.emergencia.prontosocorro.controller;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.emergencia.prontosocorro.DTO.Request.HospitalRequest;
-import com.emergencia.prontosocorro.Domain.Entity.Hospital;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
+import com.emergencia.prontosocorro.domain.entity.Hospital;
 
 import jakarta.persistence.EntityNotFoundException;
 
