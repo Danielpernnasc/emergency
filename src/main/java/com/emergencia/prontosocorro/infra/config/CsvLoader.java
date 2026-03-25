@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.emergencia.prontosocorro.Repository.RepositoryCIDKeywordRule;
@@ -14,7 +15,7 @@ import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
 import com.emergencia.prontosocorro.domain.entity.CID;
 import com.emergencia.prontosocorro.domain.entity.CIDKeywordRule;
 
-
+@Profile("!test")
 @Component
 public class CsvLoader {
 
