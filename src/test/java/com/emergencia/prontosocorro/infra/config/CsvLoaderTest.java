@@ -8,8 +8,8 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.CommandLineRunner;
 
-import com.emergencia.prontosocorro.Repository.RepositoryCIDKeywordRule;
-import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
+import com.emergencia.prontosocorro.repository.RepositoryCIDKeywordRule;
+import com.emergencia.prontosocorro.repository.loaderRepository.RepositoryCID;
 
 public class CsvLoaderTest {
    @Test

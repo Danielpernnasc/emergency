@@ -2,7 +2,6 @@ package com.emergencia.prontosocorro.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,20 +14,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.emergencia.prontosocorro.DTO.Request.ChangeSectorRequest;
-import com.emergencia.prontosocorro.DTO.Request.DeathRequest;
-import com.emergencia.prontosocorro.DTO.Request.FirstCareRequest;
-import com.emergencia.prontosocorro.DTO.Request.StateEvolutionRequest;
-import com.emergencia.prontosocorro.DTO.Response.FirstCareResponse;
-import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
-import com.emergencia.prontosocorro.Repository.RepositoryHospital;
-import com.emergencia.prontosocorro.Repository.RepositoryPeople;
-import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
-import com.emergencia.prontosocorro.Service.CareService;
+import com.emergencia.prontosocorro.DTO.request.ChangeSectorRequest;
+import com.emergencia.prontosocorro.DTO.request.DeathRequest;
+import com.emergencia.prontosocorro.DTO.request.FirstCareRequest;
+import com.emergencia.prontosocorro.DTO.request.StateEvolutionRequest;
+import com.emergencia.prontosocorro.DTO.response.FirstCareResponse;
 import com.emergencia.prontosocorro.domain.entity.FirstCare;
 import com.emergencia.prontosocorro.domain.entity.Hospital;
 import com.emergencia.prontosocorro.domain.entity.People;
 import com.emergencia.prontosocorro.domain.enums.ComorbidityType;
+import com.emergencia.prontosocorro.repository.RepositoryFirstCare;
+import com.emergencia.prontosocorro.repository.RepositoryHospital;
+import com.emergencia.prontosocorro.repository.RepositoryPeople;
+import com.emergencia.prontosocorro.repository.loaderRepository.RepositoryCID;
+import com.emergencia.prontosocorro.service.CareService;
 
 @RestController
 @RequestMapping("firstcare")
