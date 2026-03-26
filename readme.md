@@ -75,13 +75,16 @@ src/main/java/com/emergencia/prontosocorro
 │       ├── FirstCareResponse.java
 │       └── PeopleResponse.java
 │   
- Message
-│       ├── config
-│       │   ├── RabbitMQConfig.java  
-│       │   └── CsvLoader.java
-│       │ 
-│       ├── consumer
-│       │   ├── HospitalEventConsumer.java
+|
+├──infra       
+|   ├── config
+│   │   ├── RabbitMQConfig.java  
+│   │   └── CsvLoader.java
+│   │ 
+│   ├── messaging
+│       │──consumer    
+│       │   ├──CaresStatusEventConsumer.java
+│       │   └── HospitalEventConsumer.java
 │       │   └── SectorEventConsumer.java
 │       │
 │       ├── event
@@ -106,23 +109,23 @@ src/main/java/com/emergencia/prontosocorro
 │   └── RepositoryPeople.java
 │
 └── infra → Infraestrutura (detalhes técnicos)
-        ├── config
-        │   └── RabbitMQConfig.java
-        │
-        ├── messaging → consumidores (entrada de eventos)
-        │   ├── HospitalEventConsumer.java
-        │   └── SectorEventConsumer.java
-        │
-        ├── producer → saída de eventos
-        │   └── HospitalEventProducer.java
-        │
-        ├── event → contratos de eventos
-        │   ├── PatientTransferredEvent.java
-        │   └── SectorChangedEvent.java
-        │
-        └── observability → métricas de negócio com Micrometer (monitoramento e análise do sistema)
-            └── ObservabilityService.java
-
+│   ├── config
+│   │   └── RabbitMQConfig.java
+│   │
+│   ├── messaging → consumidores (entrada de eventos)
+│   │   ├── HospitalEventConsumer.java
+│   │   └── SectorEventConsumer.java
+│   │
+│   ├── producer → saída de eventos
+│   │   └── HospitalEventProducer.java
+│   │
+│   ├── event → contratos de eventos
+│       │   ├── PatientTransferredEvent.java
+│       │   └── SectorChangedEvent.java
+│       │
+│       └── observability → métricas de negócio com Micrometer (monitoramento e análise do sistema)
+│            └── ObservabilityService.java
+│
 └── ProntosocorroApplication.java
 
 # 📐 Padrões de Projeto Utilizados
