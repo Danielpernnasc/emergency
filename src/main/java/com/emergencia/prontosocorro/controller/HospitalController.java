@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,8 @@ import com.emergencia.prontosocorro.repository.RepositoryHospital;
 
 import jakarta.persistence.EntityNotFoundException;
 
+
+@CrossOrigin(origins = "https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app/swagger-ui/index.html")
 @RestController
 @RequestMapping("hospital")
 public class HospitalController {

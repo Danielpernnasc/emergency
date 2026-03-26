@@ -3,13 +3,13 @@ package com.emergencia.prontosocorro.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.emergencia.prontosocorro.DTO.request.PeopleRequest;
@@ -17,9 +17,10 @@ import com.emergencia.prontosocorro.DTO.request.StatePatientRequest;
 import com.emergencia.prontosocorro.DTO.response.PeopleResponse;
 import com.emergencia.prontosocorro.domain.entity.People;
 import com.emergencia.prontosocorro.repository.RepositoryPeople;
-import com.emergencia.prontosocorro.service.CareService;
 import com.emergencia.prontosocorro.service.PeopleService;
 
+
+@CrossOrigin(origins = "https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app/swagger-ui/index.html")
 @RestController
 @RequestMapping("/people")
 public class PeopleController {
