@@ -1,59 +1,50 @@
 package com.emergencia.prontosocorro.infra.config;
 
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.util.Collections;
+import java.io.BufferedReader;
+import java.io.StringReader;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.CommandLineRunner;
 
-import com.emergencia.prontosocorro.repository.RepositoryCIDKeywordRule;
+import com.emergencia.prontosocorro.domain.entity.CID;
 import com.emergencia.prontosocorro.repository.loaderRepository.RepositoryCID;
 
-public class CsvLoaderTest {
-   @Test
-    void shouldNotSeedWhenRulesAlreadyExist() throws Exception {
-        // mocks
-        RepositoryCID cidRepo = mock(RepositoryCID.class);
-        RepositoryCIDKeywordRule ruleRepo = mock(RepositoryCIDKeywordRule.class);
-
-        // comportamento
-        when(ruleRepo.count()).thenReturn(1L);
-
-        // cria runner manualmente
-        CommandLineRunner runner = args -> {
-            if (ruleRepo.count() > 0) return;
-        };
-
-        // executa
-        runner.run();
-
-        // valida: NÃO chamou nada
-        verify(ruleRepo, never()).saveAll(any());
-        verify(cidRepo, never()).findAll();
-    }
+class CsvLoaderTest {
 
     @Test
-    void shouldSeedWhenNoRulesExist() throws Exception {
-        // mocks
-        RepositoryCID cidRepo = mock(RepositoryCID.class);
-        RepositoryCIDKeywordRule ruleRepo = mock(RepositoryCIDKeywordRule.class);
+    void shouldLoadDataFromCsv() throws Exception {
 
-        // comportamento
-        when(ruleRepo.count()).thenReturn(0L);
-        when(cidRepo.findAll()).thenReturn(Collections.emptyList());
+        // mock do repository
+        RepositoryCID repository = mock(RepositoryCID.class);
 
-        // runner simplificado
-        CommandLineRunner runner = args -> {
-            if (ruleRepo.count() > 0) return;
-            cidRepo.findAll();
+        when(repository.count()).thenReturn(0L);
+
+        // CSV fake (simula arquivo real)
+        String fakeCsv =
+                "CAT;CLASSIF;DESCRICAO\n" +
+                "A90;;Dengue\n" +
+                "B01;;Catapora\n";
+
+        BufferedReader fakeReader = new BufferedReader(new StringReader(fakeCsv));
+
+        // cria loader sobrescrevendo leitura
+        CsvLoader loader = new CsvLoader(repository) {
+            
+            protected List<String> getCsvPaths() {
+                return List.of("fake");
+            }
+
+            @Override
+            protected BufferedReader createReader(String path) {
+                return fakeReader;
+            }
         };
 
-        // executa
-        runner.run();
+        loader.load();
 
-        // valida
-        verify(cidRepo, times(1)).findAll();
+        // verifica se salvou
+        verify(repository, atLeastOnce()).saveAll(any());
     }
 }
