@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import com.emergencia.prontosocorro.DTO.request.PeopleRequest;
 import com.emergencia.prontosocorro.DTO.request.StatePatientRequest;
 import com.emergencia.prontosocorro.DTO.response.PeopleResponse;
-import com.emergencia.prontosocorro.controller.PeopleController;
 import com.emergencia.prontosocorro.domain.entity.Hospital;
 import com.emergencia.prontosocorro.domain.entity.People;
 import com.emergencia.prontosocorro.domain.enums.ComorbidityType;
