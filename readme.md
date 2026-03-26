@@ -12,7 +12,7 @@
 ---
 
 📌 Visão Geral
-O ProntoSocorro é um sistema de atendimento hospitalar desenvolvido com foco em:
+O sistema foi desenvolvido com foco em:
 
 🧠 Domain-Driven Design (DDD)
 
@@ -20,9 +20,7 @@ O ProntoSocorro é um sistema de atendimento hospitalar desenvolvido com foco em
 
 🔄 Arquitetura orientada a eventos (Event-Driven)
 
-🏥 Modelagem realista de fluxo hospitalar
-
-Domínio primeiro, infraestrutura depois
+🏥 Simulação realista de fluxo hospitalar
 
 ---
 
@@ -132,16 +130,20 @@ src/main/java/com/emergencia/prontosocorro
 
 O projeto utiliza alguns padrões clássicos de engenharia de software:
 
-### State Pattern
-Utilizado para modelar o estado do paciente.
+🎯 Padrões Utilizados
+State Pattern
+Gerenciamento do estado do paciente:
 
-Estados possíveis:
+Sick
 
-- Sick
-- Urgent
-- Critical
-- Interned
-- Dead
+Urgent
+
+Critical
+
+Interned
+
+Dead
+
 
 Cada estado define comportamentos específicos do paciente
 
@@ -166,7 +168,24 @@ Principais áreas cobertas:
 - Registro de óbito
 - Estados do paciente
 
-A cobertura atual está acima de **80%**, garantindo maior confiabilidade do sistema.
+🧪 Testes
+✔ JUnit 5
+
+✔ Mockito
+
+✔ JaCoCo
+
+📊 Cobertura: +80%
+
+
+
+🧱 Arquitetura
+controller → entrada (REST API)
+service → regras de negócio
+domain → núcleo do sistema
+repository → persistência
+infra → mensageria + config
+
 
 # 📬 Exemplo de Requisição
 
@@ -194,16 +213,20 @@ POST /people
 
 ✔️ Código preparado para evolução
 
-🚀 Tecnologias Utilizadas
+🧰 Tecnologias
+Java 21
 
-- Java 21
-- Spring Boot
-- Spring Data JPA
-- Maven
-- JUnit 5
-- Mockito
-- JaCoCo
+Spring Boot
 
+Spring Data JPA
+
+Maven
+
+RabbitMQ
+
+Docker
+
+Micrometer + Actuator
 🧩 Arquitetura de Mensageria (RabbitMQ)
 O sistema utiliza RabbitMQ para comunicação assíncrona entre componentes.
 
@@ -213,21 +236,27 @@ Service → Producer → RabbitMQ → Consumer → Service
 ## 🌐 Endpoints Principais
 
 
-### Pacientes
-POST /people  
-GET /people  
+📡 Endpoints
+👤 Pacientes
+POST /people
+
+GET /people
+
 GET /people/{id}
 
-### Hospitais
-POST /hospital  
+🏥 Hospital
+POST /hospital
+
 GET /hospital
 
-### Atendimento
-POST /first-care  
-POST/ first-care/transfer
-PUT /first-care/{id}/add-comorbidity  
+🚑 Atendimento
+POST /first-care
+
+POST /first-care/transfer
+
+PUT /first-care/{id}/add-comorbidity
+
 PUT /first-care/{id}/register-death
-PATCH /first-care/{id}/sector
 
 
 🏁 Conclusão
@@ -248,6 +277,10 @@ mvn spring-boot:run
 ## 🐰 RabbitMQ
 
 O sistema utiliza RabbitMQ para mensageria assíncrona.
+🐰 Mensageria (RabbitMQ)
+Fluxo:
+
+Service → Producer → RabbitMQ → Consumer → Service
 
 ### ▶️ Executar com Docker
 
@@ -276,8 +309,9 @@ password: guest
 📊 Observabilidade
 O projeto possui observabilidade básica e avançada, permitindo monitorar o comportamento das regras de negócio em tempo real.
 
-🔹 Observabilidade Simples (Spring Boot Actuator)
-Métricas são expostas via Spring Boot Actuator + Micrometer, sem necessidade de ferramentas externas.
+📊 Observabilidade
+Actuator
+/actuator/metrics
 
 ▶️ Como acessar
 Após iniciar a aplicação:
@@ -301,6 +335,11 @@ O projeto também suporta integração com Prometheus, permitindo coleta contín
 Aplicação rodando (localhost:8080)
 
 RabbitMQ ativo (necessário para o sistema)
+
+Prometheus
+
+coleta de métricas
+análise histórica
 
 📁 Arquivo prometheus.yml
 global:
@@ -328,5 +367,6 @@ patient_transfer_total
 📈 Exemplo de retorno
 patient_transfer_total{status="success"} 
 
-🌐acesse o swagger online 
-https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app/swagger-ui/index.html
+🚀 Deploy
+🔗 Swagger (produção):
+👉 https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app/swagger-ui/index.html
