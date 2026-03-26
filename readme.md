@@ -30,13 +30,13 @@ Domínio primeiro, infraestrutura depois
 
 src/main/java/com/emergencia/prontosocorro
 │
-├── Controller → Camada de entrada (API REST)
+├── controller → Camada de entrada (API REST)
 │   ├── FirstCareController.java
 │   ├── HospitalController.java
 │   └── PeopleController.java
 │
-├── Domain → Núcleo do sistema (regras de negócio)
-│   ├── Entity → Entidades do domínio (não são apenas banco)
+├── domain → Núcleo do sistema (regras de negócio)
+│   ├── entity → Entidades do domínio (não são apenas banco)
 │   │   ├── Cid.java
 │   │   ├── CIDKeywordRule.java
 │   │   ├── FirstCare.java
@@ -51,8 +51,8 @@ src/main/java/com/emergencia/prontosocorro
 │   │   ├── SpecialistMedic.java
 │   │   └── StatusType.java
 │   │
-│   └── State → Implementação do State Pattern
-│       ├── Status
+│   └──state → Implementação do State Pattern
+│       ├── status
 │       │   ├── Critical.java
 │       │   ├── Dead.java
 │       │   ├── Interned.java
@@ -63,7 +63,7 @@ src/main/java/com/emergencia/prontosocorro
 │       └── StatePeopleFactory.java
 │
 ├── DTO → Objetos de transferência de dados (entrada/saída da API)
-│   ├── Request → Dados recebidos pela API
+│   ├── request → Dados recebidos pela API
 │   │   ├── DeathRequest.java
 │   │   ├── FirstCareRequest.java
 │   │   ├── HospitalRequest.java
@@ -71,7 +71,7 @@ src/main/java/com/emergencia/prontosocorro
 │   │   ├── StateEvolutionRequest.java
 │   │   └── StatePatientRequest.java
 │   │
-│   ├── Response → Dados retornados pela API
+│   ├── response → Dados retornados pela API
 │       ├── FirstCareResponse.java
 │       └── PeopleResponse.java
 │   
@@ -94,12 +94,12 @@ src/main/java/com/emergencia/prontosocorro
 │       └── producer
 │           └── HospitalEventProducer.java
 │
-├── Service → Orquestração das regras de negócio
+├── service → Orquestração das regras de negócio
 │   ├── CareService.java
 │   ├── DeathService.java
 │   └── PeopleService.java
 │
-├── Repository → Persistência (acesso a dados)
+├── repository → Persistência (acesso a dados)
 │   ├── LoaderRepository
 │   │   ├── RepositoryCID.java
 │   │   └── RepositoryCIDKeywordRule.java

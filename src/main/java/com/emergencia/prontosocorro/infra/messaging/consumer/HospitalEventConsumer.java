@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import com.emergencia.prontosocorro.Service.CareService;
 import com.emergencia.prontosocorro.infra.config.RabbitMQConfig;
 import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
+import com.emergencia.prontosocorro.service.CareService;
 
 @Component
 public class HospitalEventConsumer {
