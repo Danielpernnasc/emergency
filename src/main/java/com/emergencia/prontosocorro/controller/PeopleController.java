@@ -20,7 +20,7 @@ import com.emergencia.prontosocorro.repository.RepositoryPeople;
 import com.emergencia.prontosocorro.service.PeopleService;
 
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app/swagger-ui/index.html")
 @RestController
 @RequestMapping("/people")
 public class PeopleController {

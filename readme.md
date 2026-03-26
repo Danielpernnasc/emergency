@@ -326,4 +326,7 @@ No campo de busca do Prometheus:
 
 patient_transfer_total
 📈 Exemplo de retorno
-patient_transfer_total{status="success"} 5
+patient_transfer_total{status="success"} 
+
+🌐acesse o swagger online 
+https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app/swagger-ui/index.html

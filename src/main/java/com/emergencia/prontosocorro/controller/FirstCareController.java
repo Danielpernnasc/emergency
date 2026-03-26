@@ -31,7 +31,7 @@ import com.emergencia.prontosocorro.repository.loaderRepository.RepositoryCID;
 import com.emergencia.prontosocorro.service.CareService;
 
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app/swagger-ui/index.html")
 @RestController
 @RequestMapping("firstcare")
 public class FirstCareController {
