@@ -5,12 +5,16 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergencia.prontosocorro.Domain.enums.CareSector;
-import com.emergencia.prontosocorro.Domain.enums.CareStatus;
-import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
-import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
-import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
-import com.emergencia.prontosocorro.Domain.enums.StatusType;
+import com.emergencia.prontosocorro.domain.entity.CID;
+import com.emergencia.prontosocorro.domain.entity.FirstCare;
+import com.emergencia.prontosocorro.domain.entity.Hospital;
+import com.emergencia.prontosocorro.domain.entity.People;
+import com.emergencia.prontosocorro.domain.enums.CareSector;
+import com.emergencia.prontosocorro.domain.enums.CareStatus;
+import com.emergencia.prontosocorro.domain.enums.CareofPacients;
+import com.emergencia.prontosocorro.domain.enums.SeverityLevel;
+import com.emergencia.prontosocorro.domain.enums.SpecialistMedic;
+import com.emergencia.prontosocorro.domain.enums.StatusType;
  
 
 public class FirtCareTest {

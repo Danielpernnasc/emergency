@@ -10,8 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Service.CareService;
+import com.emergencia.prontosocorro.domain.enums.CareSector;
 import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
 
 @ExtendWith(MockitoExtension.class)

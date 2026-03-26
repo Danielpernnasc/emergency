@@ -30,9 +30,10 @@ jobs:
           path: target/site/jacoco/
 
       - name: SonarCloud Scan
-        run: mvn verify sonar:sonar \
-          -Dsonar.projectKey=prontosocorro \
-          -Dsonar.organization=daniel \
-          -Dsonar.host.url=https://sonarcloud.io/project/overview?id=Danielpernnasc_emergencia \
-          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-          -Dsonar.login=${{ secrets.EMERGENCIATOKEN }}
+        run: |
+          mvn verify sonar:sonar \
+            -Dsonar.projectKey=Danielpernnasc_emergencia \
+            -Dsonar.organization=danielpernnasc \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+            -Dsonar.token=${{ secrets.EMERGENCIATOKEN }}

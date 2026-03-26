@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
-import com.emergencia.prontosocorro.Domain.enums.CareSector;
+import com.emergencia.prontosocorro.domain.enums.CareSector;
 import com.emergencia.prontosocorro.infra.event.PatientTransferredEvent;
 import com.emergencia.prontosocorro.infra.event.SectorChangedEvent;
 import com.emergencia.prontosocorro.infra.producer.HospitalEventProducer;

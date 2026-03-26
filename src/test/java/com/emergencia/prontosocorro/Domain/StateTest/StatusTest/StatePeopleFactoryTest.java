@@ -4,14 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergencia.prontosocorro.Domain.State.StatePatient;
-import com.emergencia.prontosocorro.Domain.State.Status.Critical;
-import com.emergencia.prontosocorro.Domain.State.Status.Dead;
-import com.emergencia.prontosocorro.Domain.State.Status.Interned;
-import com.emergencia.prontosocorro.Domain.State.Status.Sick;
-import com.emergencia.prontosocorro.Domain.State.Status.StatePeopleFactory;
-import com.emergencia.prontosocorro.Domain.State.Status.Urgent;
-import com.emergencia.prontosocorro.Domain.enums.StatusType;
+import com.emergencia.prontosocorro.domain.state.StatePatient;
+import com.emergencia.prontosocorro.domain.state.status.Critical;
+import com.emergencia.prontosocorro.domain.state.status.Dead;
+import com.emergencia.prontosocorro.domain.state.status.Interned;
+import com.emergencia.prontosocorro.domain.state.status.Sick;
+import com.emergencia.prontosocorro.domain.state.status.StatePeopleFactory;
+import com.emergencia.prontosocorro.domain.state.status.Urgent;
+import com.emergencia.prontosocorro.domain.enums.StatusType;
 
 public class StatePeopleFactoryTest {
 

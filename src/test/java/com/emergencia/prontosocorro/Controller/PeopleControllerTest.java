@@ -19,13 +19,14 @@ import org.springframework.http.ResponseEntity;
 import com.emergencia.prontosocorro.DTO.Request.PeopleRequest;
 import com.emergencia.prontosocorro.DTO.Request.StatePatientRequest;
 import com.emergencia.prontosocorro.DTO.Response.PeopleResponse;
-import com.emergencia.prontosocorro.Domain.Entity.Hospital;
-import com.emergencia.prontosocorro.Domain.Entity.People;
-import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
-import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
-import com.emergencia.prontosocorro.Domain.enums.StatusType;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 import com.emergencia.prontosocorro.Service.PeopleService;
+import com.emergencia.prontosocorro.controller.PeopleController;
+import com.emergencia.prontosocorro.domain.entity.Hospital;
+import com.emergencia.prontosocorro.domain.entity.People;
+import com.emergencia.prontosocorro.domain.enums.ComorbidityType;
+import com.emergencia.prontosocorro.domain.enums.SeverityLevel;
+import com.emergencia.prontosocorro.domain.enums.StatusType;
 
 
 @ExtendWith(MockitoExtension.class)

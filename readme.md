@@ -74,6 +74,21 @@ src/main/java/com/emergencia/prontosocorro
 │   ├── Response → Dados retornados pela API
 │       ├── FirstCareResponse.java
 │       └── PeopleResponse.java
+│   
+└── Message
+│       ├── config
+│       │   └── RabbitMQConfig.java
+│       │
+│       ├── consumer
+│       │   ├── HospitalEventConsumer.java
+│       │   └── SectorEventConsumer.java
+│       │
+│       ├── event
+│       │   ├── PatientTransferredEvent.java
+│       │   └── SectorChangedEvent.java
+│       │
+│       └── producer
+│           └── HospitalEventProducer.java
 │
 ├── Service → Orquestração das regras de negócio
 │   ├── CareService.java

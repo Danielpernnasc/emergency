@@ -16,8 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.emergencia.prontosocorro.DTO.Request.HospitalRequest;
-import com.emergencia.prontosocorro.Domain.Entity.Hospital;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
+import com.emergencia.prontosocorro.controller.HospitalController;
+import com.emergencia.prontosocorro.domain.entity.Hospital;
 
 @ExtendWith(MockitoExtension.class)
 public class HospitalControllerTest {

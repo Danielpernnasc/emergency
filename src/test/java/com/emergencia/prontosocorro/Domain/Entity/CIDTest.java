@@ -6,8 +6,9 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
-import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
+import com.emergencia.prontosocorro.domain.entity.CID;
+import com.emergencia.prontosocorro.domain.enums.SeverityLevel;
+import com.emergencia.prontosocorro.domain.enums.SpecialistMedic;
 
 public class CIDTest {
 

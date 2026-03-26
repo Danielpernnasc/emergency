@@ -19,19 +19,19 @@ import com.emergencia.prontosocorro.DTO.Request.DeathRequest;
 import com.emergencia.prontosocorro.DTO.Request.FirstCareRequest;
 import com.emergencia.prontosocorro.DTO.Request.StateEvolutionRequest;
 import com.emergencia.prontosocorro.DTO.Response.FirstCareResponse;
-
-import com.emergencia.prontosocorro.Domain.Entity.FirstCare;
-import com.emergencia.prontosocorro.Domain.Entity.Hospital;
-import com.emergencia.prontosocorro.Domain.Entity.People;
-import com.emergencia.prontosocorro.Domain.enums.CareSector;
-import com.emergencia.prontosocorro.Domain.enums.CareStatus;
-import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
-import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
-import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
 import com.emergencia.prontosocorro.Repository.RepositoryPeople;
 import com.emergencia.prontosocorro.Service.CareService;
+import com.emergencia.prontosocorro.controller.FirstCareController;
+import com.emergencia.prontosocorro.domain.entity.FirstCare;
+import com.emergencia.prontosocorro.domain.entity.Hospital;
+import com.emergencia.prontosocorro.domain.entity.People;
+import com.emergencia.prontosocorro.domain.enums.CareSector;
+import com.emergencia.prontosocorro.domain.enums.CareStatus;
+import com.emergencia.prontosocorro.domain.enums.CareofPacients;
+import com.emergencia.prontosocorro.domain.enums.ComorbidityType;
+import com.emergencia.prontosocorro.domain.enums.SpecialistMedic;
 
 
 
