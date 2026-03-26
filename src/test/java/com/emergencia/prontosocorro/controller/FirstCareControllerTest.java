@@ -19,7 +19,6 @@ import com.emergencia.prontosocorro.DTO.request.DeathRequest;
 import com.emergencia.prontosocorro.DTO.request.FirstCareRequest;
 import com.emergencia.prontosocorro.DTO.request.StateEvolutionRequest;
 import com.emergencia.prontosocorro.DTO.response.FirstCareResponse;
-import com.emergencia.prontosocorro.controller.FirstCareController;
 import com.emergencia.prontosocorro.domain.entity.FirstCare;
 import com.emergencia.prontosocorro.domain.entity.Hospital;
 import com.emergencia.prontosocorro.domain.entity.People;

@@ -1,7 +1,5 @@
 package com.emergencia.prontosocorro.infra.config;
 
-
-
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -15,6 +13,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.retry.backoff.FixedBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
@@ -23,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.amqp.support.converter.MessageConverter;
 
+@Profile("!prod")
 @Configuration
 public class RabbitMQConfig {
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,8 @@ import com.emergencia.prontosocorro.repository.RepositoryPeople;
 import com.emergencia.prontosocorro.repository.loaderRepository.RepositoryCID;
 import com.emergencia.prontosocorro.service.CareService;
 
+
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("firstcare")
 public class FirstCareController {
