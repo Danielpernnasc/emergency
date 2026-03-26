@@ -75,10 +75,11 @@ src/main/java/com/emergencia/prontosocorro
 │       ├── FirstCareResponse.java
 │       └── PeopleResponse.java
 │   
-└── Message
+ Message
 │       ├── config
-│       │   └── RabbitMQConfig.java
-│       │
+│       │   ├── RabbitMQConfig.java  
+│       │   └── CsvLoader.java
+│       │ 
 │       ├── consumer
 │       │   ├── HospitalEventConsumer.java
 │       │   └── SectorEventConsumer.java
