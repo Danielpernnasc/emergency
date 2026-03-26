@@ -15,7 +15,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update   # ⚠️ em produção usar: validate
+      ddl-auto: validate   # ⚠️ em produção usar: validate
 
     show-sql: true
 
