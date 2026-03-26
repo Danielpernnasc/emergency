@@ -20,7 +20,7 @@ import com.emergencia.prontosocorro.repository.RepositoryHospital;
 import jakarta.persistence.EntityNotFoundException;
 
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app/swagger-ui/index.html")
 @RestController
 @RequestMapping("hospital")
 public class HospitalController {
