@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.emergencia.prontosocorro.DTO.Request.HospitalRequest;
-import com.emergencia.prontosocorro.Repository.RepositoryHospital;
+import com.emergencia.prontosocorro.DTO.request.HospitalRequest;
 import com.emergencia.prontosocorro.domain.entity.Hospital;
+import com.emergencia.prontosocorro.repository.RepositoryHospital;
 
 import jakarta.persistence.EntityNotFoundException;
 
