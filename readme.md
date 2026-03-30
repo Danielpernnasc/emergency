@@ -244,17 +244,26 @@ GET /people
 
 GET /people/{id}
 
+PUT /people/{id}/state/mistake
+
 🏥 Hospital
 POST /hospital
+
+PUT /hospital/{io}
 
 GET /hospital
 
 🚑 Atendimento
+
 POST /first-care
 
 POST /first-care/transfer
 
+PATCH /first-care/{id}/sector
+
 PUT /first-care/{id}/add-comorbidity
+
+PUT/first-care/{id}/evolution
 
 PUT /first-care/{id}/register-death
 
@@ -272,6 +281,7 @@ cd prontosocorro
 Execute o projeto:
 
 mvn spring-boot:run
+DB_PASSWORD={senha} mvn clean spring-boot:run  -> .env
 
 
 ## 🐰 RabbitMQ
@@ -293,6 +303,8 @@ docker run -d \
   -p 15672:15672 \
   rabbitmq:3-management
 
+  casp queira usar local
+
 🌐 Acessos
 Aplicação (AMQP): amqp://localhost:5672
 
@@ -304,6 +316,9 @@ user: guest
 
 password: guest
 
+ja configurado com RABBIT MQ 
+CloudAMQP
+ 
 
 🔧 Versão melhorada (pode copiar)
 📊 Observabilidade
@@ -312,6 +327,19 @@ O projeto possui observabilidade básica e avançada, permitindo monitorar o com
 📊 Observabilidade
 Actuator
 /actuator/metrics
+
+Banco de Dados MYSQL esta no tidbcloud
+HOST:
+
+gateway01.us-east-1.prod.aws.tidbcloud.com
+
+PORT: 4000
+
+USERNAME: 43g3dmxQjes9pvD.root
+
+PASSWORD: <PASSWORD> .env
+
+DATABASE: prontosocorro
 
 ▶️ Como acessar
 Após iniciar a aplicação:

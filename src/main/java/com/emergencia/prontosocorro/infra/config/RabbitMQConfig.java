@@ -7,6 +7,7 @@ import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -26,6 +27,19 @@ import org.springframework.amqp.support.converter.MessageConverter;
 @Configuration
 public class RabbitMQConfig {
 
+
+    @Bean
+    public ConnectionFactory connectionFactory() {
+        CachingConnectionFactory factory =
+            new CachingConnectionFactory("jackal.rmq.cloudamqp.com");
+        factory.setUsername("kabgouoe");
+        factory.setPassword("SPnOtKbACZlSZBxarxzR1HtsT9S3xOkA");
+        factory.setVirtualHost("kabgouoe");
+
+
+        return factory;
+    }
+
     //Constantes (mantém tudo)
 
     public static final String EXCHANGE = "hospital.exchange";
@@ -39,9 +53,6 @@ public class RabbitMQConfig {
     public static final String SECTOR_QUEUE = "hospital.sector.queue";
     public static final String SECTOR_ROUTING_KEY = "patient.sector.changed";
     
-
-    
-
   //🔥 2. FILA PRINCIPAL (com DLQ)
     @Bean
     public Queue queue(){
