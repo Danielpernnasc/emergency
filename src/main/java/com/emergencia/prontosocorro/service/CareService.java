@@ -165,6 +165,7 @@ public class CareService {
         firstCare.setSpecialistMedic(req.specialistMedic());
         firstCare.setCareStatus(req.careStatus());
         firstCare.setSector(req.sector());
+        firstCare.setSeverity(req.severityLevel());
 
         return repositoryFirstCare.save(firstCare);
         }

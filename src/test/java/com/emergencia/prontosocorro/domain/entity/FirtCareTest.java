@@ -34,6 +34,7 @@ public class FirtCareTest {
         SpecialistMedic medics = SpecialistMedic.CARDIOLOGIST;
         CareStatus status = CareStatus.EM_ATENDIMENTO;
         CareSector sector = CareSector.TRIAGEM;
+        SeverityLevel severity = SeverityLevel.GRAVE;
 
     
         FirstCare firstCare = new FirstCare(
@@ -42,7 +43,8 @@ public class FirtCareTest {
             hospital,
             medics,
             status,
-            sector
+            sector,
+            severity
 
         );
 
@@ -55,6 +57,7 @@ public class FirtCareTest {
         assertNotNull(firstCare.getCareDateTime());
         assertTrue(firstCare.getProcedures().isEmpty());
         assertEquals(sector, firstCare.getSector());
+        assertEquals(severity, firstCare.getSeverity());
     }
 
     @Test
