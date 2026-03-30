@@ -8,6 +8,7 @@ import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Domain.enums.CareStatus;
 import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
 import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
+import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 import com.emergencia.prontosocorro.Domain.enums.StatusType;
 
@@ -64,11 +65,14 @@ public class FirstCare {
     @Enumerated(EnumType.STRING)
     private CareSector sector;
 
+    @Enumerated(EnumType.STRING)
+    private SeverityLevel severityLevel;
+
   public FirstCare() {
     // Required by JPA
     }
 
-    public FirstCare(People patient, CID cid, Hospital hospital, SpecialistMedic specialist_medics, CareStatus care_status, CareSector sector) {
+    public FirstCare(People patient, CID cid, Hospital hospital, SpecialistMedic specialist_medics, CareStatus care_status, CareSector sector, SeverityLevel severityLevel) {
         this.patient = patient;
         this.cid = cid;
         this.hospital = hospital;
@@ -170,5 +174,13 @@ public class FirstCare {
     public void setSector(CareSector sector){
         this.sector = sector;
     }
+
+     public SeverityLevel getSeverityLevel() {
+         return severityLevel;
+      }
+
+       public void setSeverityLevel(SeverityLevel severityLevel) {
+         this.severityLevel = severityLevel;
+      }
 
 }

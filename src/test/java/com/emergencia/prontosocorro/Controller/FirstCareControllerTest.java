@@ -27,6 +27,7 @@ import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Domain.enums.CareStatus;
 import com.emergencia.prontosocorro.Domain.enums.CareofPacients;
 import com.emergencia.prontosocorro.Domain.enums.ComorbidityType;
+import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 import com.emergencia.prontosocorro.Repository.RepositoryFirstCare;
 import com.emergencia.prontosocorro.Repository.RepositoryHospital;
@@ -63,7 +64,8 @@ public class FirstCareControllerTest {
                 SpecialistMedic.CLINICAL_MEDICINE,
                 CareStatus.EM_ATENDIMENTO,
                 "A00",
-                CareSector.TRIAGEM
+                CareSector.TRIAGEM,
+                SeverityLevel.GRAVE
         );
 
         People people = new People();

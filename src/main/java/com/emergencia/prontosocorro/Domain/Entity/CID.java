@@ -52,6 +52,10 @@ public class CID {
          return severityLevel;
       }
 
+      public void setSeverityLevel(SeverityLevel severityLevel) {
+         this.severityLevel = severityLevel;
+      }
+
       public String getDescription() {
          return description;
       }

@@ -158,9 +158,10 @@ public class CareService {
         firstCare.setSpecialistMedic(req.specialistMedic());
         firstCare.setCareStatus(req.careStatus());
         firstCare.setSector(req.sector());
+        firstCare.setSeverityLevel(req.severityLevel());
 
         return repositoryFirstCare.save(firstCare);
-        }
+}
 
     public void dischargePatient(FirstCare firstCare) {
         if (firstCare == null) {

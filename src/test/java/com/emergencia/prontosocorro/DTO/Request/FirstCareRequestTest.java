@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.emergencia.prontosocorro.Domain.enums.CareSector;
 import com.emergencia.prontosocorro.Domain.enums.CareStatus;
+import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 import com.emergencia.prontosocorro.Domain.enums.SpecialistMedic;
 
 public class FirstCareRequestTest {
@@ -17,7 +18,8 @@ public class FirstCareRequestTest {
             SpecialistMedic.CARDIOLOGIST,
             CareStatus.EM_ATENDIMENTO,
             "A00",
-            CareSector.CONSULTORIO
+            CareSector.CONSULTORIO,
+            SeverityLevel.GRAVE 
         );
 
 
@@ -27,6 +29,8 @@ public class FirstCareRequestTest {
         assertEquals(SpecialistMedic.CARDIOLOGIST, request.specialistMedic());
         assertEquals(CareStatus.EM_ATENDIMENTO, request.careStatus());
         assertEquals("A00", request.cidCode());
+        assertEquals(CareSector.CONSULTORIO, request.sector());
+        assertEquals(SeverityLevel.GRAVE, request.severityLevel());
         
         
     }
@@ -34,21 +38,24 @@ public class FirstCareRequestTest {
     @Test 
     void  ShouldConstructor(){
          FirstCareRequest request = new FirstCareRequest(
-            null, null, null, null, null, null
+            null, null, null, null, null, null, null
          );
 
-         request.getPeopleId();
+         request.peopleId();
          request.hospitalId();
-         request.getSpecialistMedic();
-         request.getCareStatus();
-         request.getCidCode();
+         request.specialistMedic();
+         request.careStatus();
+         request.cidCode();
+         request.sector();
+        request.severityLevel();
 
-         assertEquals(null, request.getPeopleId());
-         assertEquals(null, request.getHospitalId());
-         assertEquals(null, request.getSpecialistMedic());
+         assertEquals(null, request.peopleId());
+         assertEquals(null, request.hospitalId());
+         assertEquals(null, request.specialistMedic());
          assertEquals(null, request.careStatus());
-         assertEquals(null, request.getCidCode());
-         
+         assertEquals(null, request.cidCode());
+         assertEquals(null, request.sector());
+         assertEquals(null, request.severityLevel());
     }
 
     @Test

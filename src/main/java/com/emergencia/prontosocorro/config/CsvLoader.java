@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.emergencia.prontosocorro.Domain.Entity.CID;
+import com.emergencia.prontosocorro.Domain.enums.SeverityLevel;
 import com.emergencia.prontosocorro.Repository.LoaderRepository.RepositoryCID;
 
 
@@ -85,6 +86,7 @@ public class CsvLoader implements ApplicationRunner {
         CID cid = new CID();
         cid.setCode(code);
         cid.setDescription(desc);
+        cid.setSeverityLevel(SeverityLevel.LEVE);
 
         batch.add(cid);
 

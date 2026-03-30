@@ -138,7 +138,8 @@ public class CareServiceTest {
             SpecialistMedic.CLINICAL_MEDICINE,
             CareStatus.EM_ATENDIMENTO,
             "A00",
-            CareSector.SETOR_UTI
+            CareSector.SETOR_UTI,
+            SeverityLevel.MODERADO
         );
 
         when(repositoryCID.findById("A00")).thenReturn(Optional.of(cid));
