@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,9 @@ public class CareService {
     private final HospitalEventProducer hospitalEventProducer;
     private final RepositoryHospital repositoryHospital;
     private final ProcessedEventRepository processedEventRepository;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
 
    private final ObservabilityService observabilityService;
 
@@ -64,7 +68,8 @@ public class CareService {
             HospitalEventProducer hospitalEventProducer,
             RepositoryHospital repositoryHospital,
             ProcessedEventRepository processedEventRepository,
-            ObservabilityService observabilityService
+            ObservabilityService observabilityService,
+            RabbitTemplate rabbitTemplate
         ) {
         this.repositoryPeople = repositoryPeople;
         this.repositoryFirstCare = repositoryFirstCare;
@@ -74,6 +79,7 @@ public class CareService {
         this.repositoryHospital = repositoryHospital;
         this.processedEventRepository = processedEventRepository;
         this.observabilityService = observabilityService;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     public SpecialistMedic defineSpecialistMedic(String description) {
@@ -154,6 +160,8 @@ public class CareService {
             }
 
             people.changeStatus(severity);
+
+
         }
 
         repositoryPeople.save(people);
@@ -167,6 +175,7 @@ public class CareService {
         firstCare.setSector(req.sector());
         firstCare.setSeverity(req.severityLevel());
 
+        
         return repositoryFirstCare.save(firstCare);
         }
 
@@ -285,6 +294,8 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
 
         hospitalEventProducer.sendPatientTransfer(event);
         log.info("Event sent - Evento enviado: {}", event.getEventId());
+        //   rabbitTemplate.convertAndSend("fila.teste", "Teste RabbitMQ");
+
     }
 
 
