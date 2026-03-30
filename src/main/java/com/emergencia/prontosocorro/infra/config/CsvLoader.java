@@ -17,11 +17,8 @@ import org.springframework.stereotype.Component;
 import com.emergencia.prontosocorro.domain.entity.CID;
 import com.emergencia.prontosocorro.repository.loaderRepository.RepositoryCID;
 
-
-
-
-@Component
 @Profile("!test")
+@Component
 public class CsvLoader implements ApplicationRunner {
      
     private static final Logger log = LoggerFactory.getLogger(CsvLoader.class);
@@ -40,10 +37,10 @@ public class CsvLoader implements ApplicationRunner {
     protected BufferedReader createReader(String path) throws Exception {
     InputStream is = getResource(path);
 
-    return new BufferedReader(
-            new InputStreamReader(is, StandardCharsets.UTF_8)
-    );
-}
+        return new BufferedReader(
+                new InputStreamReader(is, StandardCharsets.UTF_8)
+        );
+    }
 
      public void load() throws Exception {
 
@@ -67,10 +64,7 @@ public class CsvLoader implements ApplicationRunner {
 
     private void processFile(String path, List<CID> batch) throws Exception {
 
-        InputStream is = getResource(path);
-
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(is, StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = createReader(path)){
 
             String line;
             reader.readLine(); // pula header
@@ -79,6 +73,11 @@ public class CsvLoader implements ApplicationRunner {
                 parseAndAdd(line, batch);
             }
         }
+    }
+
+    public void parseAndAdd_(String line, List<CID> batch) {
+        parseAndAdd(line, batch);
+        
     }
 
     private void parseAndAdd(String line, List<CID> batch) {

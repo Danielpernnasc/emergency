@@ -138,8 +138,9 @@ public class CareServiceTest {
             1L,
             SpecialistMedic.CLINICAL_MEDICINE,
             CareStatus.EM_ATENDIMENTO,
-            "A00",
-            CareSector.SETOR_UTI
+             cid.getCode(),
+            CareSector.CONSULTORIO,
+            SeverityLevel.MODERADO
         );
 
         when(repositoryCID.findById("A00")).thenReturn(Optional.of(cid));
@@ -174,13 +175,19 @@ public class CareServiceTest {
 
     @Test
     void shoulddisCharge(){
-
+    
+    
         //Arrange
         FirstCare firstCare = new FirstCare();
         People patient = new People();
         patient.setStatusPatient(StatusType.ENFERMO);
         firstCare.setPeople(patient);
         firstCare.setCareStatus(CareStatus.EM_ATENDIMENTO);
+        firstCare.setProcedures(Set.of(CareofPacients.MEDICACAO));
+        firstCare.setSector(CareSector.CONSULTORIO);
+        firstCare.setSeverity(SeverityLevel.LEVE);
+    
+        assertDoesNotThrow(() -> firstCare.disCharge());
 
         //Act
         firstCare.disCharge();
