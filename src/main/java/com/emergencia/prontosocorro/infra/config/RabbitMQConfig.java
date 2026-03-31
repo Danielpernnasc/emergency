@@ -23,11 +23,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.amqp.support.converter.MessageConverter;
 
-@Profile("!prod")
+@Profile("!test")
 @Configuration
 public class RabbitMQConfig {
 
-
+  
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory factory =
@@ -35,6 +35,13 @@ public class RabbitMQConfig {
         factory.setUsername("kabgouoe");
         factory.setPassword("SPnOtKbACZlSZBxarxzR1HtsT9S3xOkA");
         factory.setVirtualHost("kabgouoe");
+          factory.setPort(5671);
+
+    try {
+        factory.getRabbitConnectionFactory().useSslProtocol();
+    } catch (Exception e) {
+          throw new IllegalStateException("Erro ao configurar SSL do RabbitMQ", e);
+    }
 
 
         return factory;

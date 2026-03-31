@@ -1,10 +1,4 @@
-server:
-  port: ${PORT:8080}
 
-app:
-  url:
-    local: http://localhost:8080
-    prod: https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app
 
 spring:
   datasource:
@@ -16,18 +10,19 @@ spring:
   rabbitmq:
     uri: ${RABBITMQ_URL}
 
-  hikari:
+    hikari:
       maximum-pool-size: 10
       minimum-idle: 2
       idle-timeout: 30000
       connection-timeout: 20000
 
+  rabbitmq:
+    uri: ${RABBITMQ_URL}
+
   jpa:
     hibernate:
-      ddl-auto: validate   # ⚠️ em produção usar: validate
-
+      ddl-auto: validate
     show-sql: true
-
     properties:
       hibernate:
         format_sql: true
