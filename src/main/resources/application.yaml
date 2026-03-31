@@ -11,6 +11,10 @@ spring:
     url: jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/prontosocorro?sslMode=REQUIRED
     username: 43g3dmxQjes9pvD.root
     password: ${DB_PASSWORD}
+    
+  spring:
+  rabbitmq:
+    uri: ${RABBITMQ_URL}
 
   hikari:
       maximum-pool-size: 10
