@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+
+import com.emergencia.prontosocorro.infra.producer.HospitalEventProducer;
+
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 
@@ -26,6 +29,9 @@ class ProntosocorroApplicationTest {
     @MockBean
     private RabbitTemplate rabbitTemplate;
 
+    @MockBean
+    private HospitalEventProducer hospitalEventProducer;
+    
     @Test
     void shouldLoadContext() {
          assertTrue(true);
