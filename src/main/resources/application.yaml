@@ -18,6 +18,9 @@ spring:
       idle-timeout: 30000
       connection-timeout: 20000
 
+  rabbitmq:
+    uri: ${RABBITMQ_URL}
+
   jpa:
     hibernate:
       ddl-auto: validate
