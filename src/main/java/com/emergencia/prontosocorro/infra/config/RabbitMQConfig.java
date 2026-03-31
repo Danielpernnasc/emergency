@@ -40,7 +40,7 @@ public class RabbitMQConfig {
     try {
         factory.getRabbitConnectionFactory().useSslProtocol();
     } catch (Exception e) {
-        throw new RuntimeException(e);
+          throw new IllegalStateException("Erro ao configurar SSL do RabbitMQ", e);
     }
 
 

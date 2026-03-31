@@ -1,8 +1,14 @@
 package com.emergencia.prontosocorro;
 
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
 
 
 @SpringBootTest(
@@ -16,5 +22,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 class ProntosocorroApplicationTest {
-}
 
+    @MockBean
+    private RabbitTemplate rabbitTemplate;
+
+    @Test
+    void shouldLoadContext() {
+         assertTrue(true);
+    }
+
+  }
