@@ -55,3 +55,8 @@ management:
       show-details: when_authorized
       probes:
         enabled: true
+
+
+  app:
+    UrlProd: 'https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app/'
+    UrlLocal: 'http://localhost:8080/'
