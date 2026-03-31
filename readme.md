@@ -28,6 +28,9 @@ O sistema foi desenvolvido com foco em:
 
 src/main/java/com/emergencia/prontosocorro
 │
+├── config -> configuracao para nao bloquear CORS
+|    ├──CorsConfig.java
+|
 ├── controller → Camada de entrada (API REST)
 │   ├── FirstCareController.java
 │   ├── HospitalController.java
