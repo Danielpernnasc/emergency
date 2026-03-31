@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.amqp.support.converter.MessageConverter;
 
-
+@Profile("!test")
 @Configuration
 public class RabbitMQConfig {
 
