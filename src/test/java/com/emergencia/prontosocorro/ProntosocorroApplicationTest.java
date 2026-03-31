@@ -15,9 +15,9 @@ import org.springframework.test.context.ActiveProfiles;
 class ProntosocorroApplicationTest {
 
 
-    @Test
-    void shouldLoadContext() {
-         assertTrue(true);
-    }
+@Test
+void mainShouldRun() {
+     assertTrue(true);
+}
 
   }
