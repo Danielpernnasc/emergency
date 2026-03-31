@@ -14,17 +14,18 @@ import io.swagger.v3.oas.models.servers.Server;
 @Configuration
 public class OpenApiConfig {
 
+@Value("${app.url.prod}")
+private String prodUrl;
+
 @Value("${app.url.local}")
 private String localUrl;
 
-@Value("${app.url.prod}")
-private String prodUrl;
    @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .servers(List.of(
-                        new Server().url(localUrl),
-                        new Server().url(prodUrl)
+                        new Server().url(prodUrl),
+                        new Server().url(localUrl)
                 ));
     }
   

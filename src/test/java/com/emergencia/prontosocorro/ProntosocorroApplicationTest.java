@@ -1,19 +1,20 @@
 package com.emergencia.prontosocorro;
 
-import org.junit.jupiter.api.Test;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(
-  properties = {
-    "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration"
-  }
-)
-@ActiveProfiles("test")
-class ApplicationTests {
 
-    @Test
-    void contextLoads() {
+@SpringBootTest(
+    classes = ProntosocorroApplication.class,
+    properties = {
+        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration",
+        "spring.datasource.url=jdbc:h2:mem:testdb",
+        "spring.jpa.hibernate.ddl-auto=create-drop"
     }
+)
+
+@ActiveProfiles("test")
+class ProntosocorroApplicationTest {
 }
 

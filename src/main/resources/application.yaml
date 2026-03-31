@@ -3,8 +3,8 @@ server:
 
 app:
   url:
-    local: http://localhost:8080
     prod: https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app
+    local: http://localhost:8080
 
 spring:
   datasource:

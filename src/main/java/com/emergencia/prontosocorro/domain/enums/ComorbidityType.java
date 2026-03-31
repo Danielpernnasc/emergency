@@ -13,7 +13,7 @@ public enum ComorbidityType {
 
 
 
-    public Object getSeverityLevel() {
+   public SeverityLevel getSeverityLevel()  {
         return switch (this) {
             case HIPERTENSAO, DIABETES, CARDIOPATIA -> SeverityLevel.GRAVE;
             case DOENCA_DE_CHAGAS, ASMA, DOENCA_RENAL_CRONICA -> SeverityLevel.MODERADO;
