@@ -57,6 +57,7 @@ management:
         enabled: true
 
 
-  app:
-    UrlProd: 'https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app/'
-    UrlLocal: 'http://localhost:8080/'
+app:
+  url:
+    prod: https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app
+    local: http://localhost:8080

@@ -284,7 +284,10 @@ cd prontosocorro
 Execute o projeto:
 
 mvn spring-boot:run
-DB_PASSWORD={senha} mvn clean spring-boot:run  -> .env
+
+DB_PASSWORD= -> .env SPRING_RABBITMQ_HOST=jackal.rmq.cloudamqp.com SPRING_RABBITMQ_PORT=5671 SPRING_RABBITMQ_USERNAME=kabgouoe SPRING_RABBITMQ_PASSWORD= -> .env  SPRING_RABBITMQ_VIRTUAL_HOST=kabgouoe mvn clean spring-boot:run
+
+Senha do DB e Rabbit esta no arquivo .env
 
 
 ## 🐰 RabbitMQ
