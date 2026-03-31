@@ -10,14 +10,18 @@ spring:
   rabbitmq:
     uri: ${RABBITMQ_URL}
 
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 2
-      idle-timeout: 30000
-      connection-timeout: 20000
+  hikari:
+    maximum-pool-size: 10
+    minimum-idle: 2
+    idle-timeout: 30000
+    connection-timeout: 20000
 
   rabbitmq:
-    uri: ${RABBITMQ_URL}
+    host: jackal.rmq.cloudamqp.com
+    port: 5671
+    username: kabgouoe
+    password: ${SPRING_RABBITMQ_PASSWORD}
+    virtual-host: kabgouoe
 
   jpa:
     hibernate:
