@@ -28,7 +28,7 @@ O sistema foi desenvolvido com foco em:
 
 src/main/java/com/emergencia/prontosocorro
 │
-├── config -> configuracao para nao bloquear CORS
+├── config -> configuracao para CORS nao bloquear a api
 |    ├──CorsConfig.java
 |
 ├── controller → Camada de entrada (API REST)
