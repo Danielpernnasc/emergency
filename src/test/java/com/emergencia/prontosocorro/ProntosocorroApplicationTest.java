@@ -31,10 +31,10 @@ class ProntosocorroApplicationTest {
 
     @MockBean
     private HospitalEventProducer hospitalEventProducer;
-    
+
     @Test
     void shouldLoadContext() {
-         assertTrue(true);
+     
     }
 
   }
