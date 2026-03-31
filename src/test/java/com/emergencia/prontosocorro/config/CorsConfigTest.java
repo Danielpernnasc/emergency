@@ -17,6 +17,7 @@ class CorsConfigTest {
         CorsFilter filter = config.corsFilter();
 
         assertNotNull(filter);
+        assertNotNull(filter.getClass());
 
         
 
