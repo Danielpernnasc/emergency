@@ -22,27 +22,32 @@ import org.springframework.retry.policy.SimpleRetryPolicy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 
-@Profile("!test")
 @Configuration
+@Profile("!test")
 public class RabbitMQConfig {
 
   
-    @Bean
-    public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory factory =
-            new CachingConnectionFactory("jackal.rmq.cloudamqp.com");
-        factory.setUsername("kabgouoe");
-        factory.setPassword("SPnOtKbACZlSZBxarxzR1HtsT9S3xOkA");
-        factory.setVirtualHost("kabgouoe");
-          factory.setPort(5671);
+   @Bean
+    public ConnectionFactory connectionFactory(
+            @Value("${spring.rabbitmq.host}") String host,
+            @Value("${spring.rabbitmq.port}") int port,
+            @Value("${spring.rabbitmq.username}") String username,
+            @Value("${spring.rabbitmq.password}") String password,
+            @Value("${spring.rabbitmq.virtual-host}") String virtualHost
+    ) {
+        CachingConnectionFactory factory = new CachingConnectionFactory(host);
+        factory.setPort(port);
+        factory.setUsername(username);
+        factory.setPassword(password);
+        factory.setVirtualHost(virtualHost);
 
-    try {
-        factory.getRabbitConnectionFactory().useSslProtocol();
-    } catch (Exception e) {
-          throw new IllegalStateException("Erro ao configurar SSL do RabbitMQ", e);
-    }
-
+        try {
+            factory.getRabbitConnectionFactory().useSslProtocol();
+        } catch (Exception e) {
+            throw new IllegalStateException("Erro ao configurar SSL", e);
+        }
 
         return factory;
     }

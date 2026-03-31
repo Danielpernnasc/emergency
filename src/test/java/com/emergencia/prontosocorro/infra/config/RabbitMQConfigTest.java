@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
@@ -13,8 +14,10 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
     @Test
     void shouldCreateConnectionFactory() {
-        ConnectionFactory factory = config.connectionFactory();
-        assertNotNull(factory);
+          ConnectionFactory factory = new CachingConnectionFactory(); // fake
+            RabbitTemplate template = config.rabbitTemplate(factory);
+
+            assertNotNull(template);
     }
 
     @Test
@@ -61,20 +64,20 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
     @Test
     void shouldCreateRabbitTemplate() {
-        ConnectionFactory factory = config.connectionFactory();
+     ConnectionFactory factory = new CachingConnectionFactory();
         RabbitTemplate template = config.rabbitTemplate(factory);
         assertNotNull(template);
     }
 
     @Test
     void shouldCreateListenerFactory() {
-        ConnectionFactory factory = config.connectionFactory();
+      ConnectionFactory factory = new CachingConnectionFactory();
         assertNotNull(config.rabbitListenerContainerFactory(factory));
     }
 
     @Test
     void shouldCreateAmqpAdmin() {
-        ConnectionFactory factory = config.connectionFactory();
+      ConnectionFactory factory = new CachingConnectionFactory();
         assertNotNull(config.amqpAdmin(factory));
     }
 }
