@@ -114,6 +114,22 @@ public class PeopleControllerTest {
     }
 
     @Test
+    void shouldUpdatePatiente(){
+        People people = new People();
+        people.setId(1L);
+        people.setName("Arthur de Camelot");
+        people.setAge(1500);
+        people.setDescription("Infarto");
+        people.setStatusPatient(StatusType.URGENTE);
+
+         when(peopleService.updatedPatient(eq(1L), any(People.class)))
+                .thenReturn(people);
+
+        People result = peopleController.updatedPatient(1L, new People());
+
+        assertEquals(1L, result.getId());
+    }
+    @Test
     void shouldMistakeStatus(){
 
         StatePatientRequest req = new StatePatientRequest(
