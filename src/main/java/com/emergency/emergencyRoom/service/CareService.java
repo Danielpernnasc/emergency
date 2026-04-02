@@ -327,9 +327,6 @@ public boolean canBeDiscarged(People people, FirstCare firstCare) {
             ProcessedEvent.of(event.getEventId())
         );
 
-        System.out.println("FirstCare hospital: " + firstCare.getHospital().getId());
-        System.out.println("Event fromHospital: " + event.getFromHospitalId());
-
         log.info("Event processed successfully - Evento processado com sucesso: {}", event.getEventId());
      
       

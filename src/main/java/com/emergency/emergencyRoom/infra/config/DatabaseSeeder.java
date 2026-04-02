@@ -34,7 +34,6 @@ public class DatabaseSeeder {
     ) {
 
         if (ruleRepo.count() > 1000) {
-            System.out.println("⚠️ Keywords já geradas. Pulando...");
             return;
         }
 
@@ -44,7 +43,6 @@ public class DatabaseSeeder {
             processCid(cid, ruleRepo);
         }
 
-        System.out.println("🔥 Keywords geradas automaticamente 😈🏥");
     }
 
     public void processCID_(CID cid, RepositoryCIDKeywordRule ruleRepo){

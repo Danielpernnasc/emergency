@@ -41,7 +41,7 @@ public class HospitalEventProducer {
 
     // 🔥 FALLBACK
     public void fallbackSend(PatientTransferredEvent event, Throwable ex) {
-        System.out.println("⚠️ Rabbit fora do ar, fallback ativado");
+       throw new RuntimeException("Erro ao enviar evento para RabbitMQ: " + ex.getMessage()); 
     }
 
    

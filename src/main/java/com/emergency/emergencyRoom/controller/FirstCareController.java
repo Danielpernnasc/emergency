@@ -58,7 +58,7 @@ public class FirstCareController {
 
         People people = repositoryPeople.findById(req.peopleId())
                 .orElseThrow(() -> new RuntimeException("Patient not found"));
-        System.out.println("STATUS BEFORE: " + people.getStatusPatient());
+       
 
         Hospital hospital = repositoryHospital.findById(req.hospitalId())
                 .orElseThrow(() -> new RuntimeException("Hospital not found"));
@@ -80,7 +80,7 @@ public class FirstCareController {
 
     @GetMapping
     public List<FirstCareResponse> findAll() {
-          System.out.println("ENTROU NO FIND ALL 🚑");
+
         return repositoryFirstCare.findAll()
                 .stream()
                 .map(this::responsePatiente)
