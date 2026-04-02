@@ -19,8 +19,7 @@ import com.emergencia.prontosocorro.domain.enums.StatusType;
 import com.emergencia.prontosocorro.infra.observability.ObservabilityService;
 import com.emergencia.prontosocorro.repository.RepositoryHospital;
 import com.emergencia.prontosocorro.repository.RepositoryPeople;
-import com.emergencia.prontosocorro.service.DeathService;
-import com.emergencia.prontosocorro.service.PeopleService;
+
 
 
 @ExtendWith(MockitoExtension.class)
@@ -75,6 +74,36 @@ public class PeopleServiceTest {
         verify(observabilityService).incrementCreateCounter();
 
     }
+
+     @Test 
+     void shouldUpdatedPatient() {
+        People existingPatient = new People();
+        existingPatient.setId(1L);
+        existingPatient.setName("Old Name");
+        existingPatient.setAge(30);
+        existingPatient.setDescription("Old Description");
+        existingPatient.setSeverity(null);
+        existingPatient.setComorbidities(null);
+
+        People updatedPatient = new People();
+        updatedPatient.setName("New Name");
+        updatedPatient.setAge(40);
+        updatedPatient.setDescription("New Description");
+        updatedPatient.setSeverity(null);
+        updatedPatient.setComorbidities(null);
+
+        when(repositoryPeople.findById(1L))
+                .thenReturn(Optional.of(existingPatient));
+        when(repositoryPeople.save(any(People.class)))
+                .thenReturn(existingPatient);
+
+        People result = peopleService.updatedPatient(1L, updatedPatient);
+
+        assertNotNull(result);
+        assertEquals("New Name", result.getName());
+        assertEquals(40, result.getAge());
+        assertEquals("New Description", result.getDescription());
+     }
 
     @Test
     void shouldregisterDeath(){

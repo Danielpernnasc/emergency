@@ -2,6 +2,7 @@ package com.emergencia.prontosocorro.service;
 
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import com.emergencia.prontosocorro.domain.enums.StatusType;
 import com.emergencia.prontosocorro.infra.observability.ObservabilityService;
 import com.emergencia.prontosocorro.repository.RepositoryHospital;
 import com.emergencia.prontosocorro.repository.RepositoryPeople;
+
 
 @Service
 public class PeopleService {
@@ -49,6 +51,28 @@ public class PeopleService {
                 .orElseThrow(() -> new RuntimeException("People not found with id " + id));
     }
 
+    public People updatedPatient(Long id, People updatedPatient) {
+        People existingPatient = repositoryPeople.findById(id)
+                .orElseThrow(() -> new RuntimeException("People not found with id " + id));
+
+                Optional.ofNullable(updatedPatient.getName())
+                .ifPresent(existingPatient::setName);
+
+                Optional.ofNullable(updatedPatient.getAge())
+                .ifPresent(existingPatient::setAge);
+
+                Optional.ofNullable(updatedPatient.getDescription())
+                .ifPresent(existingPatient::setDescription);
+
+                Optional.ofNullable(updatedPatient.getComorbidities())
+                .ifPresent(existingPatient::setComorbidities);
+
+                Optional.ofNullable(updatedPatient.getStatusPatient())
+                .ifPresent(existingPatient::setStatusPatient);
+
+        return repositoryPeople.save(existingPatient);
+    }
+
     public void registerDeath(Long id, String justification, LocalDateTime date) {
         People people = repositoryPeople.findById(id)
                 .orElseThrow(() -> new RuntimeException("People not found with id " + id));
@@ -72,11 +96,7 @@ public class PeopleService {
             repositoryPeople.save(people);
             return true;
        
-    }
-
- 
-
-   
+    } 
 }
 
   
