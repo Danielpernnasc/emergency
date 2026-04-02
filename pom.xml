@@ -14,8 +14,8 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.emergencia</groupId>
-    <artifactId>prontosocorro</artifactId>
+    <groupId>com.emergency</groupId>
+    <artifactId>emergencyroom</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>

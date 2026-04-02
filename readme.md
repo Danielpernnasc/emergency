@@ -1,4 +1,5 @@
 
+# 🏥 Emergency – Hospital Care System
 # 🏥 ProntoSocorro – Sistema de Atendimento Hospitalar
 
 ![Java](https://img.shields.io/badge/Java-21-orange)
@@ -6,8 +7,9 @@
 ![Maven](https://img.shields.io/badge/Maven-3.9-blue)
 ![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow)
 
-🏥 ProntoSocorro – Sistema de Atendimento Hospitalar
 ## modelado com foco em: **Domain-Driven Design (DDD)**, **boas práticas de OO**, **State Pattern** e **separação clara de responsabilidades**, antes da introdução de Controller, Repository e Banco de Dados.
+
+## modeled with focus in: *Domain-Driven Design (DDD)**, **good OO practices**, **State Pattern** and **clear separate of responsabilities**, before of the introduction of Controller, Repository and DataBase.
 
 ---
 
@@ -26,7 +28,7 @@ O sistema foi desenvolvido com foco em:
 
 ## 🧠 Arquitetura (Visão Conceitual)
 
-src/main/java/com/emergencia/prontosocorro
+src/main/java/com/emergency/emergencyroom
 │
 ├── config -> configuracao para CORS nao bloquear a api
 |    ├──CorsConfig.java
@@ -278,10 +280,10 @@ Este projeto prioriza qualidade de modelagem, clareza de domínio e arquitetura 
 ▶️ Como Executar o Projeto
 Clone o repositório:
 
-git clone https://github.com/Danielpernnasc/emergencia
+git clone https://github.com/Danielpernnasc/emergency
 Entre na pasta do projeto:
 
-cd prontosocorro
+cd emergency
 Execute o projeto:
 
 mvn spring-boot:run
