@@ -6,23 +6,29 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.web.filter.CorsFilter;
 
-import com.emergency.emergencyroom.config.CorsConfig;
 
 class CorsConfigTest {
 
-
   @Test
-    void shouldCreateCorsFilter() {
+  void shouldCreateCorsFilter() {
 
-        CorsConfig config = new CorsConfig();
+      CorsConfig config = new CorsConfig();
 
-        CorsFilter filter = config.corsFilter();
+      try {
+          var prodField = CorsConfig.class.getDeclaredField("prodUrl");
+          prodField.setAccessible(true);
+          prodField.set(config, "https://prod.com");
 
-        assertNotNull(filter);
-        assertNotNull(filter.getClass());
+          var localField = CorsConfig.class.getDeclaredField("localUrl");
+          localField.setAccessible(true);
+          localField.set(config, "http://localhost:8080");
 
-        
+      } catch (Exception e) {
+          fail("Erro ao setar campos: " + e.getMessage());
+      }
 
+      CorsFilter filter = config.corsFilter();
 
-    }
+      assertNotNull(filter);
+  }
 }
