@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import com.emergency.emergencyRoom.domain.enums.CareSector;
-import com.emergency.emergencyRoom.infra.event.SectorChangedEvent;
+
 
 
 public class SectorChangedEventTest {

@@ -16,12 +16,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.emergency.emergencyRoom.DTO.request.HospitalRequest;
-import com.emergency.emergencyRoom.controller.HospitalController;
 import com.emergency.emergencyRoom.domain.entity.Hospital;
 import com.emergency.emergencyRoom.repository.RepositoryHospital;
 
 @ExtendWith(MockitoExtension.class)
-public class HospitalControllerTest {
+ class HospitalControllerTest {
 
     @Mock
     RepositoryHospital repositoryHospital;

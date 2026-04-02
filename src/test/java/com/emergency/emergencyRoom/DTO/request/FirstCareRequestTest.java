@@ -3,13 +3,12 @@ package com.emergency.emergencyRoom.DTO.request;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import com.emergency.emergencyRoom.DTO.request.FirstCareRequest;
 import com.emergency.emergencyRoom.domain.enums.CareSector;
 import com.emergency.emergencyRoom.domain.enums.CareStatus;
 import com.emergency.emergencyRoom.domain.enums.SeverityLevel;
 import com.emergency.emergencyRoom.domain.enums.SpecialistMedic;
 
-public class FirstCareRequestTest {
+class FirstCareRequestTest {
     @Test
     void shouldFirtCareRequest(){
         FirstCareRequest request = new FirstCareRequest(

@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergency.emergencyRoom.DTO.request.DeathRequest;
-
 public class DeathRequestTest {
 
     @Test

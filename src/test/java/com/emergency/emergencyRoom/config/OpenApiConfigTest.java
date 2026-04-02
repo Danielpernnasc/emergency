@@ -4,11 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergency.emergencyRoom.config.OpenApiConfig;
-
 import io.swagger.v3.oas.models.OpenAPI;
 
-public class OpenApiConfigTest {
+class OpenApiConfigTest {
      @Test
     void shouldCreateOpenAPIWithServers() {
         OpenApiConfig config = new OpenApiConfig();

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import com.emergency.emergencyRoom.domain.enums.ComorbidityType;
 import com.emergency.emergencyRoom.domain.enums.SeverityLevel;
 
-public class PeopleRequestTest {
+class PeopleRequestTest {
 
     @Test
     void ShouldPeopleRequest(){

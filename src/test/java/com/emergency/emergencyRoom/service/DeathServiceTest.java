@@ -15,11 +15,11 @@ import com.emergency.emergencyRoom.domain.entity.People;
 import com.emergency.emergencyRoom.domain.enums.StatusType;
 import com.emergency.emergencyRoom.infra.observability.ObservabilityService;
 import com.emergency.emergencyRoom.repository.RepositoryPeople;
-import com.emergency.emergencyRoom.service.DeathService;
+
 
 
 @ExtendWith(MockitoExtension.class)
-public class DeathServiceTest {
+class DeathServiceTest {
     @Mock
       RepositoryPeople repositoryPeople;
     @Mock

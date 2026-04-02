@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import com.emergency.emergencyRoom.domain.enums.StatusType;
 import com.emergency.emergencyRoom.domain.state.status.Critical;
 
-public class CriticalTest {
+ class CriticalTest {
     @Test
     void criticalPatientShouldReceiveCare() {
         // Arrange

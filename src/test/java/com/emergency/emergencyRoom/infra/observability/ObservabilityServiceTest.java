@@ -6,8 +6,6 @@ import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import com.emergency.emergencyRoom.infra.observability.ObservabilityService;
-
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Counter;
 

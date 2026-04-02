@@ -2,15 +2,12 @@ package com.emergency.emergencyRoom.domain.entity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Set;
-
 import org.junit.jupiter.api.Test;
 
-import com.emergency.emergencyRoom.domain.entity.CID;
 import com.emergency.emergencyRoom.domain.enums.SeverityLevel;
 import com.emergency.emergencyRoom.domain.enums.SpecialistMedic;
 
-public class CIDTest {
+class CIDTest {
 
     @Test   
     void shouldConstructorCID(){

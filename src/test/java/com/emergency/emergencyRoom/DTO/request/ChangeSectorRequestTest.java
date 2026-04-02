@@ -4,10 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergency.emergencyRoom.DTO.request.ChangeSectorRequest;
 import com.emergency.emergencyRoom.domain.enums.CareSector;
 
-public class ChangeSectorRequestTest {
+class ChangeSectorRequestTest {
 
     @Test
     void soudlChangeSectorRequest(){

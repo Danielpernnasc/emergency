@@ -65,7 +65,7 @@ public class FirtCareTest {
     }
 
     @Test
-    public void shouldDischargePatient() {
+  void shouldDischargePatient() {
        People patient = new People();  
        patient.setStatusPatient(StatusType.ENFERMO);
 
@@ -78,7 +78,7 @@ public class FirtCareTest {
 
 
     @Test
-    public void shouldNotDischargePatient() {
+    void shouldNotDischargePatient() {
         People patient = new People();
         patient.setStatusPatient(StatusType.MORTO);
         FirstCare firstCare = new FirstCare();
@@ -115,11 +115,5 @@ public class FirtCareTest {
 
         assertEquals(procedures, firstCare.getProcedures());
     }
-
-   
-
-
-
-  
 
 }

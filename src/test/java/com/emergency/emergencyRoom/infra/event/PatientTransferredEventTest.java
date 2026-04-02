@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergency.emergencyRoom.infra.event.PatientTransferredEvent;
-
-
 public class PatientTransferredEventTest {
 
     @Test

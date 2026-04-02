@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergency.emergencyRoom.DTO.request.StateEvolutionRequest;
 import com.emergency.emergencyRoom.domain.enums.CareStatus;
 import com.emergency.emergencyRoom.domain.enums.CareofPacients;
 

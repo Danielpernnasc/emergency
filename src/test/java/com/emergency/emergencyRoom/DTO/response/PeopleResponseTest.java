@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergency.emergencyRoom.DTO.response.PeopleResponse;
 import com.emergency.emergencyRoom.domain.enums.ComorbidityType;
 import com.emergency.emergencyRoom.domain.enums.StatusType;
 

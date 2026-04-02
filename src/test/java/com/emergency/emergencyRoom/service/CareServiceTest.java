@@ -42,7 +42,7 @@ import com.emergency.emergencyRoom.repository.RepositoryHospital;
 import com.emergency.emergencyRoom.repository.RepositoryPeople;
 import com.emergency.emergencyRoom.repository.eventRepository.ProcessedEventRepository;
 import com.emergency.emergencyRoom.repository.loaderRepository.RepositoryCID;
-import com.emergency.emergencyRoom.service.CareService;
+
 
 
 
