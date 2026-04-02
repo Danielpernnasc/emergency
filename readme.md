@@ -406,4 +406,4 @@ patient_transfer_total{status="success"}
 
 🚀 Deploy
 🔗 Swagger (produção):
-👉 https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app/swagger-ui/index.html
+👉 https://fair-evangelin-danielpernnasc-4688df1a.koyeb.app/swagger-ui/index.html#/
