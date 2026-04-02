@@ -1,0 +1,20 @@
+package com.emergency.emergencyroom.domain.enums;
+
+public enum SpecialistMedic {
+    CARDIOLOGIST,
+    DERMATOLOGIST,
+    NEUROLOGIST,
+    PEDIATRICIAN,
+    ORTHOPEDIST,
+    CIRURGIA_GENERALIST,
+    GYNECOLOGIST,
+    PSYCHIATRIST,
+    UROLOGIST,
+    CLINICAL_MEDICINE, 
+    NOASSISTANCE_REQUIRED,
+    PEDIATRIC_MEDICINE,
+    TRAUMATOLOGY,
+    INFECTOLOGIST,
+    OTHER
+
+}

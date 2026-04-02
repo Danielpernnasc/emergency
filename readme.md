@@ -28,7 +28,7 @@ O sistema foi desenvolvido com foco em:
 
 ## 🧠 Arquitetura (Visão Conceitual)
 
-src/main/java/com/emergency/emergencyRoom
+src/main/java/com/emergency/emergencyroom
 │
 ├── config -> configuracao para CORS nao bloquear a api
 |    ├──CorsConfig.java

@@ -15,7 +15,7 @@
     </parent>
 
     <groupId>com.emergency</groupId>
-    <artifactId>emergencyRoom</artifactId>
+    <artifactId>emergencyroom</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
