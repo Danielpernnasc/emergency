@@ -39,6 +39,7 @@ public class FirstCareController {
     private final RepositoryPeople repositoryPeople;
     private final RepositoryHospital repositoryHospital;
     private final RepositoryFirstCare repositoryFirstCare;
+    private final String FIRSTCARE_NOT_FOUND = "FirstCare not found with id: ";
 
     
     public FirstCareController(
@@ -109,7 +110,7 @@ public class FirstCareController {
     @GetMapping("{id}")
     public FirstCareResponse findById(@PathVariable Long id) {
         FirstCare firstCare = repositoryFirstCare.findById(id)
-                .orElseThrow(() -> new RuntimeException("FirstCare not found with id " + id));
+                .orElseThrow(() -> new RuntimeException(FIRSTCARE_NOT_FOUND + id));
         return responsePatiente(firstCare);
     }
 
@@ -118,7 +119,7 @@ public class FirstCareController {
         @PathVariable Long id, 
         @RequestBody List<ComorbidityType> comorbidites) {
         FirstCare firstCare = repositoryFirstCare.findById(id)
-                .orElseThrow(() -> new RuntimeException("FirstCare not found with id " + id));
+                .orElseThrow(() -> new RuntimeException(FIRSTCARE_NOT_FOUND + id));
                 careService.addComorbidity(firstCare, comorbidites);
                 repositoryFirstCare.save(firstCare);
                 return responsePatiente(firstCare);
@@ -132,7 +133,7 @@ public class FirstCareController {
             @PathVariable Long id,
             @RequestBody StateEvolutionRequest requestEvolution) {
         FirstCare firstCare = repositoryFirstCare.findById(id)
-                .orElseThrow(() -> new RuntimeException("FirstCare not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException(FIRSTCARE_NOT_FOUND + id));
        
         careService.applyProcedures(
             id,
@@ -149,7 +150,7 @@ public class FirstCareController {
     @PutMapping("{id}/register-death")
     public FirstCareResponse registerDeath(@PathVariable Long id, @RequestBody DeathRequest deathRequest) {
         FirstCare firstCare = repositoryFirstCare.findById(id)
-                .orElseThrow(() -> new RuntimeException("FirstCare not found with id " + id));
+                .orElseThrow(() -> new RuntimeException(FIRSTCARE_NOT_FOUND + id));
     
 
         careService.registerDeath(firstCare, deathRequest.deathCause(), deathRequest.deathTime());

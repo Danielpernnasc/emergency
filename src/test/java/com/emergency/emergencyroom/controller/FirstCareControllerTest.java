@@ -19,7 +19,6 @@ import com.emergency.emergencyroom.DTO.request.DeathRequest;
 import com.emergency.emergencyroom.DTO.request.FirstCareRequest;
 import com.emergency.emergencyroom.DTO.request.StateEvolutionRequest;
 import com.emergency.emergencyroom.DTO.response.FirstCareResponse;
-import com.emergency.emergencyroom.controller.FirstCareController;
 import com.emergency.emergencyroom.domain.entity.FirstCare;
 import com.emergency.emergencyroom.domain.entity.Hospital;
 import com.emergency.emergencyroom.domain.entity.People;
