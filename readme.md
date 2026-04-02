@@ -30,6 +30,7 @@ src/main/java/com/emergencia/prontosocorro
 │
 ├── config -> configuracao para CORS nao bloquear a api
 |    ├──CorsConfig.java
+|    └──OpenApiConfig.java
 |
 ├── controller → Camada de entrada (API REST)
 │   ├── FirstCareController.java
