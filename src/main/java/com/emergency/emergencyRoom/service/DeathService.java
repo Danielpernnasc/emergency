@@ -1,0 +1,46 @@
+package com.emergency.emergencyRoom.service;
+
+import java.time.LocalDateTime;
+
+import org.springframework.stereotype.Service;
+
+import com.emergency.emergencyRoom.domain.entity.People;
+import com.emergency.emergencyRoom.domain.enums.StatusType;
+import com.emergency.emergencyRoom.infra.observability.ObservabilityService;
+import com.emergency.emergencyRoom.repository.RepositoryPeople;
+
+@Service
+public class DeathService {
+
+    private final RepositoryPeople repositoryPeople;
+    private final ObservabilityService observabilityService;
+
+
+    public DeathService(RepositoryPeople repositoryPeople, ObservabilityService observabilityService) {
+        this.repositoryPeople = repositoryPeople;
+        this.observabilityService = observabilityService;
+    }
+
+    public void registerDeath(
+        People people,
+        String justification,
+        LocalDateTime date
+    ){
+        if(people.getStatusPatient() == StatusType.MORTO){
+            throw new IllegalStateException("Patient already dead");
+        }
+
+        if(justification == null || justification.isBlank()){
+            throw new IllegalStateException("justification is mandatadory");
+        }
+
+       observabilityService.incrementDeathCounter();
+        LocalDateTime deathTime =  date != null ? date : LocalDateTime.now();
+
+        people.registerDeath(justification, deathTime);
+
+        repositoryPeople.save(people);
+    }
+
+
+}
