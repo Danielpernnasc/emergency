@@ -43,7 +43,7 @@ public class PeopleController {
 
         People people = new People();
         people.setName(req.name());
-        people.setAge(req.idade());
+        people.setAge(req.age());
         people.setDescription(req.description());
         people.setSeverity(req.severityLevel());
         people.setComorbidities(req.comorbidities());
@@ -84,9 +84,9 @@ public class PeopleController {
     @PutMapping("/{id}")
     public People updatedPatient(
             @PathVariable Long id,
-            @RequestBody People updatedPatient
+            @RequestBody PeopleRequest request
         ){
-            return peopleService.updatedPatient(id, updatedPatient);
+            return peopleService.updatedPatient(id, request);
         }
 
 

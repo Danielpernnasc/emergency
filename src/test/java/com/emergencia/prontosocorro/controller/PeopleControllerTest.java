@@ -122,10 +122,20 @@ public class PeopleControllerTest {
         people.setDescription("Infarto");
         people.setStatusPatient(StatusType.URGENTE);
 
-         when(peopleService.updatedPatient(eq(1L), any(People.class)))
+        //  when(peopleService.updatedPatient(eq(1L), any(People.class)))
+        //         .thenReturn(people);
+        
+         when(peopleService.updatedPatient(eq(1L), any(PeopleRequest.class)))
                 .thenReturn(people);
 
-        People result = peopleController.updatedPatient(1L, new People());
+        People result = peopleController.updatedPatient(1L, new PeopleRequest(
+            "Arthur de Camelot",
+            1500,
+            "Infarto",
+            1L,
+            SeverityLevel.GRAVE,
+            List.of(ComorbidityType.OUTRA)
+        ));
 
         assertEquals(1L, result.getId());
     }

@@ -51,24 +51,24 @@ public class PeopleService {
                 .orElseThrow(() -> new RuntimeException("People not found with id " + id));
     }
 
-    public People updatedPatient(Long id, People updatedPatient) {
+    public People updatedPatient(Long id, PeopleRequest request) {
         People existingPatient = repositoryPeople.findById(id)
                 .orElseThrow(() -> new RuntimeException("People not found with id " + id));
 
-                Optional.ofNullable(updatedPatient.getName())
+                Optional.ofNullable(request.name())
                 .ifPresent(existingPatient::setName);
 
-                Optional.ofNullable(updatedPatient.getAge())
+                Optional.ofNullable(request.age())
                 .ifPresent(existingPatient::setAge);
 
-                Optional.ofNullable(updatedPatient.getDescription())
+                Optional.ofNullable(request.description())
                 .ifPresent(existingPatient::setDescription);
 
-                Optional.ofNullable(updatedPatient.getComorbidities())
+                Optional.ofNullable(request.comorbidities())
                 .ifPresent(existingPatient::setComorbidities);
 
-                Optional.ofNullable(updatedPatient.getStatusPatient())
-                .ifPresent(existingPatient::setStatusPatient);
+                Optional.ofNullable(request.severityLevel())
+                .ifPresent(existingPatient::setSeverity);
 
         return repositoryPeople.save(existingPatient);
     }

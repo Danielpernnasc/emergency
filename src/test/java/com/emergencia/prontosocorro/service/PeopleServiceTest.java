@@ -97,7 +97,15 @@ public class PeopleServiceTest {
         when(repositoryPeople.save(any(People.class)))
                 .thenReturn(existingPatient);
 
-        People result = peopleService.updatedPatient(1L, updatedPatient);
+
+        People result = peopleService.updatedPatient(1L, new PeopleRequest(
+            "New Name",
+            40,
+            "New Description",
+            null,
+            null,
+            null
+        ));
 
         assertNotNull(result);
         assertEquals("New Name", result.getName());
