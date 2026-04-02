@@ -40,7 +40,7 @@ public class ObservabilityService {
 
    @PostConstruct
     public void testMetric() {
-        meterRegistry.counter("patient.create.total").increment();
+        meterRegistry.counter(CREATE_METRIC).increment();
     }
 
 
