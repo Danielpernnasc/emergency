@@ -89,7 +89,7 @@ public class RabbitMQConfig {
     //🔥 4. Exchanges
 
     @Bean
-    public DirectExchange exchange(){
+    public DirectExchange emergencyExchange(){
         return new DirectExchange(EXCHANGE);
     }
 
@@ -102,7 +102,7 @@ public class RabbitMQConfig {
     public Binding binding() {
         return BindingBuilder
                 .bind(getqueue())
-                .to(exchange())
+                .to(emergencyExchange())
                 .with(ROUTING_KEY);
     }
 
@@ -118,7 +118,7 @@ public class RabbitMQConfig {
     public Binding sectorBinding(){
         return BindingBuilder
             .bind(sectorQueue())
-            .to(exchange())
+            .to(emergencyExchange())
             .with(SECTOR_ROUTING_KEY);
     }
 

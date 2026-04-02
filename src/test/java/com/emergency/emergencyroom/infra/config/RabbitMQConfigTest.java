@@ -9,8 +9,6 @@ import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
-import com.emergency.emergencyroom.infra.config.RabbitMQConfig;
-
  class RabbitMQConfigTest {
  private final RabbitMQConfig config = new RabbitMQConfig();
 
@@ -42,7 +40,7 @@ import com.emergency.emergencyroom.infra.config.RabbitMQConfig;
 
     @Test
     void shouldCreateExchange() {
-        DirectExchange exchange = config.exchange();
+        DirectExchange exchange = config.emergencyExchange();
         assertEquals(RabbitMQConfig.EXCHANGE, exchange.getName());
     }
 
