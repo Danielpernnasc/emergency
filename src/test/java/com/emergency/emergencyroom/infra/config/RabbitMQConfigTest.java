@@ -24,7 +24,7 @@ import com.emergency.emergencyroom.infra.config.RabbitMQConfig;
 
     @Test
     void shouldCreateMainQueue() {
-        Queue queue = config.queue();
+        Queue queue = config.getqueue();
         assertEquals(RabbitMQConfig.QUEUE, queue.getName());
     }
 

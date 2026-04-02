@@ -67,7 +67,7 @@ public class RabbitMQConfig {
     
   //🔥 2. FILA PRINCIPAL (com DLQ)
     @Bean
-    public Queue queue(){
+    public Queue getqueue(){
         return  QueueBuilder.durable(QUEUE)
                     .withArgument("x-dead-letter-exchange", DLX)
                     .withArgument("x-dead-letter-routing-key", DLQ_ROUTING_KEY)
@@ -101,7 +101,7 @@ public class RabbitMQConfig {
     @Bean
     public Binding binding() {
         return BindingBuilder
-                .bind(queue())
+                .bind(getqueue())
                 .to(exchange())
                 .with(ROUTING_KEY);
     }
