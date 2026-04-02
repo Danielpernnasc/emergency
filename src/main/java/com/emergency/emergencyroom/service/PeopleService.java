@@ -22,6 +22,7 @@ public class PeopleService {
       private final DeathService deathService;
       private final RepositoryHospital repositoryHospital;
      private final ObservabilityService observabilityService;
+     private static final String PEOPLE_NOT_FOUND = "People not found with id ";
 
 
     public PeopleService(
@@ -51,12 +52,12 @@ public class PeopleService {
 
     public People getStatePatientById(Long id) {
         return repositoryPeople.findById(id)
-                .orElseThrow(() -> new RuntimeException("People not found with id " + id));
+                .orElseThrow(() -> new RuntimeException(PEOPLE_NOT_FOUND + id));
     }
 
     public People updatedPatient(Long id, PeopleRequest updatedPatient) {
         People existingPatient = repositoryPeople.findById(id)
-                .orElseThrow(() -> new RuntimeException("People not found with id " + id));
+                .orElseThrow(() -> new RuntimeException(PEOPLE_NOT_FOUND + id));
 
                 Optional.ofNullable(updatedPatient.name())
                 .ifPresent(existingPatient::setName);
@@ -78,13 +79,13 @@ public class PeopleService {
 
     public void registerDeath(Long id, String justification, LocalDateTime date) {
         People people = repositoryPeople.findById(id)
-                .orElseThrow(() -> new RuntimeException("People not found with id " + id));
+                .orElseThrow(() -> new RuntimeException(PEOPLE_NOT_FOUND + id));
         deathService.registerDeath(people, justification, date);
     }
 
     public boolean mistakeStatus(Long id, StatusType newStatus, String justification) {
         People people = repositoryPeople.findById(id)
-                .orElseThrow(() -> new RuntimeException("People not found with id " + id));
+                .orElseThrow(() -> new RuntimeException(PEOPLE_NOT_FOUND + id));
 
             if (people.getStatusPatient() != StatusType.MORTO) {
                 throw new IllegalStateException("Only dead patients can have status corrected");

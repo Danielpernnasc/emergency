@@ -22,7 +22,7 @@ import com.emergency.emergencyroom.repository.RepositoryPeople;
 
 
 @ExtendWith(MockitoExtension.class)
-public class PeopleServiceTest {
+class PeopleServiceTest {
 
     @Mock
     RepositoryPeople repositoryPeople;

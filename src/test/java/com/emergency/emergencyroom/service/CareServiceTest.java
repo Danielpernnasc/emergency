@@ -48,7 +48,7 @@ import com.emergency.emergencyroom.repository.eventRepository.ProcessedEventRepo
 
 
 @ExtendWith(MockitoExtension.class)
-public class CareServiceTest {
+class CareServiceTest {
 
     @Mock
     RepositoryFirstCare repositoryFirstCare;

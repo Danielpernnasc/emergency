@@ -11,9 +11,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     "com.emergency.emergencyroom.infra.event"
 })
 @EnableJpaRepositories("com.emergency.emergencyroom")
-public class ProntosocorroApplication {
+public class EmergencyRoomApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ProntosocorroApplication.class, args);
+        SpringApplication.run(EmergencyRoomApplication.class, args);
     }
 
 }

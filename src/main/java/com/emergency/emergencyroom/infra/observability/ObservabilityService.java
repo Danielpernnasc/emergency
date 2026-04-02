@@ -19,21 +19,23 @@ public class ObservabilityService {
     private static final String UPDATE_METRIC = "patient.update.total";
     private static final String TRANSFER_METRIC = "patient.transfer.total";
     private static final String DEATH_METRIC = "patient.death.total";
+    private static final String STATUS = "status";
+     private static final String SUCCEESS = "success";
 
     public void incrementCreateCounter(){
-        meterRegistry.counter(CREATE_METRIC, "status", "success").increment();
+        meterRegistry.counter(CREATE_METRIC, STATUS, SUCCEESS).increment();
     }
 
     public void incrementUpdateCounter(){
-        meterRegistry.counter(UPDATE_METRIC, "status", "success").increment();
+        meterRegistry.counter(UPDATE_METRIC, STATUS, SUCCEESS).increment();
     }
      
     public void incrementTransferCounter(){
-        meterRegistry.counter(TRANSFER_METRIC,"status", "success").increment();
+        meterRegistry.counter(TRANSFER_METRIC, STATUS, SUCCEESS).increment();
     }
 
     public void incrementDeathCounter(){
-        meterRegistry.counter(DEATH_METRIC, "status", "success").increment();
+        meterRegistry.counter(DEATH_METRIC, STATUS, SUCCEESS).increment();
     }
 
    @PostConstruct

@@ -17,7 +17,7 @@ import com.emergency.emergencyroom.domain.entity.Hospital;
 import com.emergency.emergencyroom.repository.RepositoryHospital;
 
 @ExtendWith(MockitoExtension.class)
-public class HospitalServiceTest {
+class HospitalServiceTest {
 
     @Mock
     RepositoryHospital repositoryHospital;

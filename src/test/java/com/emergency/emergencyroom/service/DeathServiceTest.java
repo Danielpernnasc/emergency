@@ -30,19 +30,16 @@ class DeathServiceTest {
         DeathService deathService;
 
     @Test
-    void shouldRegisterDeath(){
+        void shouldRegisterDeath(){
 
-        People people = new People();
-        people.setStatusPatient(StatusType.MORTO);
-        String justification = "Patient died due to complications from surgery.";
-        LocalDateTime deathDate = LocalDateTime.now();
-        try {
-            deathService.registerDeath(people, justification, deathDate);
-        } catch (IllegalStateException e) {
-            assert(e.getMessage().equals("Patient already dead"));
+            deathService.registerDeath(
+                new People(),   
+                "Heart attack",
+                LocalDateTime.now()
+            );
+
+            verify(repositoryPeople).save(any(People.class));
         }
-
-    }
 
     @Test
     void shouldUseCurrentTimeWhenDateIsNull() {

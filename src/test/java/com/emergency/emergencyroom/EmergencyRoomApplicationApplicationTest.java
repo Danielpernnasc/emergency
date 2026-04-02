@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 
 @ActiveProfiles("test")
-class ProntosocorroApplicationTest {
+class EmergencyRoomApplicationApplicationTest {
 
 
 @Test
