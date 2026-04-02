@@ -280,7 +280,7 @@ Este projeto prioriza qualidade de modelagem, clareza de domínio e arquitetura 
 ▶️ Como Executar o Projeto
 Clone o repositório:
 
-git clone https://github.com/Danielpernnasc/emergencia
+git clone https://github.com/Danielpernnasc/emergency
 Entre na pasta do projeto:
 
 cd emergency
