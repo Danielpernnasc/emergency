@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergency.emergencyRoom.DTO.request.PeopleRequest;
 import com.emergency.emergencyRoom.domain.enums.ComorbidityType;
 import com.emergency.emergencyRoom.domain.enums.SeverityLevel;
 
@@ -24,11 +23,11 @@ public class PeopleRequestTest {
 
         );
 
-        assertEquals("Arthur de Camelot", req.getName());
-        assertEquals(1800, req.getIdade());
-        assertEquals("ATAQUE DE INFARTO", req.getDescription());
-        assertEquals(1L, req.getHospitalId());
-        assertEquals(SeverityLevel.GRAVE, req.getSeverityLevel());
+        assertEquals("Arthur de Camelot", req.name());
+        assertEquals(1800, req.age());
+        assertEquals("ATAQUE DE INFARTO", req.description());
+        assertEquals(1L, req.hospitalId());
+        assertEquals(SeverityLevel.GRAVE, req.severityLevel());
         assertEquals(List.of(ComorbidityType.ALERGIA), req.comorbidities());
     }
 }

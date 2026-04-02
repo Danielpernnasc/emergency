@@ -33,9 +33,9 @@ public class HospitalController {
     @PostMapping
     public  ResponseEntity<Hospital> create(@RequestBody HospitalRequest request){
           Hospital hospital = new Hospital();
-    hospital.setNameHospital(request.getNameHospital());
-    hospital.setAddress(request.getAddress());
-    hospital.setNumero(request.getNumero());
+    hospital.setNameHospital(request.nameHospital());
+    hospital.setAddress(request.address());
+    hospital.setNumero(request.number());
 
     Hospital saved = repositoryHospital.save(hospital);
     return ResponseEntity.status(HttpStatus.CREATED).body(saved);
@@ -62,9 +62,9 @@ public class HospitalController {
         Hospital hospital = repositoryHospital.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Hospital not found with id " + id));
 
-        hospital.setNameHospital(request.getNameHospital());
-        hospital.setAddress(request.getAddress());
-        hospital.setNumero(request.getNumero());
+        hospital.setNameHospital(request.nameHospital());
+        hospital.setAddress(request.address());
+        hospital.setNumero(request.number());
 
         Hospital updated = repositoryHospital.save(hospital);
         return ResponseEntity.ok(updated);

@@ -23,16 +23,19 @@ public class PeopleService {
       private final RepositoryHospital repositoryHospital;
      private final ObservabilityService observabilityService;
 
+
     public PeopleService(
         RepositoryPeople repositoryPeople, 
         DeathService deathService, 
         RepositoryHospital repositoryHospital,
         ObservabilityService observabilityService
+    
     ) {
         this.repositoryPeople = repositoryPeople;
         this.deathService = deathService;
         this.repositoryHospital = repositoryHospital;
         this.observabilityService = observabilityService;
+     
 
     }
 
@@ -51,24 +54,24 @@ public class PeopleService {
                 .orElseThrow(() -> new RuntimeException("People not found with id " + id));
     }
 
-    public People updatedPatient(Long id, People updatedPatient) {
+    public People updatedPatient(Long id, PeopleRequest updatedPatient) {
         People existingPatient = repositoryPeople.findById(id)
                 .orElseThrow(() -> new RuntimeException("People not found with id " + id));
 
-                Optional.ofNullable(updatedPatient.getName())
+                Optional.ofNullable(updatedPatient.name())
                 .ifPresent(existingPatient::setName);
 
-                Optional.ofNullable(updatedPatient.getAge())
+                Optional.ofNullable(updatedPatient.age())
                 .ifPresent(existingPatient::setAge);
 
-                Optional.ofNullable(updatedPatient.getDescription())
+                Optional.ofNullable(updatedPatient.description())
                 .ifPresent(existingPatient::setDescription);
 
-                Optional.ofNullable(updatedPatient.getComorbidities())
+                Optional.ofNullable(updatedPatient.comorbidities())
                 .ifPresent(existingPatient::setComorbidities);
 
-                Optional.ofNullable(updatedPatient.getStatusPatient())
-                .ifPresent(existingPatient::setStatusPatient);
+                Optional.ofNullable(updatedPatient.severityLevel())
+                .ifPresent(existingPatient::setSeverity);
 
         return repositoryPeople.save(existingPatient);
     }

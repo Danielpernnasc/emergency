@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.emergency.emergencyRoom.DTO.request.HospitalRequest;
-
 public class HospitalRequestTest {
 
     @Test
@@ -18,7 +16,7 @@ public class HospitalRequestTest {
 
         assertEquals("Hospital Central",  req.nameHospital());
         assertEquals("Avenida Central", req.address());
-        assertEquals(100, req.numero());
+        assertEquals(100, req.number());
 
     }
 
@@ -26,13 +24,13 @@ public class HospitalRequestTest {
     void shouldGetHospital(){
         HospitalRequest req = new HospitalRequest();
 
-        req.getNameHospital();
-        req.getAddress();
-        req.getNumero();
+        req.nameHospital();
+        req.address();
+        req.number();
 
-        assertEquals(null, req.getNameHospital());
-        assertEquals(null, req.getAddress());
-        assertEquals(0, req.getNumero());
+        assertEquals(null, req.nameHospital());
+        assertEquals(null, req.address());
+        assertEquals(0, req.number());
     }
 
 }

@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import com.emergency.emergencyRoom.DTO.request.PeopleRequest;
 import com.emergency.emergencyRoom.DTO.request.StatePatientRequest;
 import com.emergency.emergencyRoom.DTO.response.PeopleResponse;
-import com.emergency.emergencyRoom.controller.PeopleController;
 import com.emergency.emergencyRoom.domain.entity.Hospital;
 import com.emergency.emergencyRoom.domain.entity.People;
 import com.emergency.emergencyRoom.domain.enums.ComorbidityType;
@@ -116,20 +115,27 @@ public class PeopleControllerTest {
 
     @Test
     void shouldUpdatePatiente(){
-        People people = new People();
-        people.setId(1L);
-        people.setName("Arthur de Camelot");
-        people.setAge(1500);
-        people.setDescription("Infarto");
-        people.setStatusPatient(StatusType.URGENTE);
 
-         when(peopleService.updatedPatient(eq(1L), any(People.class)))
-                .thenReturn(people);
+    
+       PeopleRequest peopleRequest = new PeopleRequest(
+        "Arthur de Camelot",
+        1500,
+        "Dor no peito",
+        1L,
+        SeverityLevel.GRAVE,
+        List.of(ComorbidityType.OUTRA)
+       );
+        People mockPeople = new People();
+        mockPeople.setId(1L);
+       
+        when(peopleService.updatedPatient(eq(1L), any(PeopleRequest.class)))
+                .thenReturn(mockPeople);    
 
-        People result = peopleController.updatedPatient(1L, new People());
+        People result = peopleController.updatedPatient(1L, peopleRequest);
 
         assertEquals(1L, result.getId());
     }
+    
     @Test
     void shouldMistakeStatus(){
 
