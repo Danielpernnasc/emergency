@@ -82,15 +82,7 @@ public class PeopleServiceTest {
         existingPatient.setName("Old Name");
         existingPatient.setAge(30);
         existingPatient.setDescription("Old Description");
-        existingPatient.setSeverity(null);
         existingPatient.setComorbidities(null);
-
-        People updatedPatient = new People();
-        updatedPatient.setName("New Name");
-        updatedPatient.setAge(40);
-        updatedPatient.setDescription("New Description");
-        updatedPatient.setSeverity(null);
-        updatedPatient.setComorbidities(null);
 
         when(repositoryPeople.findById(1L))
                 .thenReturn(Optional.of(existingPatient));

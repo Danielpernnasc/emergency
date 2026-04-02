@@ -67,9 +67,6 @@ public class PeopleService {
                 Optional.ofNullable(request.comorbidities())
                 .ifPresent(existingPatient::setComorbidities);
 
-                Optional.ofNullable(request.severityLevel())
-                .ifPresent(existingPatient::setSeverity);
-
         return repositoryPeople.save(existingPatient);
     }
 
