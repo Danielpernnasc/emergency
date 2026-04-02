@@ -19,7 +19,12 @@ import com.emergencia.prontosocorro.domain.enums.StatusType;
 import com.emergencia.prontosocorro.infra.observability.ObservabilityService;
 import com.emergencia.prontosocorro.repository.RepositoryHospital;
 import com.emergencia.prontosocorro.repository.RepositoryPeople;
+<<<<<<< HEAD
 
+=======
+import com.emergencia.prontosocorro.service.DeathService;
+import com.emergencia.prontosocorro.service.PeopleService;
+>>>>>>> 0aced022997289a5840a47bcb19db2801960cd8a
 
 
 @ExtendWith(MockitoExtension.class)

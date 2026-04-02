@@ -12,7 +12,10 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.emergencia.prontosocorro.domain.entity.CID;
+<<<<<<< HEAD
 import com.emergencia.prontosocorro.domain.entity.CsvLoader;
+=======
+>>>>>>> 0aced022997289a5840a47bcb19db2801960cd8a
 import com.emergencia.prontosocorro.repository.loaderRepository.RepositoryCID;
 
 class CsvLoaderTest {

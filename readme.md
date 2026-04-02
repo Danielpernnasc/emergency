@@ -30,6 +30,10 @@ src/main/java/com/emergencia/prontosocorro
 │
 ├── config -> configuracao para CORS nao bloquear a api
 |    ├──CorsConfig.java
+<<<<<<< HEAD
+=======
+|    └──OpenApiConfig.java
+>>>>>>> 0aced022997289a5840a47bcb19db2801960cd8a
 |
 ├── controller → Camada de entrada (API REST)
 │   ├── FirstCareController.java
@@ -74,16 +78,24 @@ src/main/java/com/emergencia/prontosocorro
 │   │   ├── StateEvolutionRequest.java
 │   │   └── StatePatientRequest.java
 │   │
+<<<<<<< HEAD
 │   └── response → Dados retornados pela API
+=======
+│   ├── response → Dados retornados pela API
+>>>>>>> 0aced022997289a5840a47bcb19db2801960cd8a
 │       ├── FirstCareResponse.java
 │       └── PeopleResponse.java
 │   
-└── Message
-│       ├── config
-│       │   └── RabbitMQConfig.java
-│       │
-│       ├── consumer
-│       │   ├── HospitalEventConsumer.java
+|
+├──infra       
+|   ├── config
+│   │   ├── RabbitMQConfig.java  
+│   │   └── CsvLoader.java
+│   │ 
+│   ├── messaging
+│       │──consumer    
+│       │   ├──CaresStatusEventConsumer.java
+│       │   └── HospitalEventConsumer.java
 │       │   └── SectorEventConsumer.java
 │       │
 │       ├── event
@@ -119,11 +131,19 @@ src/main/java/com/emergencia/prontosocorro
 │   │   └── HospitalEventProducer.java
 │   │
 │   ├── event → contratos de eventos
+<<<<<<< HEAD
 │   |   ├── PatientTransferredEvent.java
 │   |   └── SectorChangedEvent.java
 │   |   
 │   └── observability → métricas de negócio com Micrometer (monitoramento e análise do sistema)
 │        └── ObservabilityService.java
+=======
+│       │   ├── PatientTransferredEvent.java
+│       │   └── SectorChangedEvent.java
+│       │
+│       └── observability → métricas de negócio com Micrometer (monitoramento e análise do sistema)
+│            └── ObservabilityService.java
+>>>>>>> 0aced022997289a5840a47bcb19db2801960cd8a
 │
 └── ProntosocorroApplication.java
 

@@ -13,7 +13,10 @@ import com.emergencia.prontosocorro.domain.enums.StatusType;
 import com.emergencia.prontosocorro.infra.observability.ObservabilityService;
 import com.emergencia.prontosocorro.repository.RepositoryHospital;
 import com.emergencia.prontosocorro.repository.RepositoryPeople;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0aced022997289a5840a47bcb19db2801960cd8a
 
 @Service
 public class PeopleService {
