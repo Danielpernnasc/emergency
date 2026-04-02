@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.infra.config;
+package com.emergencia.prontosocorro.domain.entity;
 
 import java.util.List;
 
@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.emergencia.prontosocorro.domain.entity.CID;
-import com.emergencia.prontosocorro.domain.entity.CIDKeywordRule;
 import com.emergencia.prontosocorro.repository.RepositoryCIDKeywordRule;
 import com.emergencia.prontosocorro.repository.loaderRepository.RepositoryCID;
 

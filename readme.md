@@ -42,8 +42,10 @@ src/main/java/com/emergencia/prontosocorro
 │   │   ├── CIDKeywordRule.java
 │   │   ├── FirstCare.java
 │   │   ├── Hospital.java
-│   │   └── People.java
-│   │
+│   │   ├── People.java
+|   |   ├── CIDKeywordRuleTest.java
+│   │   └── CsvLoader.java 
+|   |
 │   ├── enums → Tipos de domínio (imutáveis)
 │   │   ├── CareofPacients.java
 │   │   ├── CareStatus.java
@@ -72,28 +74,9 @@ src/main/java/com/emergencia/prontosocorro
 │   │   ├── StateEvolutionRequest.java
 │   │   └── StatePatientRequest.java
 │   │
-│   ├── response → Dados retornados pela API
+│   └── response → Dados retornados pela API
 │       ├── FirstCareResponse.java
 │       └── PeopleResponse.java
-│   
-|
-├──infra       
-|   ├── config
-│   │   ├── RabbitMQConfig.java  
-│   │   └── CsvLoader.java
-│   │ 
-│   ├── messaging
-│       │──consumer    
-│       │   ├──CaresStatusEventConsumer.java
-│       │   └── HospitalEventConsumer.java
-│       │   └── SectorEventConsumer.java
-│       │
-│       ├── event
-│       │   ├── PatientTransferredEvent.java
-│       │   └── SectorChangedEvent.java
-│       │
-│       └── producer
-│           └── HospitalEventProducer.java
 │
 ├── service → Orquestração das regras de negócio
 │   ├── CareService.java
@@ -121,11 +104,11 @@ src/main/java/com/emergencia/prontosocorro
 │   │   └── HospitalEventProducer.java
 │   │
 │   ├── event → contratos de eventos
-│       │   ├── PatientTransferredEvent.java
-│       │   └── SectorChangedEvent.java
-│       │
-│       └── observability → métricas de negócio com Micrometer (monitoramento e análise do sistema)
-│            └── ObservabilityService.java
+│   |   ├── PatientTransferredEvent.java
+│   |   └── SectorChangedEvent.java
+│   |   
+│   └── observability → métricas de negócio com Micrometer (monitoramento e análise do sistema)
+│        └── ObservabilityService.java
 │
 └── ProntosocorroApplication.java
 

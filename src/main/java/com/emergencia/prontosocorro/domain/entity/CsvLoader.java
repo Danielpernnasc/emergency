@@ -1,4 +1,4 @@
-package com.emergencia.prontosocorro.infra.config;
+package com.emergencia.prontosocorro.domain.entity;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -14,7 +14,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.emergencia.prontosocorro.domain.entity.CID;
 import com.emergencia.prontosocorro.repository.loaderRepository.RepositoryCID;
 
 @Profile("!test")

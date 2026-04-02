@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.emergencia.prontosocorro.domain.entity.CID;
+import com.emergencia.prontosocorro.domain.entity.DatabaseSeeder;
 import com.emergencia.prontosocorro.repository.RepositoryCIDKeywordRule;
 import com.emergencia.prontosocorro.repository.loaderRepository.RepositoryCID;
 

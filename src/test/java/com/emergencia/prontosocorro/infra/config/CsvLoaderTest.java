@@ -12,6 +12,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.emergencia.prontosocorro.domain.entity.CID;
+import com.emergencia.prontosocorro.domain.entity.CsvLoader;
 import com.emergencia.prontosocorro.repository.loaderRepository.RepositoryCID;
 
 class CsvLoaderTest {
