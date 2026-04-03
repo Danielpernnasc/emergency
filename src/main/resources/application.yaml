@@ -56,5 +56,5 @@ management:
 
 app:
   url:
-    prod: https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app
+    prod: https://fair-evangelin-danielpernnasc-4688df1a.koyeb.app
     local: http://localhost:8080
