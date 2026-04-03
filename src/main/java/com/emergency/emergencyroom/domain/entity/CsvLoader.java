@@ -44,7 +44,7 @@ public class CsvLoader implements ApplicationRunner {
      public void load() throws Exception {
 
         if (repository.count() > 0) {
-            log.warn("⚠️ CIDs já carregados. Pulando...");
+            log.warn("⚠️ CIDs aredy charged, skipping CSV loading.");
             return;
         }
 
