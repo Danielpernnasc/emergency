@@ -65,13 +65,11 @@ public class CsvLoader implements ApplicationRunner {
 
         try (BufferedReader reader = createReader(path)){
 
-        
-            reader.readLine();
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                parseAndAdd(line, batch);
-            }
+    
+        String line;
+        while ((line = reader.readLine()) != null) {
+            parseAndAdd(line, batch);
+        }
         }
     }
 
