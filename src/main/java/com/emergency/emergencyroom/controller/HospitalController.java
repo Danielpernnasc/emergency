@@ -21,7 +21,7 @@ import com.emergency.emergencyroom.service.HospitalService;
 import jakarta.persistence.EntityNotFoundException;
 
 
-@CrossOrigin(origins = "https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app")
+
 @RestController
 @RequestMapping("hospital")
 public class HospitalController {
