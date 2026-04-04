@@ -30,7 +30,7 @@ import com.emergency.emergencyroom.repository.RepositoryHospital;
 import com.emergency.emergencyroom.repository.RepositoryPeople;
 import com.emergency.emergencyroom.service.CareService;
 
-@CrossOrigin(origins = "https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app")
+
 @RestController
 @RequestMapping("firstcare")
 public class FirstCareController {

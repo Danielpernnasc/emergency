@@ -19,8 +19,6 @@ import com.emergency.emergencyroom.domain.entity.People;
 import com.emergency.emergencyroom.repository.RepositoryPeople;
 import com.emergency.emergencyroom.service.PeopleService;
 
-
-@CrossOrigin(origins = "https://spare-shae-danielpernnasc-3c2dab9e.koyeb.app")
 @RestController
 @RequestMapping("/people")
 public class PeopleController {
@@ -50,11 +48,7 @@ public class PeopleController {
         People createdPeople = peopleService.createPatient(people, req);
         return ResponseEntity.ok(createdPeople);
 }
-
-
-   
-   
-    
+ 
     @GetMapping
     public List<PeopleResponse> findAll() {
         return repositoryPeople.findAll()
