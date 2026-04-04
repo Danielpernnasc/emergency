@@ -23,11 +23,9 @@ import jakarta.persistence.EntityNotFoundException;
 @RestController
 @RequestMapping("hospital")
 public class HospitalController {
-    private final RepositoryHospital repositoryHospital;
     private final HospitalService hospitalService;
 
-    public HospitalController(RepositoryHospital repositoryHospital, HospitalService hospitalService) {
-        this.repositoryHospital = repositoryHospital;
+    public HospitalController(HospitalService hospitalService) {
         this.hospitalService = hospitalService;
     }
 
