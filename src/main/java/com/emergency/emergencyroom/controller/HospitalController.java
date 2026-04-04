@@ -20,8 +20,6 @@ import com.emergency.emergencyroom.service.HospitalService;
 
 import jakarta.persistence.EntityNotFoundException;
 
-
-
 @RestController
 @RequestMapping("hospital")
 public class HospitalController {
