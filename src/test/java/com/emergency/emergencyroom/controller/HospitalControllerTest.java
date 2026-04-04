@@ -47,7 +47,7 @@ import com.emergency.emergencyroom.service.HospitalService;
 
         when(repositoryHospital.save(any(Hospital.class))).thenReturn(hospital);
 
-        HospitalController hospitalController = new HospitalController(repositoryHospital, hospitalService);
+        HospitalController hospitalController = new HospitalController(hospitalService);
         ResponseEntity<Hospital> result = hospitalController.create(request);
 
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
@@ -66,7 +66,7 @@ import com.emergency.emergencyroom.service.HospitalService;
         );
 
      when(repositoryHospital.findAll()).thenReturn(List.of(hospital));
-       HospitalController hospitalController = new HospitalController(repositoryHospital, hospitalService);
+       HospitalController hospitalController = new HospitalController(hospitalService);
         List<Hospital> result = hospitalController.getAllHospitals();
 
 
@@ -89,7 +89,7 @@ import com.emergency.emergencyroom.service.HospitalService;
 
          when(repositoryHospital.findById(1L)).thenReturn(Optional.of(hospital));
 
-        HospitalController hospitalController = new HospitalController(repositoryHospital, hospitalService);
+        HospitalController hospitalController = new HospitalController(hospitalService);
         Hospital result = hospitalController.findById(1L);
 
         assertEquals(1L, result.getId());
@@ -107,7 +107,7 @@ import com.emergency.emergencyroom.service.HospitalService;
 
         when(repositoryHospital.findByNameHospitalContainingIgnoreCase("Hospital Central")).thenReturn(List.of(hospital));
         
-        HospitalController hospitalController = new HospitalController(repositoryHospital, hospitalService);
+        HospitalController hospitalController = new HospitalController(hospitalService);
         List<Hospital> result = hospitalController.searchByName("Hospital Central");
 
          assertEquals(1, result.size());
@@ -137,7 +137,7 @@ import com.emergency.emergencyroom.service.HospitalService;
                 100
             );
             
-            HospitalController hospitalController = new HospitalController(repositoryHospital, hospitalService);
+            HospitalController hospitalController = new HospitalController(hospitalService);
             ResponseEntity<Hospital> result = hospitalController.update(1L, reqHospital);
 
             assertEquals(null, result.getBody());
