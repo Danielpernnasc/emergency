@@ -22,7 +22,7 @@ jobs:
       - name: Build and analyze with SonarCloud
         run: |
           mvn clean verify sonar:sonar \
-            -Dsonar.projectKey=Danielpernnasc_emergencia \
+            -Dsonar.projectKey=Danielpernnasc_emergencyroom \
             -Dsonar.organization=danielpernnasc \
             -Dsonar.host.url=https://sonarcloud.io
         env:
