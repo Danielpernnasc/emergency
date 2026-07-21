@@ -30,10 +30,13 @@ jobs:
           path: target/site/jacoco/
 
       - name: SonarCloud Scan
+        if: ${{ secrets.EMERGENCIATOKEN != '' }}
+        env:
+          SONAR_TOKEN: ${{ secrets.EMERGENCIATOKEN }}
         run: |
           mvn verify sonar:sonar \
             -Dsonar.projectKey=Danielpernnasc_emergencia \
             -Dsonar.organization=danielpernnasc \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-            -Dsonar.token=${{ secrets.EMERGENCIATOKEN }}
+            -Dsonar.token=$SONAR_TOKEN
