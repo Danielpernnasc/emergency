@@ -1,15 +1,18 @@
-version: '3.8'
-
 services:
   app:
     build: .
     container_name: emergencyroom-app
     ports:
       - "8080:8080"
+
     depends_on:
-      - rabbitmq
-    environment:
-      SPRING_RABBITMQ_HOST: rabbitmq
+      rabbitmq:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+
+    env_file:
+      - .env
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -17,3 +20,39 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.4
+    container_name: mysql
+    restart: unless-stopped
+
+    environment:
+      MYSQL_DATABASE: prontosocorro
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: emergency
+      MYSQL_PASSWORD: emergency
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:

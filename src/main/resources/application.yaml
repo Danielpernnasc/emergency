@@ -1,25 +1,27 @@
 spring:
   datasource:
-    url: jdbc:mysql://gateway01.us-east-1.prod.aws.tidbcloud.com:4000/prontosocorro?sslMode=REQUIRED
-    username: 43g3dmxQjes9pvD.root
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
-  rabbitmq:
-    host: jackal.rmq.cloudamqp.com
-    port: 5671
-    username: kabgouoe
-    password: ${SPRING_RABBITMQ_PASSWORD}
-    virtual-host: kabgouoe
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 20000
 
-  hikari:
-    maximum-pool-size: 10
-    minimum-idle: 2
-    idle-timeout: 30000
-    connection-timeout: 20000
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
+    virtual-host: ${SPRING_RABBITMQ_VIRTUAL_HOST}
+    ssl:
+      enabled: ${SPRING_RABBITMQ_SSL:false}
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -53,8 +55,7 @@ management:
       probes:
         enabled: true
 
-
 app:
   url:
-    prod: https://fair-evangelin-danielpernnasc-4688df1a.koyeb.app
-    local: http://localhost:8080
+    prod: ${APP_URL_PROD:https://fair-evangelin-danielpernnasc-4688df1a.koyeb.app}
+    local: ${APP_URL_LOCAL:http://localhost:8080}

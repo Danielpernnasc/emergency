@@ -43,11 +43,11 @@ public class RabbitMQConfig {
         factory.setPassword(password);
         factory.setVirtualHost(virtualHost);
 
-        try {
-            factory.getRabbitConnectionFactory().useSslProtocol();
-        } catch (Exception e) {
-            throw new IllegalStateException("Erro ao configurar SSL", e);
-        }
+//        try {
+//            factory.getRabbitConnectionFactory().useSslProtocol();
+//        } catch (Exception e) {
+//            throw new IllegalStateException("Erro ao configurar SSL", e);
+//        }
 
         return factory;
     }
