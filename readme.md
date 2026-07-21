@@ -3,7 +3,7 @@
 # 🏥 ProntoSocorro – Sistema de Atendimento Hospitalar
 
 ![Java](https://img.shields.io/badge/Java-21-orange)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.x-brightgreen)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.4-brightgreen)
 ![Maven](https://img.shields.io/badge/Maven-3.9-blue)
 ![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow)
 
@@ -274,136 +274,232 @@ PUT/first-care/{id}/evolution
 PUT /first-care/{id}/register-death
 
 
-🏁 Conclusão
-Este projeto prioriza qualidade de modelagem, clareza de domínio e arquitetura limpa, servindo como base sólida para evolução com API REST, persistência e integrações futuras.
+---
 
-▶️ Como Executar o Projeto
-Clone o repositório:
+# 🏁 Conclusão
 
-git clone https://github.com/Danielpernnasc/emergency
-Entre na pasta do projeto:
+O **Emergency Room** foi desenvolvido com foco em qualidade de código, clareza de domínio e arquitetura limpa, servindo como base sólida para evolução com API REST, persistência de dados, mensageria e integrações futuras.
 
+---
+
+# ▶️ Como Executar o Projeto
+
+### 📥 1. Clone o repositório
+
+```bash
+git clone https://github.com/Danielpernnasc/emergency.git
 cd emergency
-Execute o projeto:
+```
 
-mvn spring-boot:run
+### ⚙️ 2. Configure as variáveis de ambiente
 
-DB_PASSWORD= -> .env SPRING_RABBITMQ_HOST=jackal.rmq.cloudamqp.com SPRING_RABBITMQ_PORT=5671 SPRING_RABBITMQ_USERNAME=kabgouoe SPRING_RABBITMQ_PASSWORD= -> .env  SPRING_RABBITMQ_VIRTUAL_HOST=kabgouoe mvn clean spring-boot:run
+Crie um arquivo `.env` na raiz do projeto (ou copie o `.env.example`, caso exista) e informe as credenciais necessárias para o banco de dados e RabbitMQ.
 
-Senha do DB e Rabbit esta no arquivo .env
+### 🔨 3. Compile a aplicação
 
+```bash
+mvn clean package
+```
+
+### 🐳 4. Inicie a aplicação
+
+```bash
+docker compose up -d --build
+```
+
+O Docker Compose iniciará automaticamente:
+
+- ☕ Aplicação Spring Boot
+- 🗄️ MySQL
+- 🐰 RabbitMQ
+
+---
+
+# 🌐 Acessos
+
+### 📘 Swagger
+
+```
+http://localhost:8080/swagger-ui/index.html
+```
+
+### 🐰 RabbitMQ Management
+
+```
+http://localhost:15672
+```
+
+Login padrão:
+
+```
+Usuário: guest
+Senha: guest
+```
+
+---
 
 ## 🐰 RabbitMQ
 
-O sistema utiliza RabbitMQ para mensageria assíncrona.
-🐰 Mensageria (RabbitMQ)
-Fluxo:
+O projeto utiliza **RabbitMQ** para comunicação assíncrona entre os serviços.
 
-Service → Producer → RabbitMQ → Consumer → Service
+### 🔄 Fluxo de Mensageria
 
-### ▶️ Executar com Docker
+```
+Service
+   │
+   ▼
+Producer
+   │
+   ▼
+RabbitMQ
+   │
+   ▼
+Consumer
+   │
+   ▼
+Service
+```
+
+> 💡 **Observação:** quando a aplicação é executada com **Docker Compose**, o RabbitMQ é iniciado automaticamente.
+
+---
+
+# 🗄️ Banco de Dados
+
+O projeto utiliza **MySQL** como banco de dados relacional.
+
+> 💡 As credenciais de acesso são configuradas no arquivo `.env`.
+
+---
+
+# 📊 Observabilidade
+
+O projeto possui observabilidade utilizando:
+
+- 📈 Spring Boot Actuator
+- 📊 Micrometer
+- 🔥 Prometheus
+
+### 🔎 Endpoints
+
+```
+http://localhost:8080/actuator/health
+```
+
+```
+http://localhost:8080/actuator/metrics
+```
+
+```
+http://localhost:8080/actuator/prometheus
+```
+
+### 📈 Métricas disponíveis
+
+- patient.create.total
+- patient.update.total
+- patient.transfer.total
+- patient.death.total
+
+---
+
+# 🔥 Prometheus
+
+Para coletar as métricas da aplicação:
 
 ```bash
-docker start rabbitmq
-
-docker run -d \
-  --name rabbitmq \
-  -p 5672:5672 \
-  -p 15672:15672 \
-  rabbitmq:3-management
-
-  casp queira usar local
-
-🌐 Acessos
-Aplicação (AMQP): amqp://localhost:5672
-
-Painel Web: http://localhost:15672
-
-Login:
-
-user: guest
-
-password: guest
-
-ja configurado com RABBIT MQ 
-CloudAMQP
- 
-
-🔧 Versão melhorada (pode copiar)
-📊 Observabilidade
-O projeto possui observabilidade básica e avançada, permitindo monitorar o comportamento das regras de negócio em tempo real.
-
-📊 Observabilidade
-Actuator
-/actuator/metrics
-
-Banco de Dados MYSQL esta no tidbcloud
-HOST:
-
-gateway01.us-east-1.prod.aws.tidbcloud.com
-
-PORT: 4000
-
-USERNAME: 43g3dmxQjes9pvD.root
-
-PASSWORD: <PASSWORD> .env
-
-DATABASE: prontosocorro
-
-▶️ Como acessar
-Após iniciar a aplicação:
-
-http://localhost:8080/actuator/metrics
-🔎 Métricas de negócio disponíveis
-patient.create.total → criação de paciente / atendimento inicial
-
-patient.update.total → atualização do estado do paciente
-
-patient.transfer.total → transferência entre setor/hospital
-
-patient.death.total → registro de óbito
-
-📌 Exemplo
-http://localhost:8080/actuator/metrics/patient.transfer.total
-🔥 Observabilidade Avançada (Prometheus)
-O projeto também suporta integração com Prometheus, permitindo coleta contínua e análise histórica das métricas.
-
-▶️ Pré-requisitos
-Aplicação rodando (localhost:8080)
-
-RabbitMQ ativo (necessário para o sistema)
-
-Prometheus
-
-coleta de métricas
-análise histórica
-
-📁 Arquivo prometheus.yml
-global:
-  scrape_interval: 5s
-
-scrape_configs:
-  - job_name: 'prontosocorro'
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: ['host.docker.internal:8080']
-▶️ Subir o Prometheus
 docker run -d \
   -p 9090:9090 \
   --add-host=host.docker.internal:host-gateway \
   -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml \
   prom/prometheus
-🌐 Acessos
-Prometheus UI:
+```
 
+### 🌐 Acesso
+
+```
 http://localhost:9090
-🔎 Consultar métricas
-No campo de busca do Prometheus:
+```
 
-patient_transfer_total
-📈 Exemplo de retorno
-patient_transfer_total{status="success"} 
+---
 
-🚀 Deploy
-🔗 Swagger (produção):
-👉 https://fair-evangelin-danielpernnasc-4688df1a.koyeb.app/swagger-ui/index.html#/
+#---
+
+## 💻 Executando pelo IntelliJ IDEA ou VS Code
+## ▶️ Executando o projeto
+
+### Opção 1 - Executar pelo IntelliJ IDEA ou VS Code
+
+Como a aplicação depende do **MySQL** e do **RabbitMQ**, esses serviços devem estar em execução antes de iniciar a aplicação.
+
+Inicie apenas os serviços de infraestrutura:
+
+```bash
+docker compose up -d mysql rabbitmq
+```
+
+Verifique se os containers estão ativos:
+
+```bash
+docker ps
+```
+
+Em seguida, execute a classe `EmergencyRoomApplication` pelo IntelliJ IDEA ou VS Code.
+
+> **Observação:** Ao executar a aplicação fora do Docker, configure as variáveis de ambiente para utilizar `localhost` como host do MySQL e do RabbitMQ.
+
+Exemplo:
+
+```properties
+DB_URL=jdbc:mysql://localhost:3306/prontosocorro?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+DB_USERNAME=emergency
+DB_PASSWORD=emergency
+
+SPRING_RABBITMQ_HOST=localhost
+SPRING_RABBITMQ_PORT=5672
+SPRING_RABBITMQ_USERNAME=guest
+SPRING_RABBITMQ_PASSWORD=guest
+SPRING_RABBITMQ_VIRTUAL_HOST=/
+SPRING_RABBITMQ_SSL=false
+```
+
+### Opção 2 - Executar totalmente com Docker
+
+Para executar toda a aplicação em containers (Spring Boot, MySQL e RabbitMQ):
+
+```bash
+docker compose up -d --build
+```
+
+A aplicação ficará disponível em:
+
+- Swagger: `http://localhost:8080/swagger-ui/index.html`
+- RabbitMQ Management: `http://localhost:15672`
+> **Observação:** Para executar a aplicação pelo IntelliJ IDEA ou VS Code, utilize um arquivo `.env.local` (baseado no `.env.example`) configurado para acessar o MySQL e o RabbitMQ em `localhost`.
+
+## ⚙️ Arquivos de ambiente
+
+O projeto utiliza diferentes arquivos de configuração conforme o ambiente de execução.
+
+| Arquivo | Utilização |
+|---------|------------|
+| `.env` | Utilizado pelo Docker Compose. |
+| `.env.local` | Utilizado ao executar a aplicação pelo IntelliJ IDEA ou VS Code. |
+| `.env.example` | Modelo para criação dos arquivos de ambiente. |
+
+> **Importante:** Ao executar a aplicação pela IDE, utilize um `.env.local` baseado no `.env.example`, configurando `localhost` como host do MySQL e do RabbitMQ.
+# 👨‍💻 Autor
+
+**Daniel P. Nascimento**
+
+Backend Java Developer
+
+- ☕ Java 21
+- 🌱 Spring Boot
+- 🏗️ Domain-Driven Design (DDD)
+- 🐳 Docker
+- 🐰 RabbitMQ
+- 🗄️ MySQL
+
+GitHub:
+https://github.com/Danielpernnasc/emergency

@@ -12,7 +12,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EnableJpaRepositories("com.emergency.emergencyroom")
 public class EmergencyRoomApplication {
+
     public static void main(String[] args) {
+
+        System.out.println("DB_URL = " + System.getenv("DB_URL"));
+        System.out.println("RABBIT_HOST = " + System.getenv("SPRING_RABBITMQ_HOST"));
         SpringApplication.run(EmergencyRoomApplication.class, args);
     }
 
